@@ -37,28 +37,21 @@ const loginOut = () => {
     })
     .catch(() => {})
 }
-
-const toDocument = () => {
-  window.open('https://element-plus-admin-doc.cn/')
-}
 </script>
 
 <template>
   <ElDropdown :class="prefixCls" trigger="click">
     <div class="flex items-center">
       <img
-        src="@/assets/imgs/avatar.jpg"
+        src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
         alt=""
         class="w-[calc(var(--logo-height)-25px)] rounded-[50%]"
       />
-      <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">Archer</span>
+      <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">Colin</span>
     </div>
     <template #dropdown>
       <ElDropdownMenu>
         <ElDropdownItem>
-          <div @click="toDocument">{{ t('common.document') }}</div>
-        </ElDropdownItem>
-        <ElDropdownItem divided>
           <div @click="loginOut">{{ t('common.loginOut') }}</div>
         </ElDropdownItem>
       </ElDropdownMenu>

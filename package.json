@@ -1,8 +1,8 @@
 {
-  "name": "vue-element-plus-admin",
-  "version": "1.9.9",
-  "description": "一套基于vue3、element-plus、typesScript、vite4的后台集成方案。",
-  "author": "Archer <502431556@qq.com>",
+  "name": "ekin-admin",
+  "version": "1.0.0",
+  "description": "fork from vue-element-plus-admin，感谢 Archer",
+  "author": "Colin <zhang_colin@163.com>",
   "private": false,
   "scripts": {
     "i": "pnpm install",
