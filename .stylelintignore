@@ -4,3 +4,6 @@ public/*
 /dist*
 /src/types/env.d.ts
 /docs/**/*
+
+/node_modules/*
+/html/*

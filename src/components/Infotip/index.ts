@@ -1,3 +1,3 @@
-import Infotip from './src/Infotip.vue'
+import Infotip from './src/Infotip.vue';
 
-export { Infotip }
+export { Infotip };

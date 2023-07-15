@@ -8,3 +8,10 @@
 /docs/**/*
 /plop/**/*
 CHANGELOG
+
+
+/html/*
+.local
+**/*.svg
+**/*.sh
+/.vscode

@@ -40,13 +40,13 @@ export default {
     delOk: 'OK',
     delCancel: 'Cancel',
     delNoData: 'Please select the data to delete',
-    delSuccess: 'Deleted successfully'
+    delSuccess: 'Deleted successfully',
   },
   error: {
     noPermission: `Sorry, you don't have permission to access this page.`,
     pageError: 'Sorry, the page you visited does not exist.',
     networkError: 'Sorry, the server reported an error.',
-    returnToHome: 'Return to home'
+    returnToHome: 'Return to home',
   },
   setting: {
     projectSetting: 'Project setting',
@@ -77,12 +77,12 @@ export default {
     tagsViewIcon: 'Tags view icon',
     dynamicRouter: 'Dynamic router',
     reExperienced: 'Please exit the login experience again',
-    fixedMenu: 'Fixed menu'
+    fixedMenu: 'Fixed menu',
   },
   size: {
     default: 'Default',
     large: 'Large',
-    small: 'Small'
+    small: 'Small',
   },
   login: {
     welcome: 'Welcome to the system',
@@ -99,15 +99,15 @@ export default {
     usernamePlaceholder: 'Please input username',
     passwordPlaceholder: 'Please input password',
     code: 'Verification code',
-    codePlaceholder: 'Please input verification code'
+    codePlaceholder: 'Please input verification code',
   },
   router: {
     login: 'Login',
     dashboard: 'Dashboard',
-    workplace: 'Workplace'
+    workplace: 'Workplace',
   },
   permission: {
-    hasPermission: 'Please set the operation permission value'
+    hasPermission: 'Please set the operation permission value',
   },
   workplace: {
     goodMorning: 'Good morning',
@@ -115,6 +115,6 @@ export default {
     toady: `It's sunny today`,
     project: 'Project',
     access: 'Project access',
-    toDo: 'To do'
-  }
-}
+    toDo: 'To do',
+  },
+};

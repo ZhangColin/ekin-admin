@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { propTypes } from '@/utils/propTypes'
-import { ref, onMounted, onActivated, shallowRef } from 'vue'
-import { useEventListener, useWindowSize, isClient } from '@vueuse/core'
-import type { CSSProperties } from 'vue'
+import { propTypes } from '@/utils/propTypes';
+import { ref, onMounted, onActivated, shallowRef } from 'vue';
+import { useEventListener, useWindowSize, isClient } from '@vueuse/core';
+import type { CSSProperties } from 'vue';
 const props = defineProps({
   // 距离顶部或者底部的距离(单位px)
   offset: propTypes.number.def(0),
@@ -14,111 +14,118 @@ const props = defineProps({
   position: {
     type: String,
     validator: function (value: string) {
-      return ['top', 'bottom'].indexOf(value) !== -1
+      return ['top', 'bottom'].indexOf(value) !== -1;
     },
-    default: 'top'
-  }
-})
-const width = ref('auto' as string)
-const height = ref('auto' as string)
-const isSticky = ref(false)
-const refSticky = shallowRef<HTMLElement>()
-const scrollContainer = shallowRef<HTMLElement | Window>()
-const { height: windowHeight } = useWindowSize()
+    default: 'top',
+  },
+});
+const width = ref('auto' as string);
+const height = ref('auto' as string);
+const isSticky = ref(false);
+const refSticky = shallowRef<HTMLElement>();
+const scrollContainer = shallowRef<HTMLElement | Window>();
+const { height: windowHeight } = useWindowSize();
 onMounted(() => {
-  height.value = refSticky.value?.getBoundingClientRect().height + 'px'
+  height.value = refSticky.value?.getBoundingClientRect().height + 'px';
 
-  scrollContainer.value = getScrollContainer(refSticky.value!, true)
-  useEventListener(scrollContainer, 'scroll', handleScroll)
-  useEventListener('resize', handleReize)
-  handleScroll()
-})
+  scrollContainer.value = getScrollContainer(refSticky.value!, true);
+  useEventListener(scrollContainer, 'scroll', handleScroll);
+  useEventListener('resize', handleReize);
+  handleScroll();
+});
 onActivated(() => {
-  handleScroll()
-})
+  handleScroll();
+});
 
 const camelize = (str: string): string => {
-  return str.replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ''))
-}
+  return str.replace(/-(\w)/g, (_, c) => (c ? c.toUpperCase() : ''));
+};
 
-const getStyle = (element: HTMLElement, styleName: keyof CSSProperties): string => {
-  if (!isClient || !element || !styleName) return ''
+const getStyle = (
+  element: HTMLElement,
+  styleName: keyof CSSProperties,
+): string => {
+  if (!isClient || !element || !styleName) return '';
 
-  let key = camelize(styleName)
-  if (key === 'float') key = 'cssFloat'
+  let key = camelize(styleName);
+  if (key === 'float') key = 'cssFloat';
   try {
-    const style = element.style[styleName]
-    if (style) return style
-    const computed = document.defaultView?.getComputedStyle(element, '')
-    return computed ? computed[styleName] : ''
+    const style = element.style[styleName];
+    if (style) return style;
+    const computed = document.defaultView?.getComputedStyle(element, '');
+    return computed ? computed[styleName] : '';
   } catch {
-    return element.style[styleName]
+    return element.style[styleName];
   }
-}
+};
 const isScroll = (el: HTMLElement, isVertical?: boolean): boolean => {
-  if (!isClient) return false
+  if (!isClient) return false;
   const key = (
     {
       undefined: 'overflow',
       true: 'overflow-y',
-      false: 'overflow-x'
+      false: 'overflow-x',
     } as const
-  )[String(isVertical)]!
-  const overflow = getStyle(el, key)
-  return ['scroll', 'auto', 'overlay'].some((s) => overflow.includes(s))
-}
+  )[String(isVertical)]!;
+  const overflow = getStyle(el, key);
+  return ['scroll', 'auto', 'overlay'].some((s) => overflow.includes(s));
+};
 
 const getScrollContainer = (
   el: HTMLElement,
-  isVertical: boolean
+  isVertical: boolean,
 ): Window | HTMLElement | undefined => {
-  if (!isClient) return
-  let parent = el
+  if (!isClient) return;
+  let parent = el;
   while (parent) {
-    if ([window, document, document.documentElement].includes(parent)) return window
-    if (isScroll(parent, isVertical)) return parent
-    parent = parent.parentNode as HTMLElement
+    if ([window, document, document.documentElement].includes(parent))
+      return window;
+    if (isScroll(parent, isVertical)) return parent;
+    parent = parent.parentNode as HTMLElement;
   }
-  return parent
-}
+  return parent;
+};
 
 const handleScroll = () => {
-  width.value = refSticky.value!.getBoundingClientRect().width! + 'px'
+  width.value = refSticky.value!.getBoundingClientRect().width! + 'px';
   if (props.position === 'top') {
-    const offsetTop = refSticky.value?.getBoundingClientRect().top
+    const offsetTop = refSticky.value?.getBoundingClientRect().top;
     if (offsetTop !== undefined && offsetTop < props.offset) {
-      sticky()
-      return
+      sticky();
+      return;
     }
-    reset()
+    reset();
   } else {
-    const offsetBottom = refSticky.value?.getBoundingClientRect().bottom
+    const offsetBottom = refSticky.value?.getBoundingClientRect().bottom;
 
-    if (offsetBottom !== undefined && offsetBottom > windowHeight.value - props.offset) {
-      sticky()
-      return
+    if (
+      offsetBottom !== undefined &&
+      offsetBottom > windowHeight.value - props.offset
+    ) {
+      sticky();
+      return;
     }
-    reset()
+    reset();
   }
-}
+};
 const handleReize = () => {
   if (isSticky.value && refSticky.value) {
-    width.value = refSticky.value.getBoundingClientRect().width + 'px'
+    width.value = refSticky.value.getBoundingClientRect().width + 'px';
   }
-}
+};
 const sticky = () => {
   if (isSticky.value) {
-    return
+    return;
   }
-  isSticky.value = true
-}
+  isSticky.value = true;
+};
 const reset = () => {
   if (!isSticky.value) {
-    return
+    return;
   }
-  width.value = 'auto'
-  isSticky.value = false
-}
+  width.value = 'auto';
+  isSticky.value = false;
+};
 </script>
 <template>
   <div :style="{ height: height, zIndex: zIndex }" ref="refSticky">
@@ -130,7 +137,7 @@ const reset = () => {
         zIndex: zIndex,
         position: isSticky ? 'fixed' : 'static',
         width: width,
-        height: height
+        height: height,
       }"
     >
       <slot>

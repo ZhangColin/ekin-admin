@@ -5,50 +5,80 @@ module.exports = defineConfig({
   env: {
     browser: true,
     node: true,
-    es6: true
+    es6: true,
+    es2021: true,
+    jest: true
   },
+    /* 指定如何解析语法 */
   parser: 'vue-eslint-parser',
+   /** 优先级低于 parse 的语法解析配置 */
   parserOptions: {
     parser: '@typescript-eslint/parser',
-    ecmaVersion: 2020,
+    ecmaVersion: "latest",
     sourceType: 'module',
     jsxPragma: 'React',
     ecmaFeatures: {
       jsx: true
     }
   },
+    /* 继承已有的规则 */
   extends: [
+    "eslint:recommended",
     'plugin:vue/vue3-recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
     'plugin:prettier/recommended'
   ],
+  plugins: ["vue", "@typescript-eslint"],
+  // globals: {
+  //   'ElRef': true
+  // },
   rules: {
-    'vue/script-setup-uses-vars': 'error',
-    'vue/no-reserved-component-names': 'off',
-    '@typescript-eslint/ban-ts-ignore': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/no-empty-function': 'off',
-    'vue/custom-event-name-casing': 'off',
+    "no-var": "error", // 要求使用 let 或 const 而不是 var
+    "no-multiple-empty-lines": [
+      "warn",
+      {
+        max: 1,
+      },
+    ], // 不允许多个空行
+    "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
+    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    "no-unexpected-multiline": "error", // 禁止空余的多行
+    "no-useless-escape": "off", // 禁止不必要的转义字符
     'no-use-before-define': 'off',
-    '@typescript-eslint/no-use-before-define': 'off',
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/ban-types': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
     'no-unused-vars': 'off',
     'space-before-function-paren': 'off',
 
+    // typeScript (https://typescript-eslint.io/rules)
+    "@typescript-eslint/no-unused-vars": "error", // 禁止定义未使用的变量
+    "@typescript-eslint/prefer-ts-expect-error": "error", // 禁止使用 @ts-ignore
+    "@typescript-eslint/no-explicit-any": "off", // 禁止使用 any 类型
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-namespace": "off", // 禁止使用自定义 TypeScript 模块和命名空间。
+    "@typescript-eslint/semi": "off",
+    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    
+    // eslint-plugin-vue (https://eslint.vuejs.org/rules/)
+    "vue/multi-word-component-names": "off", // 要求组件名称始终为 “-” 链接的单词
+    "vue/script-setup-uses-vars": "error", // 防止<script setup>使用的变量<template>被标记为未使用
+    "vue/no-mutating-props": "off", // 不允许组件 prop的改变
+    "vue/attribute-hyphenation": "off", // 对模板中的自定义组件强制执行属性命名样式
+
+    'vue/custom-event-name-casing': 'off',
+    'vue/no-reserved-component-names': 'off',
     'vue/attributes-order': 'off',
     'vue/one-component-per-file': 'off',
     'vue/html-closing-bracket-newline': 'off',
     'vue/max-attributes-per-line': 'off',
     'vue/multiline-html-element-content-newline': 'off',
     'vue/singleline-html-element-content-newline': 'off',
-    'vue/attribute-hyphenation': 'off',
     'vue/require-default-prop': 'off',
     'vue/require-explicit-emits': 'off',
     'vue/html-self-closing': [
@@ -63,7 +93,6 @@ module.exports = defineConfig({
         math: 'always'
       }
     ],
-    'vue/multi-word-component-names': 'off',
     'vue/no-v-html': 'off'
   }
 })

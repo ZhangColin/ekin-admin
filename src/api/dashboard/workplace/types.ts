@@ -1,5 +1,5 @@
 export type WorkplaceTotal = {
-  project: number
-  access: number
-  todo: number
-}
+  project: number;
+  access: number;
+  todo: number;
+};

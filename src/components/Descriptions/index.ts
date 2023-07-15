@@ -1,3 +1,3 @@
-import Descriptions from './src/Descriptions.vue'
+import Descriptions from './src/Descriptions.vue';
 
-export { Descriptions }
+export { Descriptions };

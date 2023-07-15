@@ -1,10 +1,13 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
-import type { App } from 'vue'
-import { Layout } from '@/utils/routerHelper'
-import { useI18n } from '@/hooks/web/useI18n'
+import { createRouter, createWebHashHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
+import type { App } from 'vue';
+import { Layout } from '@/utils/routerHelper';
+import { useI18n } from '@/hooks/web/useI18n';
+import { system } from './modules/system';
 
-const { t } = useI18n()
+console.log(system);
+
+const { t } = useI18n();
 
 export const constantRouterMap: AppRouteRecordRaw[] = [
   {
@@ -13,8 +16,8 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     redirect: '/dashboard/workplace',
     name: 'Root',
     meta: {
-      hidden: true
-    }
+      hidden: true,
+    },
   },
   {
     path: '/redirect',
@@ -25,13 +28,13 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
         path: '/redirect/:path(.*)',
         name: 'Redirect',
         component: () => import('@/views/Redirect/Redirect.vue'),
-        meta: {}
-      }
+        meta: {},
+      },
     ],
     meta: {
       hidden: true,
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/login',
@@ -40,8 +43,8 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: t('router.login'),
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/404',
@@ -50,8 +53,8 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: '404',
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/403',
@@ -60,8 +63,8 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: '403',
-      noTagsView: true
-    }
+      noTagsView: true,
+    },
   },
   {
     path: '/500',
@@ -70,10 +73,10 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
     meta: {
       hidden: true,
       title: '500',
-      noTagsView: true
-    }
-  }
-]
+      noTagsView: true,
+    },
+  },
+];
 
 export const asyncRouterMap: AppRouteRecordRaw[] = [
   {
@@ -84,7 +87,7 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
     meta: {
       title: t('router.dashboard'),
       icon: 'ant-design:dashboard-filled',
-      alwaysShow: true
+      alwaysShow: false,
     },
     children: [
       {
@@ -93,32 +96,40 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
         name: 'Workplace',
         meta: {
           title: t('router.workplace'),
-          noCache: true
-        }
-      }
-    ]
-  }
-]
+          noCache: true,
+        },
+      },
+    ],
+  },
+  system,
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
   strict: true,
   routes: constantRouterMap as RouteRecordRaw[],
-  scrollBehavior: () => ({ left: 0, top: 0 })
-})
+  scrollBehavior: () => ({ left: 0, top: 0 }),
+});
 
 export const resetRouter = (): void => {
-  const resetWhiteNameList = ['Redirect', 'Login', 'NoFind', 'NoAuth', 'ServerError', 'Root']
+  const resetWhiteNameList = [
+    'Redirect',
+    'Login',
+    'NoFind',
+    'NoAuth',
+    'ServerError',
+    'Root',
+  ];
   router.getRoutes().forEach((route) => {
-    const { name } = route
+    const { name } = route;
     if (name && !resetWhiteNameList.includes(name as string)) {
-      router.hasRoute(name) && router.removeRoute(name)
+      router.hasRoute(name) && router.removeRoute(name);
     }
-  })
-}
+  });
+};
 
 export const setupRouter = (app: App<Element>) => {
-  app.use(router)
-}
+  app.use(router);
+};
 
-export default router
+export default router;

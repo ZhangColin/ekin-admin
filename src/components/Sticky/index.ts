@@ -1,3 +1,3 @@
-import Sticky from './src/Sticky.vue'
+import Sticky from './src/Sticky.vue';
 
-export { Sticky }
+export { Sticky };

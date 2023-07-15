@@ -46,10 +46,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           }
         }]
       }),
-      EslintPlugin({
-        cache: false,
-        include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
-      }),
+      // EslintPlugin({
+      //   cache: false,
+      //   include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
+      // }),
       VueI18nPlugin({
         runtimeOnly: true,
         compositionOnly: true,
@@ -80,6 +80,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
 
     css: {
       preprocessorOptions: {
+        scss: {
+          javascriptEnabled: true,
+          additionalData: '@import "./src/styles/variable.scss";',
+        },
         less: {
           additionalData: '@import "./src/styles/variables.module.less";',
           javascriptEnabled: true
@@ -116,7 +120,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       proxy: {
         // 选项写法
         '/api': {
-          target: 'http://127.0.0.1:8000',
+          target: env.VITE_SERVE,
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, '')
         }

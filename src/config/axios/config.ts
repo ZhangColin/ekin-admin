@@ -1,13 +1,13 @@
 const config: {
   base_url: {
-    base: string
-    dev: string
-    pro: string
-    test: string
-  }
-  result_code: number | string
-  default_headers: AxiosHeaders
-  request_timeout: number
+    base: string;
+    dev: string;
+    pro: string;
+    test: string;
+  };
+  result_code: number | string;
+  default_headers: AxiosHeaders;
+  request_timeout: number;
 } = {
   /**
    * api请求基础路径
@@ -17,13 +17,13 @@ const config: {
     base: '',
 
     // 打包开发环境接口前缀
-    dev: '',
+    dev: '/api',
 
     // 打包生产环境接口前缀
     pro: '',
 
     // 打包测试环境接口前缀
-    test: ''
+    test: '',
   },
 
   /**
@@ -40,7 +40,7 @@ const config: {
    * 默认接口请求类型
    * 可选值：application/x-www-form-urlencoded multipart/form-data
    */
-  default_headers: 'application/json'
-}
+  default_headers: 'application/json',
+};
 
-export { config }
+export { config };

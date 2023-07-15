@@ -39,13 +39,13 @@ export default {
     delOk: '确定',
     delCancel: '取消',
     delNoData: '请选择需要删除的数据',
-    delSuccess: '删除成功'
+    delSuccess: '删除成功',
   },
   error: {
     noPermission: `抱歉，您无权访问此页面。`,
     pageError: '抱歉，您访问的页面不存在。',
     networkError: '抱歉，服务器报告错误。',
-    returnToHome: '返回首页'
+    returnToHome: '返回首页',
   },
   setting: {
     projectSetting: '项目配置',
@@ -76,12 +76,12 @@ export default {
     tagsViewIcon: '标签页图标',
     dynamicRouter: '动态路由',
     reExperienced: '请重新退出登录体验',
-    fixedMenu: '固定菜单'
+    fixedMenu: '固定菜单',
   },
   size: {
     default: '默认',
     large: '大',
-    small: '小'
+    small: '小',
   },
   login: {
     welcome: '欢迎使用',
@@ -98,15 +98,15 @@ export default {
     usernamePlaceholder: '请输入用户名',
     passwordPlaceholder: '请输入密码',
     code: '验证码',
-    codePlaceholder: '请输入验证码'
+    codePlaceholder: '请输入验证码',
   },
   router: {
     login: '登录',
     dashboard: '首页',
-    workplace: '工作台'
+    workplace: '工作台',
   },
   permission: {
-    hasPermission: '请设置操作权限值'
+    hasPermission: '请设置操作权限值',
   },
   workplace: {
     goodMorning: '早安',
@@ -114,6 +114,6 @@ export default {
     toady: '今日晴',
     project: '项目数',
     access: '项目访问',
-    toDo: '待办'
-  }
-}
+    toDo: '待办',
+  },
+};

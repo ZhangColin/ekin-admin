@@ -1,35 +1,38 @@
 <script setup lang="ts">
-import { ElCard, ElButton } from 'element-plus'
-import { propTypes } from '@/utils/propTypes'
-import { useDesign } from '@/hooks/web/useDesign'
-import { ref, onMounted, defineEmits } from 'vue'
-import { Sticky } from '@/components/Sticky'
-import { useI18n } from '@/hooks/web/useI18n'
-const { t } = useI18n()
+import { ElCard, ElButton } from 'element-plus';
+import { propTypes } from '@/utils/propTypes';
+import { useDesign } from '@/hooks/web/useDesign';
+import { ref, onMounted, defineEmits } from 'vue';
+import { Sticky } from '@/components/Sticky';
+import { useI18n } from '@/hooks/web/useI18n';
+const { t } = useI18n();
 
-const { getPrefixCls } = useDesign()
+const { getPrefixCls } = useDesign();
 
-const prefixCls = getPrefixCls('content-detail-wrap')
+const prefixCls = getPrefixCls('content-detail-wrap');
 
 defineProps({
   title: propTypes.string.def(''),
-  message: propTypes.string.def('')
-})
-const emit = defineEmits(['back'])
-const offset = ref(85)
-const contentDetailWrap = ref()
+  message: propTypes.string.def(''),
+});
+const emit = defineEmits(['back']);
+const offset = ref(85);
+const contentDetailWrap = ref();
 onMounted(() => {
-  offset.value = contentDetailWrap.value.getBoundingClientRect().top
-})
+  offset.value = contentDetailWrap.value.getBoundingClientRect().top;
+});
 </script>
 
 <template>
-  <div :class="[`${prefixCls}-container`, 'relative bg-[#fff]']" ref="contentDetailWrap">
+  <div
+    :class="[`${prefixCls}-container`, 'relative bg-[#fff]']"
+    ref="contentDetailWrap"
+  >
     <Sticky :offset="offset">
       <div
         :class="[
           `${prefixCls}-header`,
-          'flex border-bottom-1 h-50px items-center text-center bg-white pr-10px'
+          'flex border-bottom-1 h-50px items-center text-center bg-white pr-10px',
         ]"
       >
         <div :class="[`${prefixCls}-header__back`, 'flex pl-10px pr-10px ']">
@@ -38,7 +41,9 @@ onMounted(() => {
             {{ t('common.back') }}
           </el-button>
         </div>
-        <div :class="[`${prefixCls}-header__title`, 'flex flex-1  justify-center']">
+        <div
+          :class="[`${prefixCls}-header__title`, 'flex flex-1  justify-center']"
+        >
           <slot name="title">
             <label class="text-16px font-700">{{ title }}</label>
           </slot>

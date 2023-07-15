@@ -19,34 +19,34 @@ export type ComponentName =
   | 'TimeSelect'
   | 'SelectV2'
   | 'InputPassword'
-  | 'Editor'
+  | 'Editor';
 
 export type ColProps = {
-  span?: number
-  xs?: number
-  sm?: number
-  md?: number
-  lg?: number
-  xl?: number
-  tag?: string
-}
+  span?: number;
+  xs?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
+  tag?: string;
+};
 
 export type ComponentOptions = {
-  label?: string
-  value?: FormValueType
-  disabled?: boolean
-  key?: string | number
-  children?: ComponentOptions[]
-  options?: ComponentOptions[]
-} & Recordable
+  label?: string;
+  value?: FormValueType;
+  disabled?: boolean;
+  key?: string | number;
+  children?: ComponentOptions[];
+  options?: ComponentOptions[];
+} & Recordable;
 
 export type ComponentOptionsAlias = {
-  labelField?: string
-  valueField?: string
-}
+  labelField?: string;
+  valueField?: string;
+};
 
 export type ComponentProps = {
-  optionsAlias?: ComponentOptionsAlias
-  options?: ComponentOptions[]
-  optionsSlot?: boolean
-} & Recordable
+  optionsAlias?: ComponentOptionsAlias;
+  options?: ComponentOptions[];
+  optionsSlot?: boolean;
+} & Recordable;

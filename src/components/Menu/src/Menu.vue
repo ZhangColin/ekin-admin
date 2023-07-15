@@ -1,82 +1,84 @@
 <script lang="tsx">
-import { computed, defineComponent, unref, PropType } from 'vue'
-import { ElMenu, ElScrollbar } from 'element-plus'
-import { useAppStore } from '@/store/modules/app'
-import { usePermissionStore } from '@/store/modules/permission'
-import { useRenderMenuItem } from './components/useRenderMenuItem'
-import { useRouter } from 'vue-router'
-import { isUrl } from '@/utils/is'
-import { useDesign } from '@/hooks/web/useDesign'
-import { LayoutType } from '@/types/layout'
+import { computed, defineComponent, unref, PropType } from 'vue';
+import { ElMenu, ElScrollbar } from 'element-plus';
+import { useAppStore } from '@/store/modules/app';
+import { usePermissionStore } from '@/store/modules/permission';
+import { useRenderMenuItem } from './components/useRenderMenuItem';
+import { useRouter } from 'vue-router';
+import { isUrl } from '@/utils/is';
+import { useDesign } from '@/hooks/web/useDesign';
+import { LayoutType } from '@/types/layout';
 
-const { getPrefixCls } = useDesign()
+const { getPrefixCls } = useDesign();
 
-const prefixCls = getPrefixCls('menu')
+const prefixCls = getPrefixCls('menu');
 
 export default defineComponent({
   name: 'Menu',
   props: {
     menuSelect: {
       type: Function as PropType<(index: string) => void>,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   setup(props) {
-    const appStore = useAppStore()
+    const appStore = useAppStore();
 
-    const layout = computed(() => appStore.getLayout)
+    const layout = computed(() => appStore.getLayout);
 
-    const { push, currentRoute } = useRouter()
+    const { push, currentRoute } = useRouter();
 
-    const permissionStore = usePermissionStore()
+    const permissionStore = usePermissionStore();
 
     const menuMode = computed((): 'vertical' | 'horizontal' => {
       // 竖
-      const vertical: LayoutType[] = ['classic', 'topLeft', 'cutMenu']
+      const vertical: LayoutType[] = ['classic', 'topLeft', 'cutMenu'];
 
       if (vertical.includes(unref(layout))) {
-        return 'vertical'
+        return 'vertical';
       } else {
-        return 'horizontal'
+        return 'horizontal';
       }
-    })
+    });
 
     const routers = computed(() =>
-      unref(layout) === 'cutMenu' ? permissionStore.getMenuTabRouters : permissionStore.getRouters
-    )
+      unref(layout) === 'cutMenu'
+        ? permissionStore.getMenuTabRouters
+        : permissionStore.getRouters,
+    );
 
-    const collapse = computed(() => appStore.getCollapse)
+    const collapse = computed(() => appStore.getCollapse);
 
-    const uniqueOpened = computed(() => appStore.getUniqueOpened)
+    const uniqueOpened = computed(() => appStore.getUniqueOpened);
 
     const activeMenu = computed(() => {
-      const { meta, path } = unref(currentRoute)
+      const { meta, path } = unref(currentRoute);
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
-        return meta.activeMenu as string
+        return meta.activeMenu as string;
       }
-      return path
-    })
+      return path;
+    });
 
     const menuSelect = (index: string) => {
       if (props.menuSelect) {
-        props.menuSelect(index)
+        props.menuSelect(index);
       }
       // 自定义事件
       if (isUrl(index)) {
-        window.open(index)
+        window.open(index);
       } else {
-        push(index)
+        push(index);
       }
-    }
+    };
 
     const renderMenuWrap = () => {
       if (unref(layout) === 'top') {
-        return renderMenu()
+        return renderMenu();
       } else {
-        return <ElScrollbar>{renderMenu()}</ElScrollbar>
+        return <ElScrollbar>{renderMenu()}</ElScrollbar>;
       }
-    }
+    };
 
     const renderMenu = () => {
       return (
@@ -84,7 +86,9 @@ export default defineComponent({
           defaultActive={unref(activeMenu)}
           mode={unref(menuMode)}
           collapse={
-            unref(layout) === 'top' || unref(layout) === 'cutMenu' ? false : unref(collapse)
+            unref(layout) === 'top' || unref(layout) === 'cutMenu'
+              ? false
+              : unref(collapse)
           }
           uniqueOpened={unref(layout) === 'top' ? false : unref(uniqueOpened)}
           backgroundColor="var(--left-menu-bg-color)"
@@ -94,13 +98,13 @@ export default defineComponent({
         >
           {{
             default: () => {
-              const { renderMenuItem } = useRenderMenuItem(unref(menuMode))
-              return renderMenuItem(unref(routers))
-            }
+              const { renderMenuItem } = useRenderMenuItem(unref(menuMode));
+              return renderMenuItem(unref(routers));
+            },
           }}
         </ElMenu>
-      )
-    }
+      );
+    };
 
     return () => (
       <div
@@ -109,16 +113,18 @@ export default defineComponent({
           `${prefixCls} ${prefixCls}__${unref(menuMode)}`,
           'h-[100%] overflow-hidden flex-col bg-[var(--left-menu-bg-color)]',
           {
-            'w-[var(--left-menu-min-width)]': unref(collapse) && unref(layout) !== 'cutMenu',
-            'w-[var(--left-menu-max-width)]': !unref(collapse) && unref(layout) !== 'cutMenu'
-          }
+            'w-[var(--left-menu-min-width)]':
+              unref(collapse) && unref(layout) !== 'cutMenu',
+            'w-[var(--left-menu-max-width)]':
+              !unref(collapse) && unref(layout) !== 'cutMenu',
+          },
         ]}
       >
         {renderMenuWrap()}
       </div>
-    )
-  }
-})
+    );
+  },
+});
 </script>
 
 <style lang="less" scoped>
