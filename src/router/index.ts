@@ -1,135 +1,80 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import type { RouteRecordRaw } from 'vue-router';
-import type { App } from 'vue';
-import { Layout } from '@/utils/routerHelper';
-import { useI18n } from '@/hooks/web/useI18n';
-import { system } from './modules/system';
-
-console.log(system);
-
-const { t } = useI18n();
-
-export const constantRouterMap: AppRouteRecordRaw[] = [
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard/workplace',
-    name: 'Root',
-    meta: {
-      hidden: true,
-    },
-  },
-  {
-    path: '/redirect',
-    component: Layout,
-    name: 'Redirect',
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        name: 'Redirect',
-        component: () => import('@/views/Redirect/Redirect.vue'),
-        meta: {},
-      },
-    ],
-    meta: {
-      hidden: true,
-      noTagsView: true,
-    },
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/Login/Login.vue'),
-    name: 'Login',
-    meta: {
-      hidden: true,
-      title: t('router.login'),
-      noTagsView: true,
-    },
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/Error/404.vue'),
-    name: 'NoFind',
-    meta: {
-      hidden: true,
-      title: '404',
-      noTagsView: true,
-    },
-  },
-  {
-    path: '/403',
-    component: () => import('@/views/Error/403.vue'),
-    name: 'NoAuth',
-    meta: {
-      hidden: true,
-      title: '403',
-      noTagsView: true,
-    },
-  },
-  {
-    path: '/500',
-    component: () => import('@/views/Error/500.vue'),
-    name: 'ServerError',
-    meta: {
-      hidden: true,
-      title: '500',
-      noTagsView: true,
-    },
-  },
-];
-
-export const asyncRouterMap: AppRouteRecordRaw[] = [
-  {
-    path: '/dashboard',
-    component: Layout,
-    redirect: '/dashboard/workplace',
-    name: 'Dashboard',
-    meta: {
-      title: t('router.dashboard'),
-      icon: 'ant-design:dashboard-filled',
-      alwaysShow: false,
-    },
-    children: [
-      {
-        path: 'workplace',
-        component: () => import('@/views/Dashboard/Workplace.vue'),
-        name: 'Workplace',
-        meta: {
-          title: t('router.workplace'),
-          noCache: true,
-        },
-      },
-    ],
-  },
-  system,
-];
+import { createRouter, createWebHashHistory } from 'vue-router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+import { staticRoutes, adminBaseRoute } from '/@/router/static'
+import { loading } from '/@/utils/loading'
+import langAutoLoadMap from '/@/lang/autoload'
+import { mergeMessage } from '/@/lang/index'
+import { useConfig } from '/@/stores/config'
+import { isAdminApp } from '/@/utils/common'
+import { uniq } from 'lodash-es'
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  strict: true,
-  routes: constantRouterMap as RouteRecordRaw[],
-  scrollBehavior: () => ({ left: 0, top: 0 }),
-});
+    history: createWebHashHistory(),
+    routes: staticRoutes,
+})
 
-export const resetRouter = (): void => {
-  const resetWhiteNameList = [
-    'Redirect',
-    'Login',
-    'NoFind',
-    'NoAuth',
-    'ServerError',
-    'Root',
-  ];
-  router.getRoutes().forEach((route) => {
-    const { name } = route;
-    if (name && !resetWhiteNameList.includes(name as string)) {
-      router.hasRoute(name) && router.removeRoute(name);
+router.beforeEach((to, from, next) => {
+    NProgress.configure({ showSpinner: false })
+    NProgress.start()
+    if (!window.existLoading) {
+        loading.show()
+        window.existLoading = true
     }
-  });
-};
 
-export const setupRouter = (app: App<Element>) => {
-  app.use(router);
-};
+    // 按需动态加载页面的语言包-start
+    let loadPath: string[] = []
+    const config = useConfig()
+    if (to.path in langAutoLoadMap) {
+        loadPath.push(...langAutoLoadMap[to.path as keyof typeof langAutoLoadMap])
+    }
+    let prefix = ''
+    if (isAdminApp(to.fullPath)) {
+        prefix = './backend/' + config.lang.defaultLang
 
-export default router;
+        // 去除 path 中的 /admin
+        const adminPath = to.path.slice(to.path.indexOf(adminBaseRoute.path) + adminBaseRoute.path.length)
+        if (adminPath) loadPath.push(prefix + adminPath + '.ts')
+    } else {
+        prefix = './frontend/' + config.lang.defaultLang
+        loadPath.push(prefix + to.path + '.ts')
+    }
+
+    // 根据路由 name 加载的语言包
+    if (to.name) {
+        loadPath.push(prefix + '/' + to.name.toString() + '.ts')
+    }
+
+    if (!window.loadLangHandle.publicMessageLoaded) window.loadLangHandle.publicMessageLoaded = []
+    const publicMessagePath = prefix + '.ts'
+    if (!window.loadLangHandle.publicMessageLoaded.includes(publicMessagePath)) {
+        loadPath.push(publicMessagePath)
+        window.loadLangHandle.publicMessageLoaded.push(publicMessagePath)
+    }
+
+    // 去重
+    loadPath = uniq(loadPath)
+
+    for (const key in loadPath) {
+        loadPath[key] = loadPath[key].replaceAll('${lang}', config.lang.defaultLang)
+        if (loadPath[key] in window.loadLangHandle) {
+            window.loadLangHandle[loadPath[key]]().then((res: { default: anyObj }) => {
+                const pathName = loadPath[key].slice(loadPath[key].lastIndexOf(prefix) + (prefix.length + 1), loadPath[key].lastIndexOf('.'))
+                mergeMessage(res.default, pathName)
+            })
+        }
+    }
+    // 动态加载语言包-end
+
+    next()
+})
+
+// 路由加载后
+router.afterEach(() => {
+    if (window.existLoading) {
+        loading.hide()
+    }
+    NProgress.done()
+})
+
+export default router

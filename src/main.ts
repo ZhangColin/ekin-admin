@@ -1,56 +1,36 @@
-// 引入windi css
-import '@/plugins/windi.css';
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import { loadLang } from '/@/lang/index'
+import { registerIcons } from '/@/utils/common'
+import ElementPlus from 'element-plus'
+import mitt from 'mitt'
+import pinia from '/@/stores/index'
+import { directives } from '/@/utils/directives'
+import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/display.css'
+import 'font-awesome/css/font-awesome.min.css'
+import '/@/styles/index.scss'
+// modules import mark, Please do not remove.
 
-// 导入全局的svg图标
-import '@/plugins/svgIcon';
+async function start() {
+    const app = createApp(App)
+    app.use(pinia)
 
-// 初始化多语言
-import { setupI18n } from '@/plugins/vueI18n';
+    // 全局语言包加载
+    await loadLang(app)
 
-// 引入状态管理
-import { setupStore } from '@/store';
+    app.use(router)
+    app.use(ElementPlus)
 
-// 全局组件
-import { setupGlobCom } from '@/components';
+    // 全局注册
+    directives(app) // 指令
+    registerIcons(app) // icons
 
-// 引入element-plus
-import { setupElementPlus } from '@/plugins/elementPlus';
+    app.mount('#app')
 
-// 引入全局样式
-import '@/styles/index.less';
+    // modules start mark, Please do not remove.
 
-// 引入动画
-import '@/plugins/animate.css';
-
-// 路由
-import { setupRouter } from './router';
-
-// 权限
-import { setupPermission } from './directives';
-
-import { createApp } from 'vue';
-
-import App from './App.vue';
-
-import './permission';
-
-// 创建实例
-const setupAll = async () => {
-  const app = createApp(App);
-
-  await setupI18n(app);
-
-  setupStore(app);
-
-  setupGlobCom(app);
-
-  setupElementPlus(app);
-
-  setupRouter(app);
-
-  setupPermission(app);
-
-  app.mount('#app');
-};
-
-setupAll();
+    app.config.globalProperties.eventBus = mitt()
+}
+start()

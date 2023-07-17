@@ -1,51 +1,22 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
-    // 解析非相对模块的基地址，默认是当前目录
-    "baseUrl": ".",
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
-    "strictFunctionTypes": false,
-    "experimentalDecorators": true,
-    "noImplicitAny": false,
-    "skipLibCheck": true,
-    "paths": {
-      // 路径映射，相对于 baseUrl
-      "@/*": ["src/*"]
+    "compilerOptions": {
+        "target": "esnext",
+        "useDefineForClassFields": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "removeComments": false,
+        "strict": true,
+        "jsx": "preserve",
+        "sourceMap": false,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "lib": ["esnext", "dom"],
+        "isolatedModules": true,
+        "baseUrl": "./",
+        "paths": {
+            "/@/*": ["src/*"]
+        },
+        "types": ["element-plus/global"]
     },
-
-    /* Bundler mode */
-    "moduleResolution": "node",
-    // "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "preserve",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "types": [
-      "@intlify/unplugin-vue-i18n/types",
-      "vite/client",
-      "element-plus/global",
-      "@types/intro.js",
-      "@types/qrcode",
-      "vite-plugin-svg-icons/client",
-      "unplugin-vue-define-options/macros-global"
-    ],
-    "typeRoots": ["./node_modules/@types/", "./types"]
-  },
-  "include": ["src/**/*", "types/**/*.d.ts", "mock/**/*.ts", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["dist", "node_modules"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "exclude": ["node_modules"]
 }
