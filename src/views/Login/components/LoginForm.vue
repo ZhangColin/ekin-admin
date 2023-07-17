@@ -4,13 +4,13 @@ import { Form } from '@/components/Form';
 import { useI18n } from '@/hooks/web/useI18n';
 import { ElButton, ElCheckbox, ElLink } from 'element-plus';
 import { useForm } from '@/hooks/web/useForm';
-import { loginApi, getTestRoleApi, getAdminRoleApi } from '@/api/login';
+import { loginApi, getTestRoleApi, getAdminRoleApi, getUserInfoApi } from '@/api/login';
 import { useCache } from '@/hooks/web/useCache';
 import { useAppStore } from '@/store/modules/app';
 import { usePermissionStore } from '@/store/modules/permission';
 import { useRouter } from 'vue-router';
 import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router';
-import { UserType } from '@/api/login/types';
+import { UserLoginType, UserType } from '@/api/login/types';
 import { useValidator } from '@/hooks/web/useValidator';
 import { FormSchema } from '@/types/form';
 
@@ -43,7 +43,7 @@ const schema = reactive<FormSchema[]>([
   {
     field: 'username',
     label: t('login.username'),
-    value: 'admin',
+    value: '',
     component: 'Input',
     colProps: {
       span: 24,
@@ -55,7 +55,7 @@ const schema = reactive<FormSchema[]>([
   {
     field: 'password',
     label: t('login.password'),
-    value: 'admin',
+    value: '',
     component: 'InputPassword',
     colProps: {
       span: 24,
@@ -79,20 +79,20 @@ const schema = reactive<FormSchema[]>([
       span: 24,
     },
   },
-  {
-    field: 'other',
-    component: 'Divider',
-    label: t('login.otherLogin'),
-    componentProps: {
-      contentPosition: 'center',
-    },
-  },
-  {
-    field: 'otherIcon',
-    colProps: {
-      span: 24,
-    },
-  },
+  // {
+  //   field: 'other',
+  //   component: 'Divider',
+  //   label: t('login.otherLogin'),
+  //   componentProps: {
+  //     contentPosition: 'center',
+  //   },
+  // },
+  // {
+  //   field: 'otherIcon',
+  //   colProps: {
+  //     span: 24,
+  //   },
+  // },
 ]);
 
 const iconSize = 30;
@@ -124,13 +124,17 @@ const signIn = async () => {
     if (isValid) {
       loading.value = true;
       const { getFormData } = methods;
-      const formData = await getFormData<UserType>();
+      const formData = await getFormData<UserLoginType>();
 
       try {
         const res = await loginApi(formData);
 
         if (res) {
-          wsCache.set(appStore.getUserInfo, res.data);
+          wsCache.set(appStore.getToken, res.token);
+          const userInfo = await getUserInfoApi();
+          console.log(userInfo);
+
+          wsCache.set(appStore.getUserInfo, userInfo);
           // 是否使用动态路由
           if (appStore.getDynamicRouter) {
             getRole();
@@ -211,9 +215,9 @@ const toRegister = () => {
           :label="t('login.remember')"
           size="small"
         />
-        <ElLink type="primary" :underline="false">
+        <!-- <ElLink type="primary" :underline="false">
           {{ t('login.forgetPassword') }}
-        </ElLink>
+        </ElLink> -->
       </div>
     </template>
 
@@ -228,11 +232,11 @@ const toRegister = () => {
           {{ t('login.login') }}
         </ElButton>
       </div>
-      <div class="w-[100%] mt-15px">
+      <!-- <div class="w-[100%] mt-15px">
         <ElButton class="w-[100%]" @click="toRegister">
           {{ t('login.register') }}
         </ElButton>
-      </div>
+      </div> -->
     </template>
 
     <template #otherIcon>

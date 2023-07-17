@@ -1,16 +1,27 @@
 import request from '@/config/axios';
-import type { UserType } from './types';
+import type { UserLoginType, UserLoginResponseType, UserType } from './types';
+
+import { encrypt } from '@/utils/crypto';
 
 interface RoleParams {
   roleName: string;
 }
 
-export const loginApi = (data: UserType): Promise<IResponse<UserType>> => {
-  return request.post({ url: '/user/login', data });
+export const loginApi = (
+  data: UserLoginType,
+): Promise<UserLoginResponseType> => {
+  return request.post({
+    url: '/api/system/login',
+    data: { username: data.username, password: encrypt(data.password) },
+  });
 };
 
 export const loginOutApi = (): Promise<IResponse> => {
   return request.get({ url: '/user/loginOut' });
+};
+
+export const getUserInfoApi = (): Promise<UserType> => {
+  return request.get({ url: '/api/system/user/info' });
 };
 
 export const getUserListApi = ({ params }: AxiosConfig) => {

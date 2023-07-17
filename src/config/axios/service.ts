@@ -6,6 +6,9 @@ import axios, {
   AxiosError,
 } from 'axios';
 
+import { useCache } from '@/hooks/web/useCache';
+import { useAppStore } from '@/store/modules/app';
+
 import qs from 'qs';
 
 import { config } from './config';
@@ -47,6 +50,16 @@ service.interceptors.request.use(
       config.params = {};
       config.url = url;
     }
+
+    const appStore = useAppStore();
+    const { wsCache } = useCache();
+
+    const token = wsCache.get(appStore.getToken);
+
+    if (token) {
+      config.headers['Authorization'] = 'Bearer ' + token;
+    }
+
     return config;
   },
   (error: AxiosError) => {
@@ -62,11 +75,12 @@ service.interceptors.response.use(
     if (response.config.responseType === 'blob') {
       // 如果是文件流，直接过
       return response;
-    } else if (response.data.code === result_code) {
-      return response.data;
-    } else {
-      ElMessage.error(response.data.message);
+      // } else if (response.data.code === result_code) {
+      //   return response.data;
+      // } else {
+      //   ElMessage.error(response.data.message);
     }
+    return response.data;
   },
   (error: AxiosError) => {
     console.log('err' + error); // for debug

@@ -5,7 +5,7 @@ import Vue from '@vitejs/plugin-vue'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 import WindiCSS from 'vite-plugin-windicss'
 import progress from 'vite-plugin-progress'
-import EslintPlugin from 'vite-plugin-eslint'
+// import EslintPlugin from 'vite-plugin-eslint'
 import { ViteEjsPlugin } from "vite-plugin-ejs"
 import { viteMockServe } from 'vite-plugin-mock'
 import PurgeIcons from 'vite-plugin-purge-icons'
@@ -120,7 +120,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       proxy: {
         // 选项写法
         '/api': {
-          target: env.VITE_SERVE,
+          target: 'http://localhost:8080/',
           changeOrigin: true,
           rewrite: path => path.replace(/^\/api/, '')
         }

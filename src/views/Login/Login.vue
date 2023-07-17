@@ -84,7 +84,7 @@ const toLogin = () => {
 
           <div class="flex justify-end items-center space-x-10px">
             <ThemeSwitch />
-            <LocaleDropdown class="<xl:text-white dark:text-white" />
+            <!-- <LocaleDropdown class="<xl:text-white dark:text-white" /> -->
           </div>
         </div>
         <Transition
