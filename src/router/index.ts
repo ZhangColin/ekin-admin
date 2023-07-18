@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
     if (to.path in langAutoLoadMap) {
         loadPath.push(...langAutoLoadMap[to.path as keyof typeof langAutoLoadMap])
     }
-    let prefix = './backend/' + config.lang.defaultLang
+    const prefix = './backend/' + config.lang.defaultLang
 
     // 去除 path 中的 /admin
     const adminPath = to.path.slice(to.path.indexOf(adminBaseRoute.path) + adminBaseRoute.path.length)
