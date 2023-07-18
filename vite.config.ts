@@ -3,13 +3,14 @@ import { resolve } from 'path'
 import type { UserConfig, ConfigEnv, ProxyOptions } from 'vite'
 import { isProd, loadEnv } from '/@/utils/vite'
 import { svgBuilder } from '/@/components/icon/svg/index'
+import { viteMockServe } from 'vite-plugin-mock'
 
 const pathResolve = (dir: string): any => {
     return resolve(__dirname, '.', dir)
 }
 
 // https://vitejs.cn/config/
-const viteConfig = ({ mode }: ConfigEnv): UserConfig => {
+const viteConfig = ({ command, mode }: ConfigEnv): UserConfig => {
     const { VITE_PORT, VITE_OPEN, VITE_BASE_PATH, VITE_OUT_DIR, VITE_PROXY_URL } = loadEnv(mode)
 
     const alias: Record<string, string> = {
@@ -29,7 +30,13 @@ const viteConfig = ({ mode }: ConfigEnv): UserConfig => {
     }
 
     return {
-        plugins: [vue(), svgBuilder('./src/assets/icons/')],
+        plugins: [
+            vue(),
+            svgBuilder('./src/assets/icons/'),
+            viteMockServe({
+                enable: command === 'serve',
+            }),
+        ],
         root: process.cwd(),
         resolve: { alias },
         base: VITE_BASE_PATH,
