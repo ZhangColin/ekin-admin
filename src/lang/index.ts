@@ -34,13 +34,13 @@ export async function loadLang(app: App) {
     // 按需加载语言包文件的句柄
     if (locale == 'zh-cn') {
         window.loadLangHandle = {
-            ...import.meta.glob('./backend/zh-cn/**/*.ts'),
-            ...import.meta.glob('./backend/zh-cn.ts'),
+            ...import.meta.glob('./modules/zh-cn/**/*.ts'),
+            ...import.meta.glob('./modules/zh-cn.ts'),
         }
     } else {
         window.loadLangHandle = {
-            ...import.meta.glob('./backend/en/**/*.ts'),
-            ...import.meta.glob('./backend/en.ts'),
+            ...import.meta.glob('./modules/en/**/*.ts'),
+            ...import.meta.glob('./modules/en.ts'),
         }
     }
 
@@ -49,8 +49,10 @@ export async function loadLang(app: App) {
      */
     if (locale == 'zh-cn') {
         assignLocale[locale].push(getLangFileMessage(import.meta.glob('./common/zh-cn/**/*.ts', { eager: true }), locale))
+        assignLocale[locale].push(getLangFileMessage(import.meta.glob('./modules/zh-cn/**/*.ts', { eager: true }), locale))
     } else if (locale == 'en') {
         assignLocale[locale].push(getLangFileMessage(import.meta.glob('./common/en/**/*.ts', { eager: true }), locale))
+        assignLocale[locale].push(getLangFileMessage(import.meta.glob('./modules/en/**/*.ts', { eager: true }), locale))
     }
 
     const messages = {

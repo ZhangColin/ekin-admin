@@ -1363,7 +1363,7 @@ export default [{
                     }
                 ],
                 "siteConfig": {
-                    "siteName": "BuildAdmin演示站",
+                    "siteName": "Cartisan",
                     "version": "v1.0.0",
                     "cdnUrl": "https:\/\/demo.buildadmin.com",
                     "apiUrl": "https:\/\/buildadmin.com",
