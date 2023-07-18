@@ -125,7 +125,7 @@
                             <el-option :label="t('auth.rule.Add as menu only')" value="add_menu_only"></el-option>
                         </el-select>
                         <div class="block-help">
-                            {{ t('user.rule.Web side component path, please start with /src, such as: /src/views/frontend/index') }}
+                            {{ t('user.rule.Web side component path, please start with /src, such as: /src/views/index') }}
                         </div>
                     </el-form-item>
                     <FormItem

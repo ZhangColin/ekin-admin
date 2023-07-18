@@ -3,12 +3,9 @@ import { isNavigationFailure, NavigationFailureType, RouteRecordRaw, RouteLocati
 import { ElNotification } from 'element-plus'
 import { useConfig } from '/@/stores/config'
 import { useNavTabs } from '/@/stores/navTabs'
-import { useSiteConfig } from '/@/stores/siteConfig'
-import { useMemberCenter } from '/@/stores/memberCenter'
 import { closeShade } from '/@/utils/pageShade'
-import { adminBaseRoute, memberCenterBaseRoute } from '/@/router/static'
+import { adminBaseRoute } from '/@/router/static'
 import { i18n } from '/@/lang/index'
-import { isAdminApp } from '/@/utils/common'
 import { Menus } from '/@/stores/interface'
 import { compact, reverse } from 'lodash-es'
 
@@ -88,42 +85,6 @@ export const onClickMenu = (menu: RouteRecordRaw) => {
             config.setLayout('menuCollapse', true)
         })
     }
-}
-
-/**
- * 处理会员中心的路由
- * 会员中心虽然也是前台的路由，但需要动态注册的路由是根据登录会员的权限来的，所以需要单独处理
- */
-export const handleMemberCenterRoute = (routes: any, rules: any) => {
-    const viewsComponent = import.meta.glob('/src/views/frontend/**/*.vue')
-    addRouteAll(viewsComponent, routes, memberCenterBaseRoute.name as string)
-    const menuMemberCenterBaseRoute = '/' + (memberCenterBaseRoute.name as string) + '/'
-    const menuRule = handleMenuRule(routes, menuMemberCenterBaseRoute, 'user')
-
-    const siteConfig = useSiteConfig()
-    const memberCenter = useMemberCenter()
-    memberCenter.setViewRoutes(menuRule)
-    memberCenter.setShowHeadline(routes.length > 1 ? true : false)
-    memberCenter.mergeAuthNode(handleAuthNode(routes, menuMemberCenterBaseRoute))
-
-    addRouteAll(viewsComponent, rules, '', true)
-    memberCenter.mergeAuthNode(handleAuthNode(rules, '/'))
-    memberCenter.setNavUserMenus(handleMenus(rules, '/', 'nav_user_menu'))
-    siteConfig.setHeadNav(handleMenus(rules, '/', 'nav'))
-}
-
-/**
- * 处理前台的路由
- */
-export const handleFrontendRoute = (routes: any) => {
-    const viewsComponent = import.meta.glob('/src/views/frontend/**/*.vue')
-    addRouteAll(viewsComponent, routes, '', true)
-
-    const siteConfig = useSiteConfig()
-    const memberCenter = useMemberCenter()
-    memberCenter.mergeAuthNode(handleAuthNode(routes, '/'))
-    memberCenter.setNavUserMenus(handleMenus(routes, '/', 'nav_user_menu'))
-    siteConfig.setHeadNav(handleMenus(routes, '/', 'nav'))
 }
 
 /**
@@ -247,7 +208,7 @@ export const addRouteItem = (viewsComponent: Record<string, any>, route: any, pa
     let path = '',
         component
     if (route.menu_type == 'iframe') {
-        path = (isAdminApp() ? '/admin' : '/user') + '/iframe/' + encodeURIComponent(route.url)
+        path = '/admin/iframe/' + encodeURIComponent(route.url)
         component = () => import('/@/layouts/common/router-view/iframe.vue')
     } else {
         path = parentName ? route.path : '/' + route.path

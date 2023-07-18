@@ -4,7 +4,6 @@ import * as elIcons from '@element-plus/icons-vue'
 import router from '/@/router/index'
 import Icon from '/@/components/icon/index.vue'
 import { useNavTabs } from '/@/stores/navTabs'
-import { useMemberCenter } from '/@/stores/memberCenter'
 import { FormInstance } from 'element-plus'
 import { useSiteConfig } from '../stores/siteConfig'
 import { useTitle } from '@vueuse/core'
@@ -151,20 +150,6 @@ export const buildJsonToElTreeData = (data: any): ElTreeData[] => {
 }
 
 /**
- * 是否在后台应用内
- * @param path 不传递则通过当前路由 path 检查
- */
-export const isAdminApp = (path = '') => {
-    if (path) {
-        return /^\/admin/.test(path)
-    }
-    if (/^\/admin/.test(getCurrentRoutePath())) {
-        return true
-    }
-    return false
-}
-
-/**
  * 是否为手机设备
  */
 export const isMobile = () => {
@@ -188,7 +173,7 @@ export const getFileNameFromPath = (path: string) => {
  */
 export const auth = (name: string) => {
     const path = getCurrentRoutePath()
-    const store = isAdminApp() ? useNavTabs() : useMemberCenter()
+    const store = useNavTabs()
     if (store.state.authNode.has(path)) {
         if (store.state.authNode.get(path)!.some((v: string) => v == path + '/' + name)) {
             return true
@@ -237,12 +222,8 @@ export const getCurrentRoutePath = () => {
 export const __ = (key: string, named?: Record<string, unknown>, options?: TranslateOptions<string>) => {
     let langPath = ''
     const path = getCurrentRoutePath()
-    if (isAdminApp()) {
-        langPath = path.slice(path.indexOf(adminBaseRoute.path) + adminBaseRoute.path.length)
-        langPath = trim(langPath, '/').replaceAll('/', '.')
-    } else {
-        langPath = trim(path, '/').replaceAll('/', '.')
-    }
+    langPath = path.slice(path.indexOf(adminBaseRoute.path) + adminBaseRoute.path.length)
+    langPath = trim(langPath, '/').replaceAll('/', '.')
     langPath = langPath ? langPath + '.' + key : key
     return i18n.global.te(langPath) ? i18n.global.t(langPath, named ?? {}, options) : i18n.global.t(key, named ?? {}, options)
 }

@@ -9,30 +9,12 @@ const pageTitle = (name: string): string => {
  */
 const staticRoutes: Array<RouteRecordRaw> = [
     {
-        // 首页
-        path: '/',
-        name: '/',
-        component: () => import('/@/views/frontend/index.vue'),
-        meta: {
-            title: pageTitle('home'),
-        },
-    },
-    {
         // 管理员登录页
         path: '/admin/login',
         name: 'adminLogin',
         component: () => import('/@/views/backend/login.vue'),
         meta: {
             title: pageTitle('adminLogin'),
-        },
-    },
-    {
-        // 会员登录页
-        path: '/user/login',
-        name: 'userLogin',
-        component: () => import('/@/views/frontend/user/login.vue'),
-        meta: {
-            title: pageTitle('userLogin'),
         },
     },
     {
@@ -112,30 +94,6 @@ const adminBaseRoute: RouteRecordRaw = {
     ],
 }
 
-/*
- * 会员中心基础静态路由
- */
-const memberCenterBaseRoute: RouteRecordRaw = {
-    path: '/user',
-    name: 'user',
-    component: () => import('/@/layouts/frontend/user.vue'),
-    redirect: '/user/loading',
-    meta: {
-        title: pageTitle('User'),
-    },
-    children: [
-        {
-            path: 'loading/:to?',
-            name: 'userMainLoading',
-            component: () => import('/@/layouts/common/components/loading.vue'),
-            meta: {
-                title: pageTitle('Loading'),
-            },
-        },
-    ],
-}
-
 staticRoutes.push(adminBaseRoute)
-staticRoutes.push(memberCenterBaseRoute)
 
-export { staticRoutes, adminBaseRoute, memberCenterBaseRoute }
+export { staticRoutes, adminBaseRoute }

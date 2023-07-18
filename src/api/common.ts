@@ -1,8 +1,7 @@
 import createAxios from '/@/utils/axios'
-import { isAdminApp, checkFileMimetype } from '/@/utils/common'
+import { checkFileMimetype } from '/@/utils/common'
 import { getUrl } from '/@/utils/axios'
 import { useAdminInfo } from '/@/stores/adminInfo'
-import { useUserInfo } from '/@/stores/userInfo'
 import { ElNotification, UploadRawFile } from 'element-plus'
 import { useSiteConfig } from '/@/stores/siteConfig'
 import { state as uploadExpandState, fileUpload as uploadExpand } from '/@/components/mixins/baUpload'
@@ -28,13 +27,6 @@ export const captchaUrl = '/api/common/captcha'
 export const clickCaptchaUrl = '/api/common/clickCaptcha'
 export const checkClickCaptchaUrl = '/api/common/checkClickCaptcha'
 export const refreshTokenUrl = '/api/common/refreshToken'
-
-// api模块(前台)
-export const apiUploadUrl = '/api/ajax/upload'
-export const apiBuildSuffixSvgUrl = '/api/ajax/buildSuffixSvg'
-export const apiAreaUrl = '/api/ajax/area'
-export const apiSendSms = '/api/Sms/send'
-export const apiSendEms = '/api/Ems/send'
 
 /**
  * 上传文件
@@ -66,7 +58,7 @@ export function fileUpload(fd: FormData, params: anyObj = {}, forceLocal = false
     }
 
     return createAxios({
-        url: isAdminApp() ? adminUploadUrl : apiUploadUrl,
+        url: adminUploadUrl,
         method: 'POST',
         data: fd,
         params: params,
@@ -83,8 +75,7 @@ export function fileUpload(fd: FormData, params: anyObj = {}, forceLocal = false
 export function buildSuffixSvgUrl(suffix: string, background = '') {
     const adminInfo = useAdminInfo()
     return (
-        getUrl() +
-        (isAdminApp() ? adminBuildSuffixSvgUrl : apiBuildSuffixSvgUrl) +
+        getUrl() + adminBuildSuffixSvgUrl +
         '?batoken=' +
         adminInfo.getToken() +
         '&suffix=' +
@@ -106,50 +97,10 @@ export function getArea(values: number[]) {
         params.city = values[1]
     }
     return createAxios({
-        url: isAdminApp() ? adminAreaUrl : apiAreaUrl,
+        url: adminAreaUrl,
         method: 'GET',
         params: params,
     })
-}
-
-/**
- * 发送短信
- */
-export function sendSms(mobile: string, templateCode: string, extend: anyObj = {}) {
-    return createAxios(
-        {
-            url: apiSendSms,
-            method: 'POST',
-            data: {
-                mobile: mobile,
-                template_code: templateCode,
-                ...extend,
-            },
-        },
-        {
-            showSuccessMessage: true,
-        }
-    )
-}
-
-/**
- * 发送邮件
- */
-export function sendEms(email: string, event: string, extend: anyObj = {}) {
-    return createAxios(
-        {
-            url: apiSendEms,
-            method: 'POST',
-            data: {
-                email: email,
-                event: event,
-                ...extend,
-            },
-        },
-        {
-            showSuccessMessage: true,
-        }
-    )
 }
 
 /**
@@ -269,12 +220,11 @@ export function getTableFieldList(table: string, clean = true) {
 
 export function refreshToken() {
     const adminInfo = useAdminInfo()
-    const userInfo = useUserInfo()
     return createAxios({
         url: refreshTokenUrl,
         method: 'POST',
         data: {
-            refreshToken: isAdminApp() ? adminInfo.getToken('refresh') : userInfo.getToken('refresh'),
+            refreshToken: adminInfo.getToken('refresh'),
         },
     })
 }

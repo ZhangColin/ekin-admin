@@ -2,10 +2,8 @@ import axios from 'axios'
 import type { AxiosRequestConfig, Method } from 'axios'
 import { ElLoading, LoadingOptions, ElNotification } from 'element-plus'
 import { useConfig } from '/@/stores/config'
-import { isAdminApp } from '/@/utils/common'
 import router from '/@/router/index'
 import { refreshToken } from '/@/api/common'
-import { useUserInfo } from '/@/stores/userInfo'
 import { useAdminInfo } from '/@/stores/adminInfo'
 import { i18n } from '/@/lang/index'
 
@@ -41,7 +39,6 @@ export const getUrlPort = (): string => {
 function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequestConfig, options: Options = {}, loading: LoadingOptions = {}): T {
     const config = useConfig()
     const adminInfo = useAdminInfo()
-    const userInfo = useUserInfo()
 
     const Axios = axios.create({
         baseURL: getUrl(),
@@ -83,8 +80,6 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
             if (config.headers) {
                 const token = adminInfo.getToken()
                 if (token) (config.headers as anyObj).batoken = token
-                const userToken = options.anotherToken || userInfo.getToken()
-                if (userToken) (config.headers as anyObj)['ba-user-token'] = userToken
             }
 
             return config
@@ -111,37 +106,20 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
                                         adminInfo.setToken(res.data.token, 'auth')
                                         response.headers.batoken = `${res.data.token}`
                                         window.requests.forEach((cb) => cb(res.data.token, 'admin-refresh'))
-                                    } else if (res.data.type == 'user-refresh') {
-                                        userInfo.setToken(res.data.token, 'auth')
-                                        response.headers['ba-user-token'] = `${res.data.token}`
-                                        window.requests.forEach((cb) => cb(res.data.token, 'user-refresh'))
                                     }
                                     window.requests = []
                                     return Axios(response.config)
                                 })
                                 .catch((err) => {
-                                    if (isAdminApp()) {
-                                        adminInfo.removeToken()
-                                        if (router.currentRoute.value.name != 'adminLogin') {
-                                            router.push({ name: 'adminLogin' })
-                                            return Promise.reject(err)
-                                        } else {
-                                            response.headers.batoken = ''
-                                            window.requests.forEach((cb) => cb('', 'admin-refresh'))
-                                            window.requests = []
-                                            return Axios(response.config)
-                                        }
+                                    adminInfo.removeToken()
+                                    if (router.currentRoute.value.name != 'adminLogin') {
+                                        router.push({ name: 'adminLogin' })
+                                        return Promise.reject(err)
                                     } else {
-                                        userInfo.removeToken()
-                                        if (router.currentRoute.value.name != 'userLogin') {
-                                            router.push({ name: 'userLogin' })
-                                            return Promise.reject(err)
-                                        } else {
-                                            response.headers['ba-user-token'] = ''
-                                            window.requests.forEach((cb) => cb('', 'user-refresh'))
-                                            window.requests = []
-                                            return Axios(response.config)
-                                        }
+                                        response.headers.batoken = ''
+                                        window.requests.forEach((cb) => cb('', 'admin-refresh'))
+                                        window.requests = []
+                                        return Axios(response.config)
                                     }
                                 })
                                 .finally(() => {
@@ -169,11 +147,7 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
                     }
                     // 自动跳转到路由name或path，仅限server端返回302的情况
                     if (response.data.code == 302) {
-                        if (isAdminApp()) {
-                            adminInfo.removeToken()
-                        } else {
-                            userInfo.removeToken()
-                        }
+                        adminInfo.removeToken()
                         if (response.data.data.routeName) {
                             router.push({ name: response.data.data.routeName })
                         } else if (response.data.data.routePath) {

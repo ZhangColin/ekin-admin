@@ -1,7 +1,6 @@
 import { CSSProperties } from 'vue'
 import { useNavTabs } from '/@/stores/navTabs'
 import { useConfig } from '/@/stores/config'
-import { isAdminApp } from '/@/utils/common'
 
 /**
  * main高度
@@ -15,14 +14,10 @@ export function mainHeight(extra = 0): CSSProperties {
         Classic: 50,
         Streamline: 60,
     }
-    if (isAdminApp()) {
-        const config = useConfig()
-        const navTabs = useNavTabs()
-        if (!navTabs.state.tabFullScreen) {
-            height += adminLayoutMainExtraHeight[config.layout.layoutMode]
-        }
-    } else {
-        height += 60
+    const config = useConfig()
+    const navTabs = useNavTabs()
+    if (!navTabs.state.tabFullScreen) {
+        height += adminLayoutMainExtraHeight[config.layout.layoutMode]
     }
     return {
         height: 'calc(100vh - ' + height.toString() + 'px)',
