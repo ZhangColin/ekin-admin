@@ -36,4 +36,4 @@ export default {
     second: '秒',
     day: '天',
     'Number of attachments Uploaded': '附件上传量',
-}
+};

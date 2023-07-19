@@ -1,8 +1,8 @@
 <script lang="ts">
-import { createVNode, defineComponent, resolveComponent, PropType, computed } from 'vue'
-import { inputTypes, modelValueTypes, InputAttr, InputData } from '/@/components/baInput'
-import { FormItemAttr } from '/@/components/formItem'
-import BaInput from '/@/components/baInput/index.vue'
+import { createVNode, defineComponent, resolveComponent, PropType, computed } from 'vue';
+import { inputTypes, modelValueTypes, InputAttr, InputData } from '/@/components/baInput';
+import { FormItemAttr } from '/@/components/formItem';
+import BaInput from '/@/components/baInput/index.vue';
 
 export default defineComponent({
     name: 'formItem',
@@ -16,7 +16,7 @@ export default defineComponent({
             type: String,
             required: true,
             validator: (value: string) => {
-                return inputTypes.includes(value)
+                return inputTypes.includes(value);
             },
         },
         // 双向绑定值
@@ -50,12 +50,12 @@ export default defineComponent({
     emits: ['update:modelValue'],
     setup(props, { emit }) {
         const onValueUpdate = (value: modelValueTypes) => {
-            emit('update:modelValue', value)
-        }
+            emit('update:modelValue', value);
+        };
 
         const blockHelp = computed(() => {
-            return props.attr && props.attr['blockHelp'] ? props.attr['blockHelp'] : ''
-        })
+            return props.attr && props.attr['blockHelp'] ? props.attr['blockHelp'] : '';
+        });
 
         // el-form-item 的默认插槽,生成一个baInput
         const defaultSlot = () => {
@@ -65,7 +65,7 @@ export default defineComponent({
                 data: props.data,
                 modelValue: props.modelValue,
                 'onUpdate:modelValue': onValueUpdate,
-            })
+            });
 
             if (blockHelp.value) {
                 return [
@@ -77,10 +77,10 @@ export default defineComponent({
                         },
                         blockHelp.value
                     ),
-                ]
+                ];
             }
-            return inputNode
-        }
+            return inputNode;
+        };
 
         // 不带独立label输入框
         const noNeedLabelSlot = [
@@ -99,10 +99,10 @@ export default defineComponent({
             'city',
             'icon',
             'color',
-        ]
+        ];
 
         // 需要独立label的输入框
-        const needLabelSlot = ['radio', 'checkbox', 'switch', 'array', 'image', 'images', 'file', 'files', 'editor']
+        const needLabelSlot = ['radio', 'checkbox', 'switch', 'array', 'image', 'images', 'file', 'files', 'editor'];
 
         if (noNeedLabelSlot.includes(props.type)) {
             return () =>
@@ -116,10 +116,10 @@ export default defineComponent({
                     {
                         default: defaultSlot,
                     }
-                )
+                );
         } else if (needLabelSlot.includes(props.type)) {
             // 带独立label的输入框
-            let title = props.data && props.data.title ? props.data.title : props.label
+            let title = props.data && props.data.title ? props.data.title : props.label;
             const labelSlot = () => {
                 return [
                     createVNode(
@@ -138,8 +138,8 @@ export default defineComponent({
                             ),
                         ]
                     ),
-                ]
-            }
+                ];
+            };
 
             return () =>
                 createVNode(
@@ -154,10 +154,10 @@ export default defineComponent({
                         label: labelSlot,
                         default: defaultSlot,
                     }
-                )
+                );
         }
     },
-})
+});
 </script>
 
 <style scoped lang="scss">

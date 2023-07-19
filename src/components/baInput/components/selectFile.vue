@@ -39,19 +39,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, provide, watch, nextTick } from 'vue'
-import { useI18n } from 'vue-i18n'
-import Table from '/@/components/table/index.vue'
-import TableHeader from '/@/components/table/header/index.vue'
-import baTableClass from '/@/utils/baTable'
-import { previewRenderFormatter } from '/@/views/routine/attachment'
-import { baTableApi } from '/@/api/common'
+import { ref, reactive, onMounted, provide, watch, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
+import Table from '/@/components/table/index.vue';
+import TableHeader from '/@/components/table/header/index.vue';
+import baTableClass from '/@/utils/baTable';
+import { previewRenderFormatter } from '/@/views/routine/attachment';
+import { baTableApi } from '/@/api/common';
 
 interface Props {
-    type?: 'image' | 'file'
-    limit?: number
-    modelValue: boolean
-    returnFullUrl?: boolean
+    type?: 'image' | 'file';
+    limit?: number;
+    modelValue: boolean;
+    returnFullUrl?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,19 +59,19 @@ const props = withDefaults(defineProps<Props>(), {
     limit: 0,
     modelValue: false,
     returnFullUrl: false,
-})
+});
 
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: boolean): void
-    (e: 'choice', value: string[]): void
-}>()
+    (e: 'update:modelValue', value: boolean): void;
+    (e: 'choice', value: string[]): void;
+}>();
 
-const tableRef = ref()
-const { t } = useI18n()
+const tableRef = ref();
+const { t } = useI18n();
 const state = reactive({
     ready: false,
     tableSelectable: true,
-})
+});
 
 const optBtn: OptButton[] = [
     {
@@ -83,26 +83,26 @@ const optBtn: OptButton[] = [
         class: 'table-row-choice',
         disabledTip: false,
         click: (row: TableRow) => {
-            const elTableRef = tableRef.value.getRef()
-            elTableRef.clearSelection()
-            emits('choice', props.returnFullUrl ? [row.full_url] : [row.url])
+            const elTableRef = tableRef.value.getRef();
+            elTableRef.clearSelection();
+            emits('choice', props.returnFullUrl ? [row.full_url] : [row.url]);
         },
     },
-]
+];
 const baTable = new baTableClass(new baTableApi('/admin/routine.Attachment/'), {
     column: [
         {
             type: 'selection',
             selectable: (row: TableRow) => {
-                if (props.limit == 0) return true
+                if (props.limit == 0) return true;
                 if (baTable.table.selection) {
                     for (const key in baTable.table.selection) {
                         if (row.id == baTable.table.selection[key].id) {
-                            return true
+                            return true;
                         }
                     }
                 }
-                return state.tableSelectable
+                return state.tableSelectable;
             },
             align: 'center',
             operator: false,
@@ -130,9 +130,9 @@ const baTable = new baTableClass(new baTableApi('/admin/routine.Attachment/'), {
             prop: 'size',
             align: 'center',
             formatter: (row: TableRow, column: TableColumn, cellValue: string) => {
-                var size = parseFloat(cellValue)
-                var i = Math.floor(Math.log(size) / Math.log(1024))
-                return parseInt((size / Math.pow(1024, i)).toFixed(i < 2 ? 0 : 2)) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i]
+                var size = parseFloat(cellValue);
+                var i = Math.floor(Math.log(size) / Math.log(1024));
+                return parseInt((size / Math.pow(1024, i)).toFixed(i < 2 ? 0 : 2)) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
             },
             operator: 'RANGE',
             sortable: 'custom',
@@ -174,57 +174,57 @@ const baTable = new baTableClass(new baTableApi('/admin/routine.Attachment/'), {
         },
     ],
     defaultOrder: { prop: 'last_upload_time', order: 'desc' },
-})
+});
 
-provide('baTable', baTable)
+provide('baTable', baTable);
 
 const getIndex = () => {
     if (props.type == 'image') {
-        baTable.table.filter!.search = [{ field: 'mimetype', val: 'image', operator: 'LIKE' }]
+        baTable.table.filter!.search = [{ field: 'mimetype', val: 'image', operator: 'LIKE' }];
     }
-    baTable.table.ref = tableRef.value
-    baTable.table.filter!.limit = 8
+    baTable.table.ref = tableRef.value;
+    baTable.table.filter!.limit = 8;
     baTable.getIndex()?.then(() => {
-        baTable.initSort()
-    })
-    state.ready = true
-}
+        baTable.initSort();
+    });
+    state.ready = true;
+};
 
 const onChoice = () => {
     if (baTable.table.selection?.length) {
-        let files: string[] = []
+        let files: string[] = [];
         for (const key in baTable.table.selection) {
-            files.push(props.returnFullUrl ? baTable.table.selection[key].full_url : baTable.table.selection[key].url)
+            files.push(props.returnFullUrl ? baTable.table.selection[key].full_url : baTable.table.selection[key].url);
         }
-        emits('choice', files)
-        const elTableRef = tableRef.value.getRef()
-        elTableRef.clearSelection()
+        emits('choice', files);
+        const elTableRef = tableRef.value.getRef();
+        elTableRef.clearSelection();
     }
-}
+};
 
 const onSelectionChange = (selection: TableRow[]) => {
-    if (props.limit == 0) return
+    if (props.limit == 0) return;
     if (selection.length > props.limit) {
-        const elTableRef = tableRef.value.getRef()
-        elTableRef.toggleRowSelection(selection[selection.length - 1], false)
+        const elTableRef = tableRef.value.getRef();
+        elTableRef.toggleRowSelection(selection[selection.length - 1], false);
     }
-    state.tableSelectable = !(selection.length >= props.limit)
-}
+    state.tableSelectable = !(selection.length >= props.limit);
+};
 
 onMounted(() => {
-    baTable.mount()
-})
+    baTable.mount();
+});
 
 watch(
     () => props.modelValue,
     (newVal) => {
         if (newVal && !state.ready) {
             nextTick(() => {
-                getIndex()
-            })
+                getIndex();
+            });
         }
     }
-)
+);
 </script>
 
 <style>

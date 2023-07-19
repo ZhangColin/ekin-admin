@@ -36,4 +36,4 @@ export default {
     second: 'Second',
     day: 'Day',
     'Number of attachments Uploaded': 'Number of attachments upload',
-}
+};

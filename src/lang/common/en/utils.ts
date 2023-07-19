@@ -84,4 +84,4 @@ export default {
     ArrayKey: 'Key',
     ArrayValue: 'Value',
     'No data': 'No data',
-}
+};

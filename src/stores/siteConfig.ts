@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { SiteConfig, Menus } from '/@/stores/interface'
+import { defineStore } from 'pinia';
+import { SiteConfig, Menus } from '/@/stores/interface';
 
 export const useSiteConfig = defineStore('siteConfig', {
     state: (): SiteConfig => {
@@ -16,14 +16,14 @@ export const useSiteConfig = defineStore('siteConfig', {
                 savename: '',
             },
             headNav: [],
-        }
+        };
     },
     actions: {
         dataFill(state: SiteConfig) {
-            this.$state = state
+            this.$state = state;
         },
         setHeadNav(headNav: Menus[]) {
-            this.headNav = headNav
+            this.headNav = headNav;
         },
     },
-})
+});

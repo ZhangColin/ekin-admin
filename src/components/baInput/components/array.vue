@@ -24,47 +24,47 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-type baInputArray = { key: string; value: string }
+type baInputArray = { key: string; value: string };
 interface Props {
-    modelValue: baInputArray[]
-    keyTitle?: string
-    valueTitle?: string
+    modelValue: baInputArray[];
+    keyTitle?: string;
+    valueTitle?: string;
 }
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 const props = withDefaults(defineProps<Props>(), {
     modelValue: () => [],
     keyTitle: '',
     valueTitle: '',
-})
+});
 
 const state = reactive({
     value: props.modelValue,
     keyTitle: props.keyTitle ? props.keyTitle : t('utils.ArrayKey'),
     valueTitle: props.valueTitle ? props.valueTitle : t('utils.ArrayValue'),
-})
+});
 
 const onAddArrayItem = () => {
     state.value.push({
         key: '',
         value: '',
-    })
-}
+    });
+};
 
 const onDelArrayItem = (idx: number) => {
-    state.value.splice(idx, 1)
-}
+    state.value.splice(idx, 1);
+};
 
 watch(
     () => props.modelValue,
     (newVal) => {
-        state.value = newVal
+        state.value = newVal;
     }
-)
+);
 </script>
 
 <style scoped lang="scss">

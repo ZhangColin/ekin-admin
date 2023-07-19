@@ -8,32 +8,32 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
-import { useNavTabs } from '/@/stores/navTabs'
+import { reactive, onMounted } from 'vue';
+import { useNavTabs } from '/@/stores/navTabs';
 
-const navTabs = useNavTabs()
+const navTabs = useNavTabs();
 
 const state = reactive({
     closeBoxTop: 20,
-})
+});
 onMounted(() => {
     setTimeout(() => {
-        state.closeBoxTop = -30
-    }, 300)
-})
+        state.closeBoxTop = -30;
+    }, 300);
+});
 /*
  * 鼠标滑到顶部显示关闭全屏按钮
  * 要检查 hover 的元素在外部，直接使用事件而不是css
  */
 const onMouseover = () => {
-    state.closeBoxTop = 20
-}
+    state.closeBoxTop = 20;
+};
 const onMouseout = () => {
-    state.closeBoxTop = -30
-}
+    state.closeBoxTop = -30;
+};
 const onCloseFullScreen = () => {
-    navTabs.setFullScreen(false)
-}
+    navTabs.setFullScreen(false);
+};
 </script>
 
 <style scoped lang="scss">

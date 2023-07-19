@@ -13,76 +13,76 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, watch, onBeforeMount, onUnmounted, nextTick } from 'vue'
-import { useRoute, RouteLocationNormalized } from 'vue-router'
-import { mainHeight as layoutMainScrollbarStyle } from '/@/utils/layout'
-import useCurrentInstance from '/@/utils/useCurrentInstance'
-import { useConfig } from '/@/stores/config'
-import { useNavTabs } from '/@/stores/navTabs'
+import { reactive, onMounted, watch, onBeforeMount, onUnmounted, nextTick } from 'vue';
+import { useRoute, RouteLocationNormalized } from 'vue-router';
+import { mainHeight as layoutMainScrollbarStyle } from '/@/utils/layout';
+import useCurrentInstance from '/@/utils/useCurrentInstance';
+import { useConfig } from '/@/stores/config';
+import { useNavTabs } from '/@/stores/navTabs';
 
 defineOptions({
     name: 'layout/main',
-})
+});
 
-const { proxy } = useCurrentInstance()
+const { proxy } = useCurrentInstance();
 
-const route = useRoute()
-const config = useConfig()
-const navTabs = useNavTabs()
+const route = useRoute();
+const config = useConfig();
+const navTabs = useNavTabs();
 
 const state: {
-    componentKey: string
-    keepAliveComponentNameList: string[]
+    componentKey: string;
+    keepAliveComponentNameList: string[];
 } = reactive({
     componentKey: route.path,
     keepAliveComponentNameList: [],
-})
+});
 
 const addKeepAliveComponentName = function (keepAliveName: string | undefined) {
     if (keepAliveName) {
         let exist = state.keepAliveComponentNameList.find((name: string) => {
-            return name === keepAliveName
-        })
-        if (exist) return
-        state.keepAliveComponentNameList.push(keepAliveName)
+            return name === keepAliveName;
+        });
+        if (exist) return;
+        state.keepAliveComponentNameList.push(keepAliveName);
     }
-}
+};
 
 onBeforeMount(() => {
     proxy.eventBus.on('onTabViewRefresh', (menu: RouteLocationNormalized) => {
-        state.keepAliveComponentNameList = state.keepAliveComponentNameList.filter((name: string) => menu.meta.keepalive !== name)
-        state.componentKey = ''
+        state.keepAliveComponentNameList = state.keepAliveComponentNameList.filter((name: string) => menu.meta.keepalive !== name);
+        state.componentKey = '';
         nextTick(() => {
-            state.componentKey = menu.path
-            addKeepAliveComponentName(menu.meta.keepalive as string)
-        })
-    })
+            state.componentKey = menu.path;
+            addKeepAliveComponentName(menu.meta.keepalive as string);
+        });
+    });
     proxy.eventBus.on('onTabViewClose', (menu: RouteLocationNormalized) => {
-        state.keepAliveComponentNameList = state.keepAliveComponentNameList.filter((name: string) => menu.meta.keepalive !== name)
-    })
-})
+        state.keepAliveComponentNameList = state.keepAliveComponentNameList.filter((name: string) => menu.meta.keepalive !== name);
+    });
+});
 
 onUnmounted(() => {
-    proxy.eventBus.off('onTabViewRefresh')
-    proxy.eventBus.off('onTabViewClose')
-})
+    proxy.eventBus.off('onTabViewRefresh');
+    proxy.eventBus.off('onTabViewClose');
+});
 
 onMounted(() => {
     // 确保刷新页面时也能正确取得当前路由 keepalive 参数
     if (typeof navTabs.state.activeRoute?.meta.keepalive == 'string') {
-        addKeepAliveComponentName(navTabs.state.activeRoute?.meta.keepalive)
+        addKeepAliveComponentName(navTabs.state.activeRoute?.meta.keepalive);
     }
-})
+});
 
 watch(
     () => route.path,
     () => {
-        state.componentKey = route.path
+        state.componentKey = route.path;
         if (typeof navTabs.state.activeRoute?.meta.keepalive == 'string') {
-            addKeepAliveComponentName(navTabs.state.activeRoute?.meta.keepalive)
+            addKeepAliveComponentName(navTabs.state.activeRoute?.meta.keepalive);
         }
     }
-)
+);
 </script>
 
 <style scoped lang="scss">

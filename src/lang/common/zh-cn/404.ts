@@ -3,4 +3,4 @@ export default {
     'We will automatically return to the previous page when we are finished': '我们将在完成后自动返回到上一页。',
     'Return to home page': '返回首页',
     'Back to previous page': '返回上一页',
-}
+};

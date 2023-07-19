@@ -73,21 +73,21 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, nextTick, watch, computed } from 'vue'
-import { getAwesomeIconfontNames, getIconfontNames, getElementPlusIconfontNames, getLocalIconfontNames } from '/@/utils/iconfont'
-import { useEventListener } from '@vueuse/core'
-import { Placement } from 'element-plus'
+import { reactive, ref, onMounted, nextTick, watch, computed } from 'vue';
+import { getAwesomeIconfontNames, getIconfontNames, getElementPlusIconfontNames, getLocalIconfontNames } from '/@/utils/iconfont';
+import { useEventListener } from '@vueuse/core';
+import { Placement } from 'element-plus';
 
-type IconType = 'ele' | 'awe' | 'ali' | 'local'
+type IconType = 'ele' | 'awe' | 'ali' | 'local';
 
 interface Props {
-    size?: 'default' | 'small' | 'large'
-    disabled?: boolean
-    title?: string
-    type?: IconType
-    placement?: Placement
-    modelValue?: string
-    showIconName?: boolean
+    size?: 'default' | 'small' | 'large';
+    disabled?: boolean;
+    title?: string;
+    type?: IconType;
+    placement?: Placement;
+    modelValue?: string;
+    showIconName?: boolean;
 }
 const props = withDefaults(defineProps<Props>(), {
     size: 'default',
@@ -97,26 +97,26 @@ const props = withDefaults(defineProps<Props>(), {
     placement: 'bottom',
     modelValue: '',
     showIconName: false,
-})
+});
 
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: string): void
-    (e: 'change', value: string): void
-}>()
+    (e: 'update:modelValue', value: string): void;
+    (e: 'change', value: string): void;
+}>();
 
-const selectorInput = ref()
-const selectorScrollbarRef = ref()
+const selectorInput = ref();
+const selectorScrollbarRef = ref();
 const state: {
-    iconType: IconType
-    selectorWidth: number
-    popoverVisible: boolean
-    inputFocus: boolean
-    iconSelectorMouseover: boolean
-    fontIconNames: string[]
-    inputValue: string
-    prependIcon: string
-    defaultModelValue: string
-    iconKey: number
+    iconType: IconType;
+    selectorWidth: number;
+    popoverVisible: boolean;
+    inputFocus: boolean;
+    iconSelectorMouseover: boolean;
+    fontIconNames: string[];
+    inputValue: string;
+    prependIcon: string;
+    defaultModelValue: string;
+    iconKey: number;
 } = reactive({
     iconType: props.type,
     selectorWidth: 0,
@@ -128,93 +128,93 @@ const state: {
     prependIcon: props.modelValue,
     defaultModelValue: props.modelValue || 'fa fa-circle-o',
     iconKey: 0, // 给icon标签准备个key，以随时使用 h 函数重新生成元素
-})
+});
 
 const onInputFocus = () => {
-    state.inputFocus = state.popoverVisible = true
-}
+    state.inputFocus = state.popoverVisible = true;
+};
 const onInputBlur = () => {
-    state.inputFocus = false
-    state.popoverVisible = state.iconSelectorMouseover
-}
+    state.inputFocus = false;
+    state.popoverVisible = state.iconSelectorMouseover;
+};
 const onInputRefresh = () => {
-    state.iconKey++
-    state.prependIcon = state.defaultModelValue
-    state.inputValue = ''
-    emits('update:modelValue', state.defaultModelValue)
-    emits('change', state.defaultModelValue)
-}
+    state.iconKey++;
+    state.prependIcon = state.defaultModelValue;
+    state.inputValue = '';
+    emits('update:modelValue', state.defaultModelValue);
+    emits('change', state.defaultModelValue);
+};
 const onChangeTab = (name: IconType) => {
-    state.iconType = name
-    state.fontIconNames = []
+    state.iconType = name;
+    state.fontIconNames = [];
     if (name == 'ele') {
         getElementPlusIconfontNames().then((res) => {
-            state.fontIconNames = res
-        })
+            state.fontIconNames = res;
+        });
     } else if (name == 'awe') {
         getAwesomeIconfontNames().then((res) => {
-            state.fontIconNames = res.map((name) => `fa ${name}`)
-        })
+            state.fontIconNames = res.map((name) => `fa ${name}`);
+        });
     } else if (name == 'ali') {
         getIconfontNames().then((res) => {
-            state.fontIconNames = res.map((name) => `iconfont ${name}`)
-        })
+            state.fontIconNames = res.map((name) => `iconfont ${name}`);
+        });
     } else if (name == 'local') {
         getLocalIconfontNames().then((res) => {
-            state.fontIconNames = res
-        })
+            state.fontIconNames = res;
+        });
     }
-}
+};
 const onIcon = (icon: string) => {
-    state.iconSelectorMouseover = state.popoverVisible = false
-    state.iconKey++
-    state.prependIcon = icon
-    state.inputValue = ''
-    emits('update:modelValue', icon)
-    emits('change', icon)
+    state.iconSelectorMouseover = state.popoverVisible = false;
+    state.iconKey++;
+    state.prependIcon = icon;
+    state.inputValue = '';
+    emits('update:modelValue', icon);
+    emits('change', icon);
     nextTick(() => {
-        selectorInput.value.blur()
-    })
-}
+        selectorInput.value.blur();
+    });
+};
 
 const renderFontIconNames = computed(() => {
-    if (!state.inputValue) return state.fontIconNames
+    if (!state.inputValue) return state.fontIconNames;
 
-    let inputValue = state.inputValue.trim().toLowerCase()
+    let inputValue = state.inputValue.trim().toLowerCase();
     return state.fontIconNames.filter((icon: string) => {
         if (icon.toLowerCase().indexOf(inputValue) !== -1) {
-            return icon
+            return icon;
         }
-    })
-})
+    });
+});
 
 // 获取 input 的宽度
 const getInputWidth = () => {
     nextTick(() => {
-        state.selectorWidth = selectorInput.value.$el.offsetWidth < 260 ? 260 : selectorInput.value.$el.offsetWidth
-    })
-}
+        state.selectorWidth = selectorInput.value.$el.offsetWidth < 260 ? 260 : selectorInput.value.$el.offsetWidth;
+    });
+};
 
 const popoverVisible = () => {
-    state.popoverVisible = state.inputFocus || state.iconSelectorMouseover ? true : false
-}
+    state.popoverVisible = state.inputFocus || state.iconSelectorMouseover ? true : false;
+};
 
 watch(
     () => props.modelValue,
     () => {
-        state.iconKey++
-        if (props.modelValue != state.prependIcon) state.defaultModelValue = props.modelValue
-        if (props.modelValue == '') state.defaultModelValue = 'fa fa-circle-o'
-        state.prependIcon = props.modelValue
+        state.iconKey++;
+        if (props.modelValue != state.prependIcon) state.defaultModelValue = props.modelValue;
+        if (props.modelValue == '') state.defaultModelValue = 'fa fa-circle-o';
+        state.prependIcon = props.modelValue;
     }
-)
+);
 onMounted(() => {
-    getInputWidth()
-    useEventListener(document, 'click', popoverVisible)
+    getInputWidth();
+    useEventListener(document, 'click', popoverVisible);
     getElementPlusIconfontNames().then((res) => {
-        state.fontIconNames = res
-    })
-})
+        state.fontIconNames = res;
+    });
+});
 </script>
 
 <style scoped lang="scss">

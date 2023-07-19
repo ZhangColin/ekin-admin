@@ -163,40 +163,40 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue'
-import type baTableClass from '/@/utils/baTable'
-import { isEmpty } from 'lodash-es'
-import BaInput from '/@/components/baInput/index.vue'
+import { inject } from 'vue';
+import type baTableClass from '/@/utils/baTable';
+import { isEmpty } from 'lodash-es';
+import BaInput from '/@/components/baInput/index.vue';
 
-const baTable = inject('baTable') as baTableClass
+const baTable = inject('baTable') as baTableClass;
 
 const onComSearch = () => {
-    let comSearchData: comSearchData[] = []
+    let comSearchData: comSearchData[] = [];
     for (const key in baTable.comSearch.form) {
         if (!baTable.comSearch.fieldData.has(key)) {
-            continue
+            continue;
         }
 
-        let val = ''
-        let fieldDataTemp = baTable.comSearch.fieldData.get(key)
+        let val = '';
+        let fieldDataTemp = baTable.comSearch.fieldData.get(key);
         if (fieldDataTemp.render == 'datetime' && (fieldDataTemp.operator == 'RANGE' || fieldDataTemp.operator == 'NOT RANGE')) {
             // 时间范围组件返回的是时间数组
             if (baTable.comSearch.form[key] && baTable.comSearch.form[key].length >= 2) {
                 // 数组转字符串，以实现通过url参数传递预设搜索值
                 if (fieldDataTemp.comSearchRender == 'date') {
-                    val = baTable.comSearch.form[key][0] + ' 00:00:00' + ',' + baTable.comSearch.form[key][1] + ' 23:59:59'
+                    val = baTable.comSearch.form[key][0] + ' 00:00:00' + ',' + baTable.comSearch.form[key][1] + ' 23:59:59';
                 } else {
-                    val = baTable.comSearch.form[key][0] + ',' + baTable.comSearch.form[key][1]
+                    val = baTable.comSearch.form[key][0] + ',' + baTable.comSearch.form[key][1];
                 }
             }
         } else if (fieldDataTemp.operator == 'RANGE' || fieldDataTemp.operator == 'NOT RANGE') {
             // 普通的范围筛选，baTable在初始化时已准备好start和end字段
             if (!baTable.comSearch.form[key + '-start'] && !baTable.comSearch.form[key + '-end']) {
-                continue
+                continue;
             }
-            val = baTable.comSearch.form[key + '-start'] + ',' + baTable.comSearch.form[key + '-end']
+            val = baTable.comSearch.form[key + '-start'] + ',' + baTable.comSearch.form[key + '-end'];
         } else if (baTable.comSearch.form[key]) {
-            val = baTable.comSearch.form[key]
+            val = baTable.comSearch.form[key];
         }
 
         if (val) {
@@ -205,19 +205,19 @@ const onComSearch = () => {
                 val: val,
                 operator: fieldDataTemp.operator,
                 render: fieldDataTemp.render,
-            })
+            });
         }
     }
 
-    baTable.onTableAction('com-search', comSearchData)
-}
+    baTable.onTableAction('com-search', comSearchData);
+};
 
 const onResetForm = () => {
     // 封装好的onResetForm在此处不能使用
     for (const key in baTable.comSearch.form) {
-        baTable.comSearch.form[key] = ''
+        baTable.comSearch.form[key] = '';
     }
-}
+};
 </script>
 
 <style scoped lang="scss">

@@ -22,28 +22,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, toRaw } from 'vue'
-import type { Axis, ContextmenuItemClickEmitArg, Props } from './interface'
-import { RouteLocationNormalized } from 'vue-router'
-import { useEventListener } from '@vueuse/core'
+import { onMounted, reactive, toRaw } from 'vue';
+import type { Axis, ContextmenuItemClickEmitArg, Props } from './interface';
+import { RouteLocationNormalized } from 'vue-router';
+import { useEventListener } from '@vueuse/core';
 
 const props = withDefaults(defineProps<Props>(), {
     width: 150,
     items: () => [],
-})
+});
 
 const emits = defineEmits<{
-    (e: 'contextmenuItemClick', item: ContextmenuItemClickEmitArg): void
-}>()
+    (e: 'contextmenuItemClick', item: ContextmenuItemClickEmitArg): void;
+}>();
 
 const state: {
-    show: boolean
+    show: boolean;
     axis: {
-        x: number
-        y: number
-    }
-    menu: RouteLocationNormalized | undefined
-    arrowAxis: number
+        x: number;
+        y: number;
+    };
+    menu: RouteLocationNormalized | undefined;
+    arrowAxis: number;
 } = reactive({
     show: false,
     axis: {
@@ -52,32 +52,32 @@ const state: {
     },
     menu: undefined,
     arrowAxis: 10,
-})
+});
 
 const onShowContextmenu = (menu: RouteLocationNormalized, axis: Axis) => {
-    state.menu = menu
-    state.axis = axis
-    state.show = true
-}
+    state.menu = menu;
+    state.axis = axis;
+    state.show = true;
+};
 
 const onContextmenuItem = (item: ContextmenuItemClickEmitArg) => {
-    if (item.disabled) return
-    item.menu = toRaw(state.menu)
-    emits('contextmenuItemClick', item)
-}
+    if (item.disabled) return;
+    item.menu = toRaw(state.menu);
+    emits('contextmenuItemClick', item);
+};
 
 const onHideContextmenu = () => {
-    state.show = false
-}
+    state.show = false;
+};
 
 defineExpose({
     onShowContextmenu,
     onHideContextmenu,
-})
+});
 
 onMounted(() => {
-    useEventListener(document, 'click', onHideContextmenu)
-})
+    useEventListener(document, 'click', onHideContextmenu);
+});
 </script>
 
 <style scoped lang="scss">

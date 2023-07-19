@@ -97,70 +97,70 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { editDefaultLang } from '/@/lang'
-import screenfull from 'screenfull'
-import { useConfig } from '/@/stores/config'
-import { ElMessage } from 'element-plus'
-import { useI18n } from 'vue-i18n'
-import Config from './config.vue'
-import { useAdminInfo } from '/@/stores/adminInfo'
-import { Local, Session } from '/@/utils/storage'
-import { ADMIN_INFO, BA_ACCOUNT } from '/@/stores/constant/cacheKey'
-import router from '/@/router'
-import { routePush } from '/@/utils/router'
-import { logout } from '/@/api/index'
-import { postClearCache } from '/@/api/common'
+import { reactive } from 'vue';
+import { editDefaultLang } from '/@/lang';
+import screenfull from 'screenfull';
+import { useConfig } from '/@/stores/config';
+import { ElMessage } from 'element-plus';
+import { useI18n } from 'vue-i18n';
+import Config from './config.vue';
+import { useAdminInfo } from '/@/stores/adminInfo';
+import { Local, Session } from '/@/utils/storage';
+import { ADMIN_INFO, BA_ACCOUNT } from '/@/stores/constant/cacheKey';
+import router from '/@/router';
+import { routePush } from '/@/utils/router';
+import { logout } from '/@/api/index';
+import { postClearCache } from '/@/api/common';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const adminInfo = useAdminInfo()
-const configStore = useConfig()
+const adminInfo = useAdminInfo();
+const configStore = useConfig();
 
 const state = reactive({
     isFullScreen: false,
     currentNavMenu: '',
     showLayoutDrawer: false,
-})
+});
 
 const onCurrentNavMenu = (status: boolean, name: string) => {
-    state.currentNavMenu = status ? name : ''
-}
+    state.currentNavMenu = status ? name : '';
+};
 
 const onFullScreen = () => {
     if (!screenfull.isEnabled) {
-        ElMessage.warning(t('layouts.Full screen is not supported'))
-        return false
+        ElMessage.warning(t('layouts.Full screen is not supported'));
+        return false;
     }
-    screenfull.toggle()
+    screenfull.toggle();
     screenfull.onchange(() => {
-        state.isFullScreen = screenfull.isFullscreen
-    })
-}
+        state.isFullScreen = screenfull.isFullscreen;
+    });
+};
 
 const onAdminInfo = () => {
-    routePush({ name: 'routine/adminInfo' })
-}
+    routePush({ name: 'routine/adminInfo' });
+};
 
 const onLogout = () => {
     logout().then(() => {
-        Local.remove(ADMIN_INFO)
-        router.go(0)
-    })
-}
+        Local.remove(ADMIN_INFO);
+        router.go(0);
+    });
+};
 
 const onClearCache = (type: string) => {
     if (type == 'storage' || type == 'all') {
-        const adminInfo = Local.get(ADMIN_INFO)
-        const baAccount = Local.get(BA_ACCOUNT)
-        Session.clear()
-        Local.clear()
-        Local.set(ADMIN_INFO, adminInfo)
-        Local.set(BA_ACCOUNT, baAccount)
-        if (type == 'storage') return
+        const adminInfo = Local.get(ADMIN_INFO);
+        const baAccount = Local.get(BA_ACCOUNT);
+        Session.clear();
+        Local.clear();
+        Local.set(ADMIN_INFO, adminInfo);
+        Local.set(BA_ACCOUNT, baAccount);
+        if (type == 'storage') return;
     }
-    postClearCache(type).then(() => {})
-}
+    postClearCache(type).then(() => {});
+};
 </script>
 
 <style scoped lang="scss">

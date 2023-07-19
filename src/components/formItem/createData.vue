@@ -110,63 +110,63 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import FormItem from '/@/components/formItem/index.vue'
-import { inputTypes } from '/@/components/baInput'
-import { validatorType } from '/@/utils/validate'
-import { InputAttr } from '/@/components/baInput'
-import { i18n } from '/@/lang'
+import { reactive } from 'vue';
+import FormItem from '/@/components/formItem/index.vue';
+import { inputTypes } from '/@/components/baInput';
+import { validatorType } from '/@/utils/validate';
+import { InputAttr } from '/@/components/baInput';
+import { i18n } from '/@/lang';
 
-const { t } = i18n.global
+const { t } = i18n.global;
 
 type OptionItem = {
     // 是否显示（被创建的数据是否需要这一项）
-    show?: boolean
+    show?: boolean;
     // 被创建数据的标题（默认使用：props.dataTitle + 本 title，自定义此 title 后，单使用此 title）
-    title?: string
+    title?: string;
     // 输入框额外属性
-    inputAttr?: InputAttr
-}
+    inputAttr?: InputAttr;
+};
 
 type ValidatesOptionItem = Omit<OptionItem, 'value'> & {
-    value?: string[]
-}
+    value?: string[];
+};
 
 interface Props {
     // 被创建数据的标题，作为所有表单项的前缀（默认值）
-    dataTitle?: string
+    dataTitle?: string;
     // 默认值
     modelValue: {
-        name?: string
-        title?: string
-        type?: string
-        tip?: string
-        rule?: string[]
-        extend?: string
-        dict?: string
-        inputExtend?: string
-    }
+        name?: string;
+        title?: string;
+        type?: string;
+        tip?: string;
+        rule?: string[];
+        extend?: string;
+        dict?: string;
+        inputExtend?: string;
+    };
     // 表单项配置
     options?: {
         // 变量名
-        name?: OptionItem
+        name?: OptionItem;
         // 标题
-        title?: OptionItem
+        title?: OptionItem;
         // 类型
-        type?: OptionItem
+        type?: OptionItem;
         // 提示信息
-        tip?: OptionItem
+        tip?: OptionItem;
         // 验证规则
-        rule?: ValidatesOptionItem
+        rule?: ValidatesOptionItem;
         // FormItem 的扩展属性
-        extend?: OptionItem
+        extend?: OptionItem;
         // 字典数据（单选、复选等类型的字典）
-        dict?: OptionItem
+        dict?: OptionItem;
         // Input 的扩展属性
-        inputExtend?: OptionItem
-    }
-    excludeInputTypes?: string[]
-    excludeValidatorRule?: string[]
+        inputExtend?: OptionItem;
+    };
+    excludeInputTypes?: string[];
+    excludeValidatorRule?: string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -181,37 +181,37 @@ const props = withDefaults(defineProps<Props>(), {
             extend: '',
             dict: '',
             inputExtend: '',
-        }
+        };
     },
     name: () => {
-        return {}
+        return {};
     },
     title: () => {
-        return {}
+        return {};
     },
     type: () => {
-        return {}
+        return {};
     },
     tip: () => {
-        return {}
+        return {};
     },
     rule: () => {
-        return {}
+        return {};
     },
     extend: () => {
-        return {}
+        return {};
     },
     dict: () => {
-        return {}
+        return {};
     },
     inputExtend: () => {
-        return {}
+        return {};
     },
     excludeInputTypes: () => [],
     excludeValidatorRule: () => [],
-})
+});
 
-const dictExistsType = ['radio', 'checkbox', 'select', 'selects']
+const dictExistsType = ['radio', 'checkbox', 'select', 'selects'];
 
 const form = reactive({
     name: {
@@ -254,16 +254,16 @@ const form = reactive({
         value: props.modelValue.inputExtend,
         title: props.options?.inputExtend?.title ?? 'Input ' + t('utils.Extend'), // Input 扩展属性
     },
-})
+});
 
 const state = reactive({
     validators: {},
     inputTypes: {},
-})
+});
 
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: Props['modelValue']): void
-}>()
+    (e: 'update:modelValue', value: Props['modelValue']): void;
+}>();
 
 const updateValue = () => {
     emits('update:modelValue', {
@@ -275,30 +275,30 @@ const updateValue = () => {
         extend: form.extend.value ?? '',
         dict: dictExistsType.includes(form.type.value ?? '') ? form.dict.value ?? '' : '',
         inputExtend: form.inputExtend.value ?? '',
-    })
-}
+    });
+};
 
 const dataPretreatment = () => {
-    let inputTypesKey: AnyObj = {}
+    let inputTypesKey: AnyObj = {};
     for (const key in inputTypes) {
         if (!props.excludeInputTypes.includes(inputTypes[key])) {
-            inputTypesKey[inputTypes[key]] = inputTypes[key]
+            inputTypesKey[inputTypes[key]] = inputTypes[key];
         }
     }
-    state.inputTypes = inputTypesKey
+    state.inputTypes = inputTypesKey;
 
-    let validators: AnyObj = {}
+    let validators: AnyObj = {};
     for (const key in validatorType) {
         if (!props.excludeValidatorRule.includes(key)) {
-            validators[key] = validatorType[key as keyof typeof validatorType]
+            validators[key] = validatorType[key as keyof typeof validatorType];
         }
     }
-    state.validators = validators
+    state.validators = validators;
 
-    updateValue()
-}
+    updateValue();
+};
 
-dataPretreatment()
+dataPretreatment();
 </script>
 
 <style scoped lang="scss"></style>

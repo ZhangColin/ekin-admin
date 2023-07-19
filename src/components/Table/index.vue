@@ -66,45 +66,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, inject, computed } from 'vue'
-import type { TableInstance, TableProps } from 'element-plus'
-import Column from '/@/components/table/column/index.vue'
-import FieldRender from '/@/components/table/fieldRender/index.vue'
-import { useConfig } from '/@/stores/config'
-import type baTableClass from '/@/utils/baTable'
+import { ref, nextTick, inject, computed } from 'vue';
+import type { TableInstance, TableProps } from 'element-plus';
+import Column from '/@/components/table/column/index.vue';
+import FieldRender from '/@/components/table/fieldRender/index.vue';
+import { useConfig } from '/@/stores/config';
+import type baTableClass from '/@/utils/baTable';
 
-const config = useConfig()
-const tableRef = ref<TableInstance>()
-const baTable = inject('baTable') as baTableClass
+const config = useConfig();
+const tableRef = ref<TableInstance>();
+const baTable = inject('baTable') as baTableClass;
 
 interface Props extends Partial<TableProps<AnyObj>> {
-    pagination?: boolean
+    pagination?: boolean;
 }
 const props = withDefaults(defineProps<Props>(), {
     pagination: true,
-})
+});
 
 const onTableSizeChange = (val: number) => {
-    baTable.onTableAction('page-size-change', { size: val })
-}
+    baTable.onTableAction('page-size-change', { size: val });
+};
 
 const onTableCurrentChange = (val: number) => {
-    baTable.onTableAction('current-page-change', { page: val })
-}
+    baTable.onTableAction('current-page-change', { page: val });
+};
 
 const onSortChange = ({ order, prop }: { order: string; prop: string }) => {
-    baTable.onTableAction('sort-change', { prop: prop, order: order ? (order == 'ascending' ? 'asc' : 'desc') : '' })
-}
+    baTable.onTableAction('sort-change', { prop: prop, order: order ? (order == 'ascending' ? 'asc' : 'desc') : '' });
+};
 
 const pageSizes = computed(() => {
-    let defaultSizes = [10, 20, 50, 100]
+    let defaultSizes = [10, 20, 50, 100];
     if (baTable.table.filter!.limit) {
         if (!defaultSizes.includes(baTable.table.filter!.limit)) {
-            defaultSizes.push(baTable.table.filter!.limit)
+            defaultSizes.push(baTable.table.filter!.limit);
         }
     }
-    return defaultSizes
-})
+    return defaultSizes;
+});
 
 /*
  * 全选和取消全选
@@ -114,13 +114,13 @@ const onSelectAll = (selection: TableRow[]) => {
     if (isSelectAll(selection.map((row: TableRow) => row[baTable.table.pk!].toString()))) {
         selection.map((row: TableRow) => {
             if (row.children) {
-                selectChildren(row.children, true)
+                selectChildren(row.children, true);
             }
-        })
+        });
     } else {
-        tableRef.value?.clearSelection()
+        tableRef.value?.clearSelection();
     }
-}
+};
 
 /*
  * 是否是全选操作
@@ -129,24 +129,24 @@ const onSelectAll = (selection: TableRow[]) => {
  * 取消全选时：selectIds为所有子元素的id
  */
 const isSelectAll = (selectIds: string[]) => {
-    let data = baTable.table.data as TableRow[]
+    let data = baTable.table.data as TableRow[];
     for (const key in data) {
-        return selectIds.includes(data[key][baTable.table.pk!].toString())
+        return selectIds.includes(data[key][baTable.table.pk!].toString());
     }
-    return false
-}
+    return false;
+};
 
 /*
  * 选择子项-递归
  */
 const selectChildren = (children: TableRow[], type: boolean) => {
     children.map((j: TableRow) => {
-        toggleSelection(j, type)
+        toggleSelection(j, type);
         if (j.children) {
-            selectChildren(j.children, type)
+            selectChildren(j.children, type);
         }
-    })
-}
+    });
+};
 
 /*
  * 执行选择操作
@@ -154,10 +154,10 @@ const selectChildren = (children: TableRow[], type: boolean) => {
 const toggleSelection = (row: TableRow, type: boolean) => {
     if (row) {
         nextTick(() => {
-            tableRef.value?.toggleRowSelection(row, type)
-        })
+            tableRef.value?.toggleRowSelection(row, type);
+        });
     }
-}
+};
 
 /*
  * 手动选择时，同时选择子级
@@ -165,53 +165,53 @@ const toggleSelection = (row: TableRow, type: boolean) => {
 const onSelect = (selection: TableRow[], row: TableRow) => {
     if (
         selection.some((item: TableRow) => {
-            return row[baTable.table.pk!] === item[baTable.table.pk!]
+            return row[baTable.table.pk!] === item[baTable.table.pk!];
         })
     ) {
         if (row.children) {
-            selectChildren(row.children, true)
+            selectChildren(row.children, true);
         }
     } else {
         if (row.children) {
-            selectChildren(row.children, false)
+            selectChildren(row.children, false);
         }
     }
-}
+};
 
 /*
  * 记录选择的项
  */
 const onSelectionChange = (selection: TableRow[]) => {
-    baTable.onTableAction('selection-change', selection)
-}
+    baTable.onTableAction('selection-change', selection);
+};
 
 /*
  * 设置折叠所有-递归
  */
 const setUnFoldAll = (children: TableRow[], unfold: boolean) => {
     for (const key in children) {
-        tableRef.value?.toggleRowExpansion(children[key], unfold)
+        tableRef.value?.toggleRowExpansion(children[key], unfold);
         if (children[key].children) {
-            setUnFoldAll(children[key].children!, unfold)
+            setUnFoldAll(children[key].children!, unfold);
         }
     }
-}
+};
 
 /*
  * 折叠所有
  */
 const unFoldAll = (unfold: boolean) => {
-    setUnFoldAll(baTable.table.data!, unfold)
-}
+    setUnFoldAll(baTable.table.data!, unfold);
+};
 
 const getRef = () => {
-    return tableRef.value
-}
+    return tableRef.value;
+};
 
 defineExpose({
     unFoldAll,
     getRef,
-})
+});
 </script>
 
 <style scoped lang="scss">

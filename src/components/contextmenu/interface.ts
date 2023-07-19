@@ -1,22 +1,22 @@
-import { RouteLocationNormalized } from 'vue-router'
+import { RouteLocationNormalized } from 'vue-router';
 
 export interface Axis {
-    x: number
-    y: number
+    x: number;
+    y: number;
 }
 
 export interface ContextMenuItem {
-    name: string
-    label: string
-    icon?: string
-    disabled?: boolean
+    name: string;
+    label: string;
+    icon?: string;
+    disabled?: boolean;
 }
 
 export interface ContextmenuItemClickEmitArg extends ContextMenuItem {
-    menu?: RouteLocationNormalized
+    menu?: RouteLocationNormalized;
 }
 
 export interface Props {
-    width?: number
-    items: ContextMenuItem[]
+    width?: number;
+    items: ContextMenuItem[];
 }

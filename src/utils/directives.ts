@@ -1,20 +1,20 @@
-import { App, nextTick } from 'vue'
-import horizontalScroll from '/@/utils/horizontalScroll'
-import { useEventListener } from '@vueuse/core'
-import { isString } from 'lodash-es'
-import { auth } from '/@/utils/common'
+import { App, nextTick } from 'vue';
+import horizontalScroll from '/@/utils/horizontalScroll';
+import { useEventListener } from '@vueuse/core';
+import { isString } from 'lodash-es';
+import { auth } from '/@/utils/common';
 
 export function directives(app: App) {
     // 鉴权指令
-    authDirective(app)
+    authDirective(app);
     // 拖动指令
-    dragDirective(app)
+    dragDirective(app);
     // 缩放指令
-    zoomDirective(app)
+    zoomDirective(app);
     // 点击后自动失焦指令
-    blurDirective(app)
+    blurDirective(app);
     // 表格横向拖动指令
-    tableLateralDragDirective(app)
+    tableLateralDragDirective(app);
 }
 
 /**
@@ -24,10 +24,10 @@ export function directives(app: App) {
 function authDirective(app: App) {
     app.directive('auth', {
         mounted(el, binding) {
-            if (!binding.value) return false
-            if (!auth(binding.value)) el.parentNode.removeChild(el)
+            if (!binding.value) return false;
+            if (!auth(binding.value)) el.parentNode.removeChild(el);
         },
-    })
+    });
 }
 
 /**
@@ -37,9 +37,9 @@ function authDirective(app: App) {
 function tableLateralDragDirective(app: App) {
     app.directive('tableLateralDrag', {
         created(el) {
-            new horizontalScroll(el.querySelector('.el-table__body-wrapper .el-scrollbar .el-scrollbar__wrap'))
+            new horizontalScroll(el.querySelector('.el-table__body-wrapper .el-scrollbar .el-scrollbar__wrap'));
         },
-    })
+    });
 }
 
 /**
@@ -49,9 +49,9 @@ function tableLateralDragDirective(app: App) {
 function blurDirective(app: App) {
     app.directive('blur', {
         mounted(el) {
-            useEventListener(el, 'focus', () => el.blur())
+            useEventListener(el, 'focus', () => el.blur());
         },
-    })
+    });
 }
 
 /**
@@ -65,54 +65,54 @@ function blurDirective(app: App) {
 function zoomDirective(app: App) {
     app.directive('zoom', {
         mounted(el, binding) {
-            if (!binding.value) return false
-            const zoomDomBindData = isString(binding.value) ? [binding.value, '.el-dialog__body', false, true] : binding.value
-            zoomDomBindData[1] = zoomDomBindData[1] ? zoomDomBindData[1] : '.el-dialog__body'
-            zoomDomBindData[2] = typeof zoomDomBindData[2] == 'undefined' ? false : zoomDomBindData[2]
-            zoomDomBindData[3] = typeof zoomDomBindData[3] == 'undefined' ? true : zoomDomBindData[3]
+            if (!binding.value) return false;
+            const zoomDomBindData = isString(binding.value) ? [binding.value, '.el-dialog__body', false, true] : binding.value;
+            zoomDomBindData[1] = zoomDomBindData[1] ? zoomDomBindData[1] : '.el-dialog__body';
+            zoomDomBindData[2] = typeof zoomDomBindData[2] == 'undefined' ? false : zoomDomBindData[2];
+            zoomDomBindData[3] = typeof zoomDomBindData[3] == 'undefined' ? true : zoomDomBindData[3];
 
             nextTick(() => {
-                const zoomDom = document.querySelector(zoomDomBindData[1]) as HTMLElement // 实际被缩放的元素
-                const zoomDomBox = document.querySelector(zoomDomBindData[0]) as HTMLElement // 动态添加缩放句柄的元素
-                const zoomHandleEl = document.createElement('div') // 缩放句柄
-                zoomHandleEl.className = 'zoom-handle'
+                const zoomDom = document.querySelector(zoomDomBindData[1]) as HTMLElement; // 实际被缩放的元素
+                const zoomDomBox = document.querySelector(zoomDomBindData[0]) as HTMLElement; // 动态添加缩放句柄的元素
+                const zoomHandleEl = document.createElement('div'); // 缩放句柄
+                zoomHandleEl.className = 'zoom-handle';
                 zoomHandleEl.onmouseenter = () => {
                     zoomHandleEl.onmousedown = (e: MouseEvent) => {
-                        const x = e.clientX
-                        const y = e.clientY
-                        const zoomDomWidth = zoomDom.offsetWidth
-                        const zoomDomHeight = zoomDom.offsetHeight
-                        const zoomDomBoxWidth = zoomDomBox.offsetWidth
-                        const zoomDomBoxHeight = zoomDomBox.offsetHeight
+                        const x = e.clientX;
+                        const y = e.clientY;
+                        const zoomDomWidth = zoomDom.offsetWidth;
+                        const zoomDomHeight = zoomDom.offsetHeight;
+                        const zoomDomBoxWidth = zoomDomBox.offsetWidth;
+                        const zoomDomBoxHeight = zoomDomBox.offsetHeight;
                         document.onmousemove = (e: MouseEvent) => {
-                            e.preventDefault() // 移动时禁用默认事件
-                            const w = zoomDomWidth + (e.clientX - x) * 2
-                            const h = zoomDomHeight + (e.clientY - y)
+                            e.preventDefault(); // 移动时禁用默认事件
+                            const w = zoomDomWidth + (e.clientX - x) * 2;
+                            const h = zoomDomHeight + (e.clientY - y);
 
-                            zoomDom.style.width = `${w}px`
-                            zoomDom.style.height = `${h}px`
+                            zoomDom.style.width = `${w}px`;
+                            zoomDom.style.height = `${h}px`;
 
                             if (zoomDomBindData[2]) {
-                                const boxH = zoomDomBoxHeight + (e.clientY - y)
-                                zoomDomBox.style.height = `${boxH}px`
+                                const boxH = zoomDomBoxHeight + (e.clientY - y);
+                                zoomDomBox.style.height = `${boxH}px`;
                             }
                             if (zoomDomBindData[3]) {
-                                const boxW = zoomDomBoxWidth + (e.clientX - x) * 2
-                                zoomDomBox.style.width = `${boxW}px`
+                                const boxW = zoomDomBoxWidth + (e.clientX - x) * 2;
+                                zoomDomBox.style.width = `${boxW}px`;
                             }
-                        }
+                        };
 
                         document.onmouseup = function () {
-                            document.onmousemove = null
-                            document.onmouseup = null
-                        }
-                    }
-                }
+                            document.onmousemove = null;
+                            document.onmouseup = null;
+                        };
+                    };
+                };
 
-                zoomDomBox.appendChild(zoomHandleEl)
-            })
+                zoomDomBox.appendChild(zoomHandleEl);
+            });
         },
-    })
+    });
 }
 
 /**
@@ -121,49 +121,49 @@ function zoomDirective(app: App) {
  * @description domEl=被拖动的元素，handleEl=在此元素内可以拖动`dom`
  */
 interface downReturn {
-    [key: string]: number
+    [key: string]: number;
 }
 function dragDirective(app: App) {
     app.directive('drag', {
         mounted(el, binding) {
-            if (!binding.value) return false
+            if (!binding.value) return false;
 
-            const dragDom = document.querySelector(binding.value[0]) as HTMLElement
-            const dragHandle = document.querySelector(binding.value[1]) as HTMLElement
+            const dragDom = document.querySelector(binding.value[0]) as HTMLElement;
+            const dragHandle = document.querySelector(binding.value[1]) as HTMLElement;
 
             if (!dragHandle || !dragDom) {
-                return false
+                return false;
             }
 
-            dragHandle.onmouseover = () => (dragHandle.style.cursor = `move`)
+            dragHandle.onmouseover = () => (dragHandle.style.cursor = `move`);
 
             function down(e: MouseEvent | TouchEvent, type: string): downReturn {
                 // 鼠标按下，计算当前元素距离可视区的距离
                 const disX =
-                    type === 'pc' ? (e as MouseEvent).clientX - dragHandle.offsetLeft : (e as TouchEvent).touches[0].clientX - dragHandle.offsetLeft
+                    type === 'pc' ? (e as MouseEvent).clientX - dragHandle.offsetLeft : (e as TouchEvent).touches[0].clientX - dragHandle.offsetLeft;
                 const disY =
-                    type === 'pc' ? (e as MouseEvent).clientY - dragHandle.offsetTop : (e as TouchEvent).touches[0].clientY - dragHandle.offsetTop
+                    type === 'pc' ? (e as MouseEvent).clientY - dragHandle.offsetTop : (e as TouchEvent).touches[0].clientY - dragHandle.offsetTop;
 
                 // body宽度
-                const screenWidth = document.body.clientWidth
-                const screenHeight = document.body.clientHeight || document.documentElement.clientHeight
+                const screenWidth = document.body.clientWidth;
+                const screenHeight = document.body.clientHeight || document.documentElement.clientHeight;
 
                 // 被拖动元素宽度
-                const dragDomWidth = dragDom.offsetWidth
+                const dragDomWidth = dragDom.offsetWidth;
                 // 被拖动元素高度
-                const dragDomheight = dragDom.offsetHeight
+                const dragDomheight = dragDom.offsetHeight;
 
                 // 拖动限位
-                const minDragDomLeft = dragDom.offsetLeft
-                const maxDragDomLeft = screenWidth - dragDom.offsetLeft - dragDomWidth
-                const minDragDomTop = dragDom.offsetTop
-                const maxDragDomTop = screenHeight - dragDom.offsetTop - dragDomheight
+                const minDragDomLeft = dragDom.offsetLeft;
+                const maxDragDomLeft = screenWidth - dragDom.offsetLeft - dragDomWidth;
+                const minDragDomTop = dragDom.offsetTop;
+                const maxDragDomTop = screenHeight - dragDom.offsetTop - dragDomheight;
 
                 // 获取到的值带px 正则匹配替换
-                let styL: string | number = getComputedStyle(dragDom).left
-                let styT: string | number = getComputedStyle(dragDom).top
-                styL = +styL.replace(/\px/g, '')
-                styT = +styT.replace(/\px/g, '')
+                let styL: string | number = getComputedStyle(dragDom).left;
+                let styT: string | number = getComputedStyle(dragDom).top;
+                styL = +styL.replace(/\px/g, '');
+                styT = +styT.replace(/\px/g, '');
 
                 return {
                     disX,
@@ -174,53 +174,53 @@ function dragDirective(app: App) {
                     maxDragDomTop,
                     styL,
                     styT,
-                }
+                };
             }
 
             function move(e: MouseEvent | TouchEvent, type: string, obj: downReturn) {
-                const { disX, disY, minDragDomLeft, maxDragDomLeft, minDragDomTop, maxDragDomTop, styL, styT } = obj
+                const { disX, disY, minDragDomLeft, maxDragDomLeft, minDragDomTop, maxDragDomTop, styL, styT } = obj;
 
                 // 通过事件委托，计算移动的距离
-                let left = type === 'pc' ? (e as MouseEvent).clientX - disX : (e as TouchEvent).touches[0].clientX - disX
-                let top = type === 'pc' ? (e as MouseEvent).clientY - disY : (e as TouchEvent).touches[0].clientY - disY
+                let left = type === 'pc' ? (e as MouseEvent).clientX - disX : (e as TouchEvent).touches[0].clientX - disX;
+                let top = type === 'pc' ? (e as MouseEvent).clientY - disY : (e as TouchEvent).touches[0].clientY - disY;
 
                 // 边界处理
                 if (-left > minDragDomLeft) {
-                    left = -minDragDomLeft
+                    left = -minDragDomLeft;
                 } else if (left > maxDragDomLeft) {
-                    left = maxDragDomLeft
+                    left = maxDragDomLeft;
                 }
 
                 if (-top > minDragDomTop) {
-                    top = -minDragDomTop
+                    top = -minDragDomTop;
                 } else if (top > maxDragDomTop) {
-                    top = maxDragDomTop
+                    top = maxDragDomTop;
                 }
 
                 // 移动当前元素
-                dragDom.style.cssText += `;left:${left + styL}px;top:${top + styT}px;`
+                dragDom.style.cssText += `;left:${left + styL}px;top:${top + styT}px;`;
             }
 
             dragHandle.onmousedown = (e) => {
-                const obj = down(e, 'pc')
+                const obj = down(e, 'pc');
                 document.onmousemove = (e) => {
-                    move(e, 'pc', obj)
-                }
+                    move(e, 'pc', obj);
+                };
                 document.onmouseup = () => {
-                    document.onmousemove = null
-                    document.onmouseup = null
-                }
-            }
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                };
+            };
             dragHandle.ontouchstart = (e) => {
-                const obj = down(e, 'app')
+                const obj = down(e, 'app');
                 document.ontouchmove = (e) => {
-                    move(e, 'app', obj)
-                }
+                    move(e, 'app', obj);
+                };
                 document.ontouchend = () => {
-                    document.ontouchmove = null
-                    document.ontouchend = null
-                }
-            }
+                    document.ontouchmove = null;
+                    document.ontouchend = null;
+                };
+            };
         },
-    })
+    });
 }

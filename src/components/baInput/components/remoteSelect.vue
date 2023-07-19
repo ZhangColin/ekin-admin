@@ -60,56 +60,56 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, onMounted, onUnmounted, ref, nextTick, getCurrentInstance, toRaw } from 'vue'
-import { getSelectData } from '/@/api/common'
-import { uuid } from '/@/utils/random'
-import type { ElSelect } from 'element-plus'
-import { isEmpty } from 'lodash-es'
-import { getArrayKey } from '/@/utils/common'
+import { reactive, watch, onMounted, onUnmounted, ref, nextTick, getCurrentInstance, toRaw } from 'vue';
+import { getSelectData } from '/@/api/common';
+import { uuid } from '/@/utils/random';
+import type { ElSelect } from 'element-plus';
+import { isEmpty } from 'lodash-es';
+import { getArrayKey } from '/@/utils/common';
 
-const selectRef = ref<InstanceType<typeof ElSelect> | undefined>()
-type ElSelectProps = Partial<InstanceType<typeof ElSelect>['$props']>
-type valType = string | number | string[] | number[]
+const selectRef = ref<InstanceType<typeof ElSelect> | undefined>();
+type ElSelectProps = Partial<InstanceType<typeof ElSelect>['$props']>;
+type valType = string | number | string[] | number[];
 
 interface Props extends /* @vue-ignore */ ElSelectProps {
-    pk?: string
-    field?: string
-    params?: AnyObj
-    multiple?: boolean
-    remoteUrl: string
-    modelValue: valType
-    labelFormatter?: (optionData: AnyObj, optionKey: string) => string
-    tooltipParams?: AnyObj
+    pk?: string;
+    field?: string;
+    params?: AnyObj;
+    multiple?: boolean;
+    remoteUrl: string;
+    modelValue: valType;
+    labelFormatter?: (optionData: AnyObj, optionKey: string) => string;
+    tooltipParams?: AnyObj;
 }
 const props = withDefaults(defineProps<Props>(), {
     pk: 'id',
     field: 'name',
     params: () => {
-        return {}
+        return {};
     },
     remoteUrl: '',
     modelValue: '',
     multiple: false,
     tooltipParams: () => {
-        return {}
+        return {};
     },
-})
+});
 
 const state: {
     // 主表字段名(不带表别名)
-    primaryKey: string
-    options: AnyObj[]
-    loading: boolean
-    total: number
-    currentPage: number
-    pageSize: number
-    params: AnyObj
-    keyword: string
-    value: valType
-    selectKey: string
-    initializeData: boolean
-    accidentBlur: boolean
-    focusStatus: boolean
+    primaryKey: string;
+    options: AnyObj[];
+    loading: boolean;
+    total: number;
+    currentPage: number;
+    pageSize: number;
+    params: AnyObj;
+    keyword: string;
+    value: valType;
+    selectKey: string;
+    initializeData: boolean;
+    accidentBlur: boolean;
+    focusStatus: boolean;
 } = reactive({
     primaryKey: props.pk,
     options: [],
@@ -124,176 +124,176 @@ const state: {
     initializeData: false,
     accidentBlur: false,
     focusStatus: false,
-})
+});
 
-let io: null | IntersectionObserver = null
-const instance = getCurrentInstance()
+let io: null | IntersectionObserver = null;
+const instance = getCurrentInstance();
 
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: valType): void
-    (e: 'row', value: any): void
-}>()
+    (e: 'update:modelValue', value: valType): void;
+    (e: 'row', value: any): void;
+}>();
 
 const onChangeSelect = (val: valType) => {
-    emits('update:modelValue', val)
+    emits('update:modelValue', val);
     if (typeof instance?.vnode.props?.onRow == 'function') {
         if (typeof val == 'number' || typeof val == 'string') {
-            const dataKey = getArrayKey(state.options, props.pk, val.toString())
-            emits('row', dataKey ? toRaw(state.options[dataKey]) : {})
+            const dataKey = getArrayKey(state.options, props.pk, val.toString());
+            emits('row', dataKey ? toRaw(state.options[dataKey]) : {});
         } else {
-            const valueArr = []
+            const valueArr = [];
             for (const key in val) {
-                let dataKey = getArrayKey(state.options, props.pk, val[key].toString())
-                if (dataKey) valueArr.push(toRaw(state.options[dataKey]))
+                let dataKey = getArrayKey(state.options, props.pk, val[key].toString());
+                if (dataKey) valueArr.push(toRaw(state.options[dataKey]));
             }
-            emits('row', valueArr)
+            emits('row', valueArr);
         }
     }
-}
+};
 
 const onVisibleChange = (val: boolean) => {
     // 保持面板状态和焦点状态一致
     if (!val) {
         nextTick(() => {
-            selectRef.value?.blur()
-        })
+            selectRef.value?.blur();
+        });
     }
-}
+};
 
 const onFocus = () => {
-    state.focusStatus = true
+    state.focusStatus = true;
     if (selectRef.value?.query != state.keyword) {
-        state.keyword = ''
-        state.initializeData = false
+        state.keyword = '';
+        state.initializeData = false;
         // el-select 自动清理搜索词会产生意外的脱焦
-        state.accidentBlur = true
+        state.accidentBlur = true;
     }
     if (!state.initializeData) {
-        getData()
+        getData();
     }
-}
+};
 
 const onBlur = () => {
-    state.focusStatus = false
-}
+    state.focusStatus = false;
+};
 
 const onClear = () => {
-    state.keyword = ''
-    state.initializeData = false
-}
+    state.keyword = '';
+    state.initializeData = false;
+};
 
 const onLogKeyword = (q: string) => {
-    state.keyword = q
-    getData()
-}
+    state.keyword = q;
+    getData();
+};
 
 const getData = (initValue: valType = '') => {
-    state.loading = true
-    state.params.page = state.currentPage
-    state.params.initKey = props.pk
-    state.params.initValue = initValue
+    state.loading = true;
+    state.params.page = state.currentPage;
+    state.params.initKey = props.pk;
+    state.params.initValue = initValue;
     getSelectData(props.remoteUrl, state.keyword, state.params)
         .then((res) => {
-            let initializeData = true
-            let opts = res.data.options ? res.data.options : res.data.list
+            let initializeData = true;
+            let opts = res.data.options ? res.data.options : res.data.list;
             if (typeof props.labelFormatter == 'function') {
                 for (const key in opts) {
-                    opts[key][props.field] = props.labelFormatter(opts[key], key)
+                    opts[key][props.field] = props.labelFormatter(opts[key], key);
                 }
             }
-            state.options = opts
-            state.total = res.data.total ?? 0
+            state.options = opts;
+            state.total = res.data.total ?? 0;
             if (initValue) {
                 // 重新渲染组件,确保在赋值前,opts已加载到-兼容 modelValue 更新
-                state.selectKey = uuid()
-                initializeData = false
+                state.selectKey = uuid();
+                initializeData = false;
             }
-            state.loading = false
-            state.initializeData = initializeData
+            state.loading = false;
+            state.initializeData = initializeData;
             if (state.accidentBlur) {
                 nextTick(() => {
-                    const inputEl = selectRef.value?.$el.querySelector('.el-select__tags .el-select__input')
-                    inputEl && inputEl.focus()
-                    state.accidentBlur = false
-                })
+                    const inputEl = selectRef.value?.$el.querySelector('.el-select__tags .el-select__input');
+                    inputEl && inputEl.focus();
+                    state.accidentBlur = false;
+                });
             }
         })
         .catch(() => {
-            state.loading = false
-        })
-}
+            state.loading = false;
+        });
+};
 
 const onSelectCurrentPageChange = (val: number) => {
-    state.currentPage = val
-    getData()
-}
+    state.currentPage = val;
+    getData();
+};
 
 const initDefaultValue = () => {
     if (state.value) {
         // number[]转string[]确保默认值能够选中
         if (typeof state.value === 'object') {
             for (const key in state.value as string[]) {
-                state.value[key] = state.value[key].toString()
+                state.value[key] = state.value[key].toString();
             }
         } else if (typeof state.value === 'number') {
-            state.value = state.value.toString()
+            state.value = state.value.toString();
         }
-        getData(state.value)
+        getData(state.value);
     }
-}
+};
 
 onMounted(() => {
     if (props.pk.indexOf('.') > 0) {
-        let pk = props.pk.split('.')
-        state.primaryKey = pk[1] ? pk[1] : pk[0]
+        let pk = props.pk.split('.');
+        state.primaryKey = pk[1] ? pk[1] : pk[0];
     }
-    initDefaultValue()
+    initDefaultValue();
 
     setTimeout(() => {
         if (window?.IntersectionObserver) {
             io = new IntersectionObserver((entries) => {
                 for (const key in entries) {
-                    if (!entries[key].isIntersecting) selectRef.value?.blur()
+                    if (!entries[key].isIntersecting) selectRef.value?.blur();
                 }
-            })
+            });
             if (selectRef.value?.$el instanceof Element) {
-                io.observe(selectRef.value.$el)
+                io.observe(selectRef.value.$el);
             }
         }
-    }, 500)
-})
+    }, 500);
+});
 
 onUnmounted(() => {
-    io?.disconnect()
-})
+    io?.disconnect();
+});
 
 watch(
     () => props.modelValue,
     (newVal) => {
         if (String(state.value) != String(newVal)) {
-            state.value = newVal ? newVal : ''
-            initDefaultValue()
+            state.value = newVal ? newVal : '';
+            initDefaultValue();
         }
     }
-)
+);
 
 const getSelectRef = () => {
-    return selectRef.value
-}
+    return selectRef.value;
+};
 
 const focus = () => {
-    selectRef.value?.focus()
-}
+    selectRef.value?.focus();
+};
 
 const blur = () => {
-    selectRef.value?.blur()
-}
+    selectRef.value?.blur();
+};
 
 defineExpose({
     blur,
     focus,
     getSelectRef,
-})
+});
 </script>
 
 <style scoped lang="scss">

@@ -17,4 +17,4 @@ export default {
     'Network request timeout!': '网络请求超时！',
     'Server exception!': '服务端异常！',
     'You are disconnected!': '您断网了！',
-}
+};

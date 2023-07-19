@@ -39,17 +39,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from 'vue'
-import { getCaptchaData, checkClickCaptcha } from '/@/api/common'
-import { i18n } from '/@/lang'
+import { reactive, computed } from 'vue';
+import { getCaptchaData, checkClickCaptcha } from '/@/api/common';
+import { i18n } from '/@/lang';
 
 interface Props {
-    uuid: string
-    callback?: (captchaInfo: string) => void
-    class?: string
-    unset?: boolean
-    error?: string
-    success?: string
+    uuid: string;
+    callback?: (captchaInfo: string) => void;
+    class?: string;
+    unset?: boolean;
+    error?: string;
+    success?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,19 +59,19 @@ const props = withDefaults(defineProps<Props>(), {
     unset: false,
     error: i18n.global.t('validate.The correct area is not clicked, please try again!'),
     success: i18n.global.t('validate.Verification is successful!'),
-})
+});
 
 const state: {
-    loading: boolean
-    xy: string[]
-    tip: string
+    loading: boolean;
+    xy: string[];
+    tip: string;
     captcha: {
-        id: string
-        text: string
-        base64: string
-        width: number
-        height: number
-    }
+        id: string;
+        text: string;
+        base64: string;
+        width: number;
+        height: number;
+    };
 } = reactive({
     loading: true,
     xy: [],
@@ -83,53 +83,53 @@ const state: {
         width: 350,
         height: 200,
     },
-})
+});
 
 const load = () => {
-    state.loading = true
+    state.loading = true;
     getCaptchaData(props.uuid).then((res) => {
-        state.xy = []
-        state.tip = ''
-        state.loading = false
-        state.captcha = res.data
-    })
-}
+        state.xy = [];
+        state.tip = '';
+        state.loading = false;
+        state.captcha = res.data;
+    });
+};
 
 const onRecord = (event: MouseEvent) => {
     if (state.xy.length < state.captcha.text.length) {
-        state.xy.push(event.offsetX + ',' + event.offsetY)
+        state.xy.push(event.offsetX + ',' + event.offsetY);
         if (state.xy.length == state.captcha.text.length) {
-            const captchaInfo = [state.xy.join('-'), (event.target as HTMLImageElement).width, (event.target as HTMLImageElement).height].join(';')
+            const captchaInfo = [state.xy.join('-'), (event.target as HTMLImageElement).width, (event.target as HTMLImageElement).height].join(';');
             checkClickCaptcha(props.uuid, captchaInfo, props.unset)
                 .then(() => {
-                    state.tip = props.success
+                    state.tip = props.success;
                     setTimeout(() => {
-                        props.callback?.(captchaInfo)
-                        onClose()
-                    }, 1500)
+                        props.callback?.(captchaInfo);
+                        onClose();
+                    }, 1500);
                 })
                 .catch(() => {
-                    state.tip = props.error
+                    state.tip = props.error;
                     setTimeout(() => {
-                        load()
-                    }, 1500)
-                })
+                        load();
+                    }, 1500);
+                });
         }
     }
-}
+};
 
 const onCancelRecord = (index: number) => {
-    state.xy.splice(index, 1)
-}
+    state.xy.splice(index, 1);
+};
 
 const onClose = () => {
-    document.getElementById(props.uuid)?.remove()
-}
+    document.getElementById(props.uuid)?.remove();
+};
 
-const captchaBoxTop = computed(() => (state.captcha.height + 200) / 2 + 'px')
-const captchaBoxLeft = computed(() => (state.captcha.width + 24) / 2 + 'px')
+const captchaBoxTop = computed(() => (state.captcha.height + 200) / 2 + 'px');
+const captchaBoxLeft = computed(() => (state.captcha.width + 24) / 2 + 'px');
 
-load()
+load();
 </script>
 
 <style scoped lang="scss">

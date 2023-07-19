@@ -14,7 +14,7 @@ export default [
                     width: 350,
                     height: 200,
                 },
-            }
+            };
         },
     },
     {
@@ -22,7 +22,7 @@ export default [
         url: '/api/common/checkClickCaptcha',
         method: 'post',
         response: () => {
-            return { code: 1, msg: '', time: 1689646421, data: null }
+            return { code: 1, msg: '', time: 1689646421, data: null };
         },
     },
-]
+];

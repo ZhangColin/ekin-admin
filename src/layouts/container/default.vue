@@ -10,12 +10,12 @@
 </template>
 
 <script setup lang="ts">
-import Aside from '/@/layouts/components/aside.vue'
-import Header from '/@/layouts/components/header.vue'
-import Main from '/@/layouts/router-view/main.vue'
-import CloseFullScreen from '/@/layouts/components/closeFullScreen.vue'
-import { useNavTabs } from '/@/stores/navTabs'
-const navTabs = useNavTabs()
+import Aside from '/@/layouts/components/aside.vue';
+import Header from '/@/layouts/components/header.vue';
+import Main from '/@/layouts/router-view/main.vue';
+import CloseFullScreen from '/@/layouts/components/closeFullScreen.vue';
+import { useNavTabs } from '/@/stores/navTabs';
+const navTabs = useNavTabs();
 </script>
 
 <style scoped>

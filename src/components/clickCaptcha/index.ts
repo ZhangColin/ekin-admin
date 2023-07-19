@@ -1,16 +1,16 @@
-import { shortUuid } from '/@/utils/random'
-import { VNode, createVNode, render } from 'vue'
-import clickCaptchaConstructor from './index.vue'
+import { shortUuid } from '/@/utils/random';
+import { VNode, createVNode, render } from 'vue';
+import clickCaptchaConstructor from './index.vue';
 
 interface ClickCaptchaOptions {
     // 验证码弹窗的自定义class
-    class?: string
+    class?: string;
     // 前端验证成功时立即清理验证码数据，不可再进行二次验证，不开启则 600s 后自动清理数据
-    unset?: boolean
+    unset?: boolean;
     // 验证失败的提示信息
-    error?: string
+    error?: string;
     // 验证成功的提示信息
-    success?: string
+    success?: string;
 }
 
 /**
@@ -25,9 +25,9 @@ const clickCaptcha = (uuid: string, callback?: (captchaInfo: string) => void, op
         callback,
         ...options,
         key: shortUuid(),
-    })
-    render(vnode, document.body)
-    vnode = null
-}
+    });
+    render(vnode, document.body);
+    vnode = null;
+};
 
-export default clickCaptcha
+export default clickCaptcha;

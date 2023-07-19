@@ -1,15 +1,15 @@
-import { i18n } from '/@/lang/index'
+import { i18n } from '/@/lang/index';
 
 /*
  * 默认Url点击事件处理
  */
 export const openUrl = (url: string, field: TableColumn) => {
     if (field.target == '_blank') {
-        window.open(url)
+        window.open(url);
     } else {
-        window.location.href = url
+        window.location.href = url;
     }
-}
+};
 
 /*
  * 默认按钮组
@@ -61,16 +61,16 @@ export const defaultOptButtons = (optButType: DefaultOptButType[] = ['weigh-sort
                 disabledTip: false,
             },
         ],
-    ])
+    ]);
 
-    const optButtons: OptButton[] = []
+    const optButtons: OptButton[] = [];
     for (const key in optButType) {
         if (optButtonsPre.has(optButType[key])) {
-            optButtons.push(optButtonsPre.get(optButType[key])!)
+            optButtons.push(optButtonsPre.get(optButType[key])!);
         }
     }
-    return optButtons
-}
+    return optButtons;
+};
 
 /**
  * 将带children的数组降维，然后寻找index所在的行
@@ -78,22 +78,22 @@ export const defaultOptButtons = (optButType: DefaultOptButType[] = ['weigh-sort
 export const findIndexRow = (data: TableRow[], findIdx: number, keyIndex: number | TableRow = -1): number | TableRow => {
     for (const key in data) {
         if (typeof keyIndex == 'number') {
-            keyIndex++
+            keyIndex++;
         }
 
         if (keyIndex == findIdx) {
-            return data[key]
+            return data[key];
         }
 
         if (data[key].children) {
-            keyIndex = findIndexRow(data[key].children!, findIdx, keyIndex)
+            keyIndex = findIndexRow(data[key].children!, findIdx, keyIndex);
             if (typeof keyIndex != 'number') {
-                return keyIndex
+                return keyIndex;
             }
         }
     }
 
-    return keyIndex
-}
+    return keyIndex;
+};
 
-type DefaultOptButType = 'weigh-sort' | 'edit' | 'delete'
+type DefaultOptButType = 'weigh-sort' | 'edit' | 'delete';

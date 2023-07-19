@@ -212,65 +212,65 @@
 </template>
 
 <script setup lang="ts">
-import { useConfig } from '/@/stores/config'
-import { useNavTabs } from '/@/stores/navTabs'
-import { useRouter } from 'vue-router'
-import IconSelector from '/@/components/baInput/components/iconSelector.vue'
-import { STORE_CONFIG, BEFORE_RESIZE_LAYOUT } from '/@/stores/constant/cacheKey'
-import { Local, Session } from '/@/utils/storage'
-import { useI18n } from 'vue-i18n'
-import { Layout } from '/@/stores/interface'
-import DarkSwitch from '/@/layouts/common/components/darkSwitch.vue'
-import toggleDark from '/@/utils/useDark'
+import { useConfig } from '/@/stores/config';
+import { useNavTabs } from '/@/stores/navTabs';
+import { useRouter } from 'vue-router';
+import IconSelector from '/@/components/baInput/components/iconSelector.vue';
+import { STORE_CONFIG, BEFORE_RESIZE_LAYOUT } from '/@/stores/constant/cacheKey';
+import { Local, Session } from '/@/utils/storage';
+import { useI18n } from 'vue-i18n';
+import { Layout } from '/@/stores/interface';
+import DarkSwitch from '/@/layouts/common/components/darkSwitch.vue';
+import toggleDark from '/@/utils/useDark';
 
-const { t } = useI18n()
-const configStore = useConfig()
-const navTabs = useNavTabs()
-const router = useRouter()
+const { t } = useI18n();
+const configStore = useConfig();
+const navTabs = useNavTabs();
+const router = useRouter();
 
 const onCommitState = (value: any, name: any) => {
-    configStore.setLayout(name, value)
-}
+    configStore.setLayout(name, value);
+};
 
 const onCommitColorState = (value: string | null, name: keyof Layout) => {
-    if (value === null) return
-    const colors = configStore.layout[name] as string[]
+    if (value === null) return;
+    const colors = configStore.layout[name] as string[];
     if (configStore.layout.isDark) {
-        colors[1] = value
+        colors[1] = value;
     } else {
-        colors[0] = value
+        colors[0] = value;
     }
-    configStore.setLayout(name, colors)
-}
+    configStore.setLayout(name, colors);
+};
 
 const setLayoutMode = (mode: string) => {
     Session.set(BEFORE_RESIZE_LAYOUT, {
         layoutMode: mode,
         menuCollapse: configStore.layout.menuCollapse,
-    })
-    configStore.setLayoutMode(mode)
-}
+    });
+    configStore.setLayoutMode(mode);
+};
 
 // 修改默认菜单图标
 const onCommitMenuDefaultIcon = (value: any, name: any) => {
-    configStore.setLayout(name, value)
+    configStore.setLayout(name, value);
 
-    const menus = navTabs.state.tabsViewRoutes
-    navTabs.setTabsViewRoutes([])
+    const menus = navTabs.state.tabsViewRoutes;
+    navTabs.setTabsViewRoutes([]);
     setTimeout(() => {
-        navTabs.setTabsViewRoutes(menus)
-    }, 200)
-}
+        navTabs.setTabsViewRoutes(menus);
+    }, 200);
+};
 
 const onCloseDrawer = () => {
-    configStore.setLayout('showDrawer', false)
-}
+    configStore.setLayout('showDrawer', false);
+};
 
 const restoreDefault = () => {
-    Local.remove(STORE_CONFIG)
-    Session.remove(BEFORE_RESIZE_LAYOUT)
-    router.go(0)
-}
+    Local.remove(STORE_CONFIG);
+    Session.remove(BEFORE_RESIZE_LAYOUT);
+    router.go(0);
+};
 </script>
 
 <style scoped lang="scss">

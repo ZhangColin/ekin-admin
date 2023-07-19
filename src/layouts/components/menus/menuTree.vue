@@ -18,24 +18,24 @@
     </template>
 </template>
 <script setup lang="ts">
-import { useConfig } from '/@/stores/config'
-import { RouteRecordRaw } from 'vue-router'
-import { onClickMenu } from '/@/utils/router'
+import { useConfig } from '/@/stores/config';
+import { RouteRecordRaw } from 'vue-router';
+import { onClickMenu } from '/@/utils/router';
 
-const config = useConfig()
+const config = useConfig();
 
 interface Props {
-    menus: RouteRecordRaw[]
+    menus: RouteRecordRaw[];
 }
 const props = withDefaults(defineProps<Props>(), {
     menus: () => [],
-})
+});
 
 const onClickSubMenu = (menu: RouteRecordRaw) => {
     if (['Streamline', 'Double'].includes(config.layout.layoutMode) && menu.children?.length) {
-        onClickMenu(menu.children[0])
+        onClickMenu(menu.children[0]);
     }
-}
+};
 </script>
 
 <style scoped lang="scss">

@@ -19,21 +19,21 @@ export default [
                     },
                     routePath: '/',
                 },
-            }
+            };
         },
     },
     {
         url: '/Index/login',
         method: 'get',
         response: () => {
-            return { code: 1, msg: '', time: 1689645983, data: { captcha: false } }
+            return { code: 1, msg: '', time: 1689645983, data: { captcha: false } };
         },
     },
     {
         url: '/Index/logout',
         method: 'post',
         response: () => {
-            return { code: 1, msg: '', time: 1689645983 }
+            return { code: 1, msg: '', time: 1689645983 };
         },
     },
-]
+];

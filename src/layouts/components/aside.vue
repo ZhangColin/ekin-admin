@@ -7,21 +7,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import Logo from '/@/layouts/components/logo.vue'
-import MenuVertical from '/@/layouts/components/menus/menuVertical.vue'
-import MenuVerticalChildren from '/@/layouts/components/menus/menuVerticalChildren.vue'
-import { useConfig } from '/@/stores/config'
-import { useNavTabs } from '/@/stores/navTabs'
+import { computed } from 'vue';
+import Logo from '/@/layouts/components/logo.vue';
+import MenuVertical from '/@/layouts/components/menus/menuVertical.vue';
+import MenuVerticalChildren from '/@/layouts/components/menus/menuVerticalChildren.vue';
+import { useConfig } from '/@/stores/config';
+import { useNavTabs } from '/@/stores/navTabs';
 
 defineOptions({
     name: 'layout/aside',
-})
+});
 
-const config = useConfig()
-const navTabs = useNavTabs()
+const config = useConfig();
+const navTabs = useNavTabs();
 
-const menuWidth = computed(() => config.menuWidth())
+const menuWidth = computed(() => config.menuWidth());
 </script>
 
 <style scoped lang="scss">

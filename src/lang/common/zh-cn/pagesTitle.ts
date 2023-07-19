@@ -8,4 +8,4 @@ export default {
     Loading: 'Loading...',
     User: '会员中心',
     userLogin: '会员登录',
-}
+};

@@ -1,55 +1,55 @@
-import { readFileSync, readdirSync } from 'fs'
+import { readFileSync, readdirSync } from 'fs';
 
-let idPerfix = ''
-const iconNames: string[] = []
-const svgTitle = /<svg([^>+].*?)>/
-const clearHeightWidth = /(width|height)="([^>+].*?)"/g
-const hasViewBox = /(viewBox="[^>+].*?")/g
-const clearReturn = /(\r)|(\n)/g
+let idPerfix = '';
+const iconNames: string[] = [];
+const svgTitle = /<svg([^>+].*?)>/;
+const clearHeightWidth = /(width|height)="([^>+].*?)"/g;
+const hasViewBox = /(viewBox="[^>+].*?")/g;
+const clearReturn = /(\r)|(\n)/g;
 // 清理 svg 的 fill
-const clearFill = /(fill="[^>+].*?")/g
+const clearFill = /(fill="[^>+].*?")/g;
 
 function findSvgFile(dir: string): string[] {
-    const svgRes = []
+    const svgRes = [];
     const dirents = readdirSync(dir, {
         withFileTypes: true,
-    })
+    });
     for (const dirent of dirents) {
-        iconNames.push(`${idPerfix}-${dirent.name.replace('.svg', '')}`)
+        iconNames.push(`${idPerfix}-${dirent.name.replace('.svg', '')}`);
         if (dirent.isDirectory()) {
-            svgRes.push(...findSvgFile(dir + dirent.name + '/'))
+            svgRes.push(...findSvgFile(dir + dirent.name + '/'));
         } else {
             const svg = readFileSync(dir + dirent.name)
                 .toString()
                 .replace(clearReturn, '')
                 .replace(clearFill, 'fill=""')
                 .replace(svgTitle, ($1, $2) => {
-                    let width = 0
-                    let height = 0
+                    let width = 0;
+                    let height = 0;
                     let content = $2.replace(clearHeightWidth, (s1: string, s2: string, s3: number) => {
                         if (s2 === 'width') {
-                            width = s3
+                            width = s3;
                         } else if (s2 === 'height') {
-                            height = s3
+                            height = s3;
                         }
-                        return ''
-                    })
+                        return '';
+                    });
                     if (!hasViewBox.test($2)) {
-                        content += `viewBox="0 0 ${width} ${height}"`
+                        content += `viewBox="0 0 ${width} ${height}"`;
                     }
-                    return `<symbol id="${idPerfix}-${dirent.name.replace('.svg', '')}" ${content}>`
+                    return `<symbol id="${idPerfix}-${dirent.name.replace('.svg', '')}" ${content}>`;
                 })
-                .replace('</svg>', '</symbol>')
-            svgRes.push(svg)
+                .replace('</svg>', '</symbol>');
+            svgRes.push(svg);
         }
     }
-    return svgRes
+    return svgRes;
 }
 
 export const svgBuilder = (path: string, perfix = 'local') => {
-    if (path === '') return
-    idPerfix = perfix
-    const res = findSvgFile(path)
+    if (path === '') return;
+    idPerfix = perfix;
+    const res = findSvgFile(path);
     return {
         name: 'svg-transform',
         transformIndexHtml(html: string) {
@@ -64,8 +64,8 @@ export const svgBuilder = (path: string, perfix = 'local') => {
                 ${res.join('')}
                 </svg>
                 `
-            )
+            );
             /* eslint-enable */
         },
-    }
-}
+    };
+};

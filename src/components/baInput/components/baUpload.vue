@@ -47,81 +47,81 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, watch, useSlots } from 'vue'
-import { UploadInstance, UploadUserFile, UploadProps, genFileId, UploadRawFile, UploadFiles } from 'element-plus'
-import { stringToArray } from '/@/components/baInput/helper'
-import { fullUrl, arrayFullUrl, getFileNameFromPath, getArrayKey } from '/@/utils/common'
-import { fileUpload } from '/@/api/common'
-import SelectFile from '/@/components/baInput/components/selectFile.vue'
-import { uuid } from '/@/utils/random'
-import { cloneDeep, isEmpty } from 'lodash-es'
-import { AxiosProgressEvent } from 'axios'
+import { ref, reactive, onMounted, watch, useSlots } from 'vue';
+import { UploadInstance, UploadUserFile, UploadProps, genFileId, UploadRawFile, UploadFiles } from 'element-plus';
+import { stringToArray } from '/@/components/baInput/helper';
+import { fullUrl, arrayFullUrl, getFileNameFromPath, getArrayKey } from '/@/utils/common';
+import { fileUpload } from '/@/api/common';
+import SelectFile from '/@/components/baInput/components/selectFile.vue';
+import { uuid } from '/@/utils/random';
+import { cloneDeep, isEmpty } from 'lodash-es';
+import { AxiosProgressEvent } from 'axios';
 
-type Writeable<T> = { -readonly [P in keyof T]: T[P] }
+type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 interface Props {
-    type: 'image' | 'images' | 'file' | 'files'
+    type: 'image' | 'images' | 'file' | 'files';
     // 上传请求时的额外携带数据
-    data?: AnyObj
-    modelValue: string | string[]
+    data?: AnyObj;
+    modelValue: string | string[];
     // 返回绝对路径
-    returnFullUrl?: boolean
+    returnFullUrl?: boolean;
     // 隐藏附件选择器
-    hideSelectFile?: boolean
+    hideSelectFile?: boolean;
     // 可自定义el-upload的其他属性
-    attr?: Partial<Writeable<UploadProps>>
+    attr?: Partial<Writeable<UploadProps>>;
     // 强制上传到本地存储
-    forceLocal?: boolean
+    forceLocal?: boolean;
 }
 interface UploadFileExt extends UploadUserFile {
-    serverUrl?: string
+    serverUrl?: string;
 }
 interface UploadProgressEvent extends AxiosProgressEvent {
-    percent: number
+    percent: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     type: 'image',
     data: () => {
-        return {}
+        return {};
     },
     modelValue: () => [],
     returnFullUrl: false,
     hideSelectFile: false,
     attr: () => {
-        return {}
+        return {};
     },
     forceLocal: false,
-})
+});
 
 const emits = defineEmits<{
-    (e: 'update:modelValue', value: string | string[]): void
-}>()
+    (e: 'update:modelValue', value: string | string[]): void;
+}>();
 
-const slots = useSlots()
-const upload = ref<UploadInstance>()
+const slots = useSlots();
+const upload = ref<UploadInstance>();
 const state: {
-    key: string
+    key: string;
     // 返回值类型，通过v-model类型动态计算
-    defaultReturnType: 'string' | 'array'
+    defaultReturnType: 'string' | 'array';
     // 预览弹窗
     preview: {
-        show: boolean
-        url: string
-    }
+        show: boolean;
+        url: string;
+    };
     // 文件列表
-    fileList: UploadFileExt[]
+    fileList: UploadFileExt[];
     // el-upload的属性对象
-    attr: Partial<UploadProps>
+    attr: Partial<UploadProps>;
     // 正在上传的文件数量
-    uploading: number
+    uploading: number;
     // 显示选择文件窗口
     selectFile: {
-        show: boolean
-        type?: 'image' | 'file'
-        limit?: number
-        returnFullUrl: boolean
-    }
-    events: AnyObj
+        show: boolean;
+        type?: 'image' | 'file';
+        limit?: number;
+        returnFullUrl: boolean;
+    };
+    events: AnyObj;
 } = reactive({
     key: uuid(),
     defaultReturnType: 'string',
@@ -138,190 +138,190 @@ const state: {
         returnFullUrl: props.returnFullUrl,
     },
     events: [],
-})
+});
 
 const onElChange = (file: UploadFileExt, files: UploadFiles) => {
     // 将 file 换为 files 中的对象，以便修改属性等操作
-    const fileIndex = getArrayKey(files, 'uid', file.uid!)
-    if (!fileIndex) return
-    file = files[fileIndex] as UploadFileExt
-    if (!file || !file.raw) return
-    if (typeof state.events['beforeUpload'] == 'function' && state.events['beforeUpload'](file) === false) return
-    let fd = new FormData()
-    fd.append('file', file.raw)
-    fd = formDataAppend(fd)
-    state.uploading++
+    const fileIndex = getArrayKey(files, 'uid', file.uid!);
+    if (!fileIndex) return;
+    file = files[fileIndex] as UploadFileExt;
+    if (!file || !file.raw) return;
+    if (typeof state.events['beforeUpload'] == 'function' && state.events['beforeUpload'](file) === false) return;
+    let fd = new FormData();
+    fd.append('file', file.raw);
+    fd = formDataAppend(fd);
+    state.uploading++;
     fileUpload(fd, { uuid: uuid() }, props.forceLocal, {
         onUploadProgress: (evt: AxiosProgressEvent) => {
-            const progressEvt = evt as UploadProgressEvent
+            const progressEvt = evt as UploadProgressEvent;
             if (evt.total && evt.total > 0) {
-                progressEvt.percent = (evt.loaded / evt.total) * 100
-                file.status = 'uploading'
-                file.percentage = Math.round(progressEvt.percent)
-                typeof state.events['onProgress'] == 'function' && state.events['onProgress'](progressEvt, file, files)
+                progressEvt.percent = (evt.loaded / evt.total) * 100;
+                file.status = 'uploading';
+                file.percentage = Math.round(progressEvt.percent);
+                typeof state.events['onProgress'] == 'function' && state.events['onProgress'](progressEvt, file, files);
             }
         },
     })
         .then((res) => {
             if (res.code == 1) {
-                file.serverUrl = res.data.file.url
-                file.status = 'success'
-                emits('update:modelValue', getAllUrls())
-                typeof state.events['onSuccess'] == 'function' && state.events['onSuccess'](res, file, files)
+                file.serverUrl = res.data.file.url;
+                file.status = 'success';
+                emits('update:modelValue', getAllUrls());
+                typeof state.events['onSuccess'] == 'function' && state.events['onSuccess'](res, file, files);
             } else {
-                file.status = 'fail'
-                files.splice(fileIndex, 1)
-                typeof state.events['onError'] == 'function' && state.events['onError'](res, file, files)
+                file.status = 'fail';
+                files.splice(fileIndex, 1);
+                typeof state.events['onError'] == 'function' && state.events['onError'](res, file, files);
             }
         })
         .catch((res) => {
-            file.status = 'fail'
-            files.splice(fileIndex, 1)
-            typeof state.events['onError'] == 'function' && state.events['onError'](res, file, files)
+            file.status = 'fail';
+            files.splice(fileIndex, 1);
+            typeof state.events['onError'] == 'function' && state.events['onError'](res, file, files);
         })
         .finally(() => {
-            state.uploading--
-            typeof state.events['onChange'] == 'function' && state.events['onChange'](file, files)
-        })
-}
+            state.uploading--;
+            typeof state.events['onChange'] == 'function' && state.events['onChange'](file, files);
+        });
+};
 
 const onElRemove = (file: UploadUserFile, files: UploadFiles) => {
-    typeof state.events['onRemove'] == 'function' && state.events['onRemove'](file, files)
-    emits('update:modelValue', getAllUrls())
-}
+    typeof state.events['onRemove'] == 'function' && state.events['onRemove'](file, files);
+    emits('update:modelValue', getAllUrls());
+};
 
 const onElPreview = (file: UploadFileExt) => {
-    typeof state.events['onPreview'] == 'function' && state.events['onPreview'](file)
+    typeof state.events['onPreview'] == 'function' && state.events['onPreview'](file);
     if (!file || !file.url) {
-        return
+        return;
     }
     if (props.type == 'file' || props.type == 'files') {
-        window.open(fullUrl(file.url))
-        return
+        window.open(fullUrl(file.url));
+        return;
     }
-    state.preview.show = true
-    state.preview.url = file.url
-}
+    state.preview.show = true;
+    state.preview.url = file.url;
+};
 
 const onElExceed = (files: UploadUserFile[]) => {
-    const file = files[0] as UploadRawFile
-    file.uid = genFileId()
-    upload.value!.handleStart(file)
-    typeof state.events['onExceed'] == 'function' && state.events['onExceed'](file, files)
-}
+    const file = files[0] as UploadRawFile;
+    file.uid = genFileId();
+    upload.value!.handleStart(file);
+    typeof state.events['onExceed'] == 'function' && state.events['onExceed'](file, files);
+};
 
 const onChoice = (files: string[]) => {
-    let oldValArr = getAllUrls('array') as string[]
-    files = oldValArr.concat(files)
-    init(files)
-    emits('update:modelValue', getAllUrls())
-    typeof state.events['onChange'] == 'function' && state.events['onChange'](files, state.fileList)
-    state.selectFile.show = false
-}
+    let oldValArr = getAllUrls('array') as string[];
+    files = oldValArr.concat(files);
+    init(files);
+    emits('update:modelValue', getAllUrls());
+    typeof state.events['onChange'] == 'function' && state.events['onChange'](files, state.fileList);
+    state.selectFile.show = false;
+};
 
 onMounted(() => {
     if (props.type == 'image' || props.type == 'file') {
-        state.attr = { ...state.attr, limit: 1 }
+        state.attr = { ...state.attr, limit: 1 };
     } else {
-        state.attr = { ...state.attr, multiple: true }
+        state.attr = { ...state.attr, multiple: true };
     }
 
     if (props.type == 'image' || props.type == 'images') {
-        state.selectFile.type = 'image'
-        state.attr = { ...state.attr, accept: 'image/*', listType: 'picture-card' }
+        state.selectFile.type = 'image';
+        state.attr = { ...state.attr, accept: 'image/*', listType: 'picture-card' };
     }
 
-    const addProps: AnyObj = {}
-    const evtArr = ['onPreview', 'onRemove', 'onSuccess', 'onError', 'onChange', 'onExceed', 'beforeUpload', 'onProgress']
+    const addProps: AnyObj = {};
+    const evtArr = ['onPreview', 'onRemove', 'onSuccess', 'onError', 'onChange', 'onExceed', 'beforeUpload', 'onProgress'];
     for (const key in props.attr) {
         if (evtArr.includes(key)) {
-            state.events[key] = props.attr[key as keyof typeof props.attr]
+            state.events[key] = props.attr[key as keyof typeof props.attr];
         } else {
-            addProps[key] = props.attr[key as keyof typeof props.attr]
+            addProps[key] = props.attr[key as keyof typeof props.attr];
         }
     }
 
-    state.attr = { ...state.attr, ...addProps }
-    if (state.attr.limit) state.selectFile.limit = state.attr.limit
+    state.attr = { ...state.attr, ...addProps };
+    if (state.attr.limit) state.selectFile.limit = state.attr.limit;
 
-    init(props.modelValue)
-})
+    init(props.modelValue);
+});
 
 watch(
     () => props.modelValue,
     (newVal) => {
-        if (state.uploading > 0) return
+        if (state.uploading > 0) return;
         if (newVal === undefined || newVal === null) {
-            return init('')
+            return init('');
         }
-        let newValArr = arrayFullUrl(stringToArray(cloneDeep(newVal)))
-        let oldValArr = arrayFullUrl(getAllUrls('array'))
+        let newValArr = arrayFullUrl(stringToArray(cloneDeep(newVal)));
+        let oldValArr = arrayFullUrl(getAllUrls('array'));
         if (newValArr.sort().toString() != oldValArr.sort().toString()) {
-            init(newVal)
+            init(newVal);
         }
     }
-)
+);
 
 const limitExceed = () => {
     if (state.attr.limit && state.fileList.length > state.attr.limit) {
-        state.fileList = state.fileList.slice(state.fileList.length - state.attr.limit)
-        return true
+        state.fileList = state.fileList.slice(state.fileList.length - state.attr.limit);
+        return true;
     }
-    return false
-}
+    return false;
+};
 
 const init = (modelValue: string | string[]) => {
-    let urls = stringToArray(modelValue as string)
-    state.fileList = []
-    state.defaultReturnType = typeof modelValue === 'string' || props.type == 'file' || props.type == 'image' ? 'string' : 'array'
+    let urls = stringToArray(modelValue as string);
+    state.fileList = [];
+    state.defaultReturnType = typeof modelValue === 'string' || props.type == 'file' || props.type == 'image' ? 'string' : 'array';
 
     for (const key in urls) {
         state.fileList.push({
             name: getFileNameFromPath(urls[key]),
             url: fullUrl(urls[key]),
             serverUrl: urls[key],
-        })
+        });
     }
 
     // 超出过滤 || 确定返回的URL完整
     if (limitExceed() || props.returnFullUrl) {
-        emits('update:modelValue', getAllUrls())
+        emits('update:modelValue', getAllUrls());
     }
-    state.key = uuid()
-}
+    state.key = uuid();
+};
 
 // 获取当前所有图片路径的列表
 const getAllUrls = (returnType: string = state.defaultReturnType) => {
-    limitExceed()
-    let urlList = []
+    limitExceed();
+    let urlList = [];
     for (const key in state.fileList) {
-        if (state.fileList[key].serverUrl) urlList.push(state.fileList[key].serverUrl)
+        if (state.fileList[key].serverUrl) urlList.push(state.fileList[key].serverUrl);
     }
-    if (props.returnFullUrl) urlList = arrayFullUrl(urlList as string[])
-    return returnType === 'string' ? urlList.join(',') : (urlList as string[])
-}
+    if (props.returnFullUrl) urlList = arrayFullUrl(urlList as string[]);
+    return returnType === 'string' ? urlList.join(',') : (urlList as string[]);
+};
 
 const formDataAppend = (fd: FormData) => {
     if (props.data && !isEmpty(props.data)) {
         for (const key in props.data) {
-            fd.append(key, props.data[key])
+            fd.append(key, props.data[key]);
         }
     }
-    return fd
-}
+    return fd;
+};
 
 const getUploadRef = () => {
-    return upload.value
-}
+    return upload.value;
+};
 
 const showSelectFile = () => {
-    state.selectFile.show = true
-}
+    state.selectFile.show = true;
+};
 
 defineExpose({
     getUploadRef,
     showSelectFile,
-})
+});
 </script>
 
 <style scoped lang="scss">

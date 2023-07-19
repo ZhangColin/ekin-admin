@@ -1,8 +1,8 @@
-import { RouteRecordRaw } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router';
 
 const pageTitle = (name: string): string => {
-    return `pagesTitle.${name}`
-}
+    return `pagesTitle.${name}`;
+};
 
 /*
  * 静态路由
@@ -38,7 +38,7 @@ const staticRoutes: Array<RouteRecordRaw> = [
                         query: to.query,
                     }),
                 },
-            }
+            };
         },
     },
     {
@@ -50,7 +50,7 @@ const staticRoutes: Array<RouteRecordRaw> = [
             title: pageTitle('noPower'),
         },
     },
-]
+];
 
 /*
  * 后台基础静态路由
@@ -73,8 +73,8 @@ const adminBaseRoute: RouteRecordRaw = {
             },
         },
     ],
-}
+};
 
-staticRoutes.push(adminBaseRoute)
+staticRoutes.push(adminBaseRoute);
 
-export { staticRoutes, adminBaseRoute }
+export { staticRoutes, adminBaseRoute };

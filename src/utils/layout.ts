@@ -1,6 +1,6 @@
-import { CSSProperties } from 'vue'
-import { useNavTabs } from '/@/stores/navTabs'
-import { useConfig } from '/@/stores/config'
+import { CSSProperties } from 'vue';
+import { useNavTabs } from '/@/stores/navTabs';
+import { useConfig } from '/@/stores/config';
 
 /**
  * main高度
@@ -8,18 +8,18 @@ import { useConfig } from '/@/stores/config'
  * @returns CSSProperties
  */
 export function mainHeight(extra = 0): CSSProperties {
-    let height = extra
+    let height = extra;
     const adminLayoutMainExtraHeight: AnyObj = {
         Default: 70,
         Classic: 50,
         Streamline: 60,
-    }
-    const config = useConfig()
-    const navTabs = useNavTabs()
+    };
+    const config = useConfig();
+    const navTabs = useNavTabs();
     if (!navTabs.state.tabFullScreen) {
-        height += adminLayoutMainExtraHeight[config.layout.layoutMode]
+        height += adminLayoutMainExtraHeight[config.layout.layoutMode];
     }
     return {
         height: 'calc(100vh - ' + height.toString() + 'px)',
-    }
+    };
 }

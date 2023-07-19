@@ -17,4 +17,4 @@ export default {
     'Network request timeout!': 'Network request timeout!',
     'Server exception!': 'Server-side exceptions!',
     'You are disconnected!': 'You are disconnected!',
-}
+};

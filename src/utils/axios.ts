@@ -1,35 +1,35 @@
-import axios from 'axios'
-import type { AxiosRequestConfig, Method } from 'axios'
-import { ElLoading, LoadingOptions, ElNotification } from 'element-plus'
-import { useConfig } from '/@/stores/config'
-import router from '/@/router/index'
-import { refreshToken } from '/@/api/common'
-import { useAdminInfo } from '/@/stores/adminInfo'
-import { i18n } from '/@/lang/index'
+import axios from 'axios';
+import type { AxiosRequestConfig, Method } from 'axios';
+import { ElLoading, LoadingOptions, ElNotification } from 'element-plus';
+import { useConfig } from '/@/stores/config';
+import router from '/@/router/index';
+import { refreshToken } from '/@/api/common';
+import { useAdminInfo } from '/@/stores/adminInfo';
+import { i18n } from '/@/lang/index';
 
-window.requests = []
-window.tokenRefreshing = false
-const pendingMap = new Map()
+window.requests = [];
+window.tokenRefreshing = false;
+const pendingMap = new Map();
 const loadingInstance: LoadingInstance = {
     target: null,
     count: 0,
-}
+};
 
 /**
  * 根据运行环境获取基础请求URL
  */
 export const getUrl = (): string => {
-    const value: string = import.meta.env.VITE_AXIOS_BASE_URL as string
-    return value == 'getCurrentDomain' ? window.location.protocol + '//' + window.location.host : value
-}
+    const value: string = import.meta.env.VITE_AXIOS_BASE_URL as string;
+    return value == 'getCurrentDomain' ? window.location.protocol + '//' + window.location.host : value;
+};
 
 /**
  * 根据运行环境获取基础请求URL的端口
  */
 export const getUrlPort = (): string => {
-    const url = getUrl()
-    return new URL(url).port
-}
+    const url = getUrl();
+    return new URL(url).port;
+};
 
 /**
  * 创建`Axios`
@@ -37,8 +37,8 @@ export const getUrlPort = (): string => {
  * 关闭`reductDataFormat`,返回类型则为`AxiosPromise`
  */
 function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequestConfig, options: Options = {}, loading: LoadingOptions = {}): T {
-    const config = useConfig()
-    const adminInfo = useAdminInfo()
+    const config = useConfig();
+    const adminInfo = useAdminInfo();
 
     const Axios = axios.create({
         baseURL: getUrl(),
@@ -48,7 +48,7 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
             server: true,
         },
         responseType: 'json',
-    })
+    });
 
     options = Object.assign(
         {
@@ -61,122 +61,122 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
             anotherToken: '', // 当前请求使用另外的用户token
         },
         options
-    )
+    );
 
     // 请求拦截
     Axios.interceptors.request.use(
         (config) => {
-            removePending(config)
-            options.CancelDuplicateRequest && addPending(config)
+            removePending(config);
+            options.CancelDuplicateRequest && addPending(config);
             // 创建loading实例
             if (options.loading) {
-                loadingInstance.count++
+                loadingInstance.count++;
                 if (loadingInstance.count === 1) {
-                    loadingInstance.target = ElLoading.service(loading)
+                    loadingInstance.target = ElLoading.service(loading);
                 }
             }
 
             // 自动携带token
             if (config.headers) {
-                const token = adminInfo.getToken()
-                if (token) (config.headers as AnyObj).batoken = token
+                const token = adminInfo.getToken();
+                if (token) (config.headers as AnyObj).batoken = token;
             }
 
-            return config
+            return config;
         },
         (error) => {
-            return Promise.reject(error)
+            return Promise.reject(error);
         }
-    )
+    );
 
     // 响应拦截
     Axios.interceptors.response.use(
         (response) => {
-            removePending(response.config)
-            options.loading && closeLoading(options) // 关闭loading
+            removePending(response.config);
+            options.loading && closeLoading(options); // 关闭loading
 
             if (response.config.responseType == 'json') {
                 if (response.data && response.data.code !== 1) {
                     if (response.data.code == 409) {
                         if (!window.tokenRefreshing) {
-                            window.tokenRefreshing = true
+                            window.tokenRefreshing = true;
                             return refreshToken()
                                 .then((res) => {
                                     if (res.data.type == 'admin-refresh') {
-                                        adminInfo.setToken(res.data.token, 'auth')
-                                        response.headers.batoken = `${res.data.token}`
-                                        window.requests.forEach((cb) => cb(res.data.token, 'admin-refresh'))
+                                        adminInfo.setToken(res.data.token, 'auth');
+                                        response.headers.batoken = `${res.data.token}`;
+                                        window.requests.forEach((cb) => cb(res.data.token, 'admin-refresh'));
                                     }
-                                    window.requests = []
-                                    return Axios(response.config)
+                                    window.requests = [];
+                                    return Axios(response.config);
                                 })
                                 .catch((err) => {
-                                    adminInfo.removeToken()
+                                    adminInfo.removeToken();
                                     if (router.currentRoute.value.name != 'adminLogin') {
-                                        router.push({ name: 'adminLogin' })
-                                        return Promise.reject(err)
+                                        router.push({ name: 'adminLogin' });
+                                        return Promise.reject(err);
                                     } else {
-                                        response.headers.batoken = ''
-                                        window.requests.forEach((cb) => cb('', 'admin-refresh'))
-                                        window.requests = []
-                                        return Axios(response.config)
+                                        response.headers.batoken = '';
+                                        window.requests.forEach((cb) => cb('', 'admin-refresh'));
+                                        window.requests = [];
+                                        return Axios(response.config);
                                     }
                                 })
                                 .finally(() => {
-                                    window.tokenRefreshing = false
-                                })
+                                    window.tokenRefreshing = false;
+                                });
                         } else {
                             return new Promise((resolve) => {
                                 // 用函数形式将 resolve 存入，等待刷新后再执行
                                 window.requests.push((token: string, type: string) => {
                                     if (type == 'admin-refresh') {
-                                        response.headers.batoken = `${token}`
+                                        response.headers.batoken = `${token}`;
                                     } else {
-                                        response.headers['ba-user-token'] = `${token}`
+                                        response.headers['ba-user-token'] = `${token}`;
                                     }
-                                    resolve(Axios(response.config))
-                                })
-                            })
+                                    resolve(Axios(response.config));
+                                });
+                            });
                         }
                     }
                     if (options.showCodeMessage) {
                         ElNotification({
                             type: 'error',
                             message: response.data.msg,
-                        })
+                        });
                     }
                     // 自动跳转到路由name或path，仅限server端返回302的情况
                     if (response.data.code == 302) {
-                        adminInfo.removeToken()
+                        adminInfo.removeToken();
                         if (response.data.data.routeName) {
-                            router.push({ name: response.data.data.routeName })
+                            router.push({ name: response.data.data.routeName });
                         } else if (response.data.data.routePath) {
-                            router.push({ path: response.data.data.routePath })
+                            router.push({ path: response.data.data.routePath });
                         }
                     }
                     // code不等于1, 页面then内的具体逻辑就不执行了
-                    return Promise.reject(response.data)
+                    return Promise.reject(response.data);
                 } else if (options.showSuccessMessage && response.data && response.data.code == 1) {
                     ElNotification({
                         message: response.data.msg ? response.data.msg : i18n.global.t('axios.Operation successful'),
                         type: 'success',
-                    })
+                    });
                 }
             }
 
-            return options.reductDataFormat ? response.data : response
+            return options.reductDataFormat ? response.data : response;
         },
         (error) => {
-            error.config && removePending(error.config)
-            options.loading && closeLoading(options) // 关闭loading
-            options.showErrorMessage && httpErrorStatusHandle(error) // 处理错误状态码
-            return Promise.reject(error) // 错误继续返回给到具体页面
+            error.config && removePending(error.config);
+            options.loading && closeLoading(options); // 关闭loading
+            options.showErrorMessage && httpErrorStatusHandle(error); // 处理错误状态码
+            return Promise.reject(error); // 错误继续返回给到具体页面
         }
-    )
-    return Axios(axiosConfig) as T
+    );
+    return Axios(axiosConfig) as T;
 }
 
-export default createAxios
+export default createAxios;
 
 /**
  * 处理异常
@@ -184,72 +184,72 @@ export default createAxios
  */
 function httpErrorStatusHandle(error: any) {
     // 处理被取消的请求
-    if (axios.isCancel(error)) return console.error(i18n.global.t('axios.Automatic cancellation due to duplicate request:') + error.message)
-    let message = ''
+    if (axios.isCancel(error)) return console.error(i18n.global.t('axios.Automatic cancellation due to duplicate request:') + error.message);
+    let message = '';
     if (error && error.response) {
         switch (error.response.status) {
             case 302:
-                message = i18n.global.t('axios.Interface redirected!')
-                break
+                message = i18n.global.t('axios.Interface redirected!');
+                break;
             case 400:
-                message = i18n.global.t('axios.Incorrect parameter!')
-                break
+                message = i18n.global.t('axios.Incorrect parameter!');
+                break;
             case 401:
-                message = i18n.global.t('axios.You do not have permission to operate!')
-                break
+                message = i18n.global.t('axios.You do not have permission to operate!');
+                break;
             case 403:
-                message = i18n.global.t('axios.You do not have permission to operate!')
-                break
+                message = i18n.global.t('axios.You do not have permission to operate!');
+                break;
             case 404:
-                message = i18n.global.t('axios.Error requesting address:') + error.response.config.url
-                break
+                message = i18n.global.t('axios.Error requesting address:') + error.response.config.url;
+                break;
             case 408:
-                message = i18n.global.t('axios.Request timed out!')
-                break
+                message = i18n.global.t('axios.Request timed out!');
+                break;
             case 409:
-                message = i18n.global.t('axios.The same data already exists in the system!')
-                break
+                message = i18n.global.t('axios.The same data already exists in the system!');
+                break;
             case 500:
-                message = i18n.global.t('axios.Server internal error!')
-                break
+                message = i18n.global.t('axios.Server internal error!');
+                break;
             case 501:
-                message = i18n.global.t('axios.Service not implemented!')
-                break
+                message = i18n.global.t('axios.Service not implemented!');
+                break;
             case 502:
-                message = i18n.global.t('axios.Gateway error!')
-                break
+                message = i18n.global.t('axios.Gateway error!');
+                break;
             case 503:
-                message = i18n.global.t('axios.Service unavailable!')
-                break
+                message = i18n.global.t('axios.Service unavailable!');
+                break;
             case 504:
-                message = i18n.global.t('axios.The service is temporarily unavailable Please try again later!')
-                break
+                message = i18n.global.t('axios.The service is temporarily unavailable Please try again later!');
+                break;
             case 505:
-                message = i18n.global.t('axios.HTTP version is not supported!')
-                break
+                message = i18n.global.t('axios.HTTP version is not supported!');
+                break;
             default:
-                message = i18n.global.t('axios.Abnormal problem, please contact the website administrator!')
-                break
+                message = i18n.global.t('axios.Abnormal problem, please contact the website administrator!');
+                break;
         }
     }
-    if (error.message.includes('timeout')) message = i18n.global.t('axios.Network request timeout!')
+    if (error.message.includes('timeout')) message = i18n.global.t('axios.Network request timeout!');
     if (error.message.includes('Network'))
-        message = window.navigator.onLine ? i18n.global.t('axios.Server exception!') : i18n.global.t('axios.You are disconnected!')
+        message = window.navigator.onLine ? i18n.global.t('axios.Server exception!') : i18n.global.t('axios.You are disconnected!');
 
     ElNotification({
         type: 'error',
         message,
-    })
+    });
 }
 
 /**
  * 关闭Loading层实例
  */
 function closeLoading(options: Options) {
-    if (options.loading && loadingInstance.count > 0) loadingInstance.count--
+    if (options.loading && loadingInstance.count > 0) loadingInstance.count--;
     if (loadingInstance.count === 0) {
-        loadingInstance.target.close()
-        loadingInstance.target = null
+        loadingInstance.target.close();
+        loadingInstance.target = null;
     }
 }
 
@@ -257,25 +257,25 @@ function closeLoading(options: Options) {
  * 储存每个请求的唯一cancel回调, 以此为标识
  */
 function addPending(config: AxiosRequestConfig) {
-    const pendingKey = getPendingKey(config)
+    const pendingKey = getPendingKey(config);
     config.cancelToken =
         config.cancelToken ||
         new axios.CancelToken((cancel) => {
             if (!pendingMap.has(pendingKey)) {
-                pendingMap.set(pendingKey, cancel)
+                pendingMap.set(pendingKey, cancel);
             }
-        })
+        });
 }
 
 /**
  * 删除重复的请求
  */
 function removePending(config: AxiosRequestConfig) {
-    const pendingKey = getPendingKey(config)
+    const pendingKey = getPendingKey(config);
     if (pendingMap.has(pendingKey)) {
-        const cancelToken = pendingMap.get(pendingKey)
-        cancelToken(pendingKey)
-        pendingMap.delete(pendingKey)
+        const cancelToken = pendingMap.get(pendingKey);
+        cancelToken(pendingKey);
+        pendingMap.delete(pendingKey);
     }
 }
 
@@ -283,9 +283,9 @@ function removePending(config: AxiosRequestConfig) {
  * 生成每个请求的唯一key
  */
 function getPendingKey(config: AxiosRequestConfig) {
-    let { data } = config
-    const { url, method, params, headers } = config
-    if (typeof data === 'string') data = JSON.parse(data) // response里面返回的config.data是个字符串对象
+    let { data } = config;
+    const { url, method, params, headers } = config;
+    if (typeof data === 'string') data = JSON.parse(data); // response里面返回的config.data是个字符串对象
     return [
         url,
         method,
@@ -293,7 +293,7 @@ function getPendingKey(config: AxiosRequestConfig) {
         headers && (headers as AnyObj)['ba-user-token'] ? (headers as AnyObj)['ba-user-token'] : '',
         JSON.stringify(params),
         JSON.stringify(data),
-    ].join('&')
+    ].join('&');
 }
 
 /**
@@ -303,33 +303,33 @@ export function requestPayload(method: Method, data: AnyObj) {
     if (method == 'GET') {
         return {
             params: data,
-        }
+        };
     } else if (method == 'POST') {
         return {
             data: data,
-        }
+        };
     }
 }
 
 interface LoadingInstance {
-    target: any
-    count: number
+    target: any;
+    count: number;
 }
 interface Options {
     // 是否开启取消重复请求, 默认为 true
-    CancelDuplicateRequest?: boolean
+    CancelDuplicateRequest?: boolean;
     // 是否开启loading层效果, 默认为false
-    loading?: boolean
+    loading?: boolean;
     // 是否开启简洁的数据结构响应, 默认为true
-    reductDataFormat?: boolean
+    reductDataFormat?: boolean;
     // 是否开启接口错误信息展示,默认为true
-    showErrorMessage?: boolean
+    showErrorMessage?: boolean;
     // 是否开启code不为0时的信息提示, 默认为true
-    showCodeMessage?: boolean
+    showCodeMessage?: boolean;
     // 是否开启code为0时的信息提示, 默认为false
-    showSuccessMessage?: boolean
+    showSuccessMessage?: boolean;
     // 当前请求使用另外的用户token
-    anotherToken?: string
+    anotherToken?: string;
 }
 
 /*

@@ -123,51 +123,51 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, inject } from 'vue'
-import { debounce, auth } from '/@/utils/common'
-import type baTableClass from '/@/utils/baTable'
-import ComSearch from '/@/components/table/comSearch/index.vue'
-import { useI18n } from 'vue-i18n'
+import { reactive, computed, inject } from 'vue';
+import { debounce, auth } from '/@/utils/common';
+import type baTableClass from '/@/utils/baTable';
+import ComSearch from '/@/components/table/comSearch/index.vue';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
-const baTable = inject('baTable') as baTableClass
+const { t } = useI18n();
+const baTable = inject('baTable') as baTableClass;
 
 interface Props {
-    buttons: HeaderOptButton[]
-    quickSearchPlaceholder?: string
+    buttons: HeaderOptButton[];
+    quickSearchPlaceholder?: string;
 }
 const props = withDefaults(defineProps<Props>(), {
     buttons: () => {
-        return ['refresh', 'add', 'edit', 'delete']
+        return ['refresh', 'add', 'edit', 'delete'];
     },
     quickSearchPlaceholder: '',
-})
+});
 
 const state = reactive({
     quickSearch: '',
-})
+});
 
 const columnDisplay = computed(() => {
-    let columnDisplayArr = []
+    let columnDisplayArr = [];
     for (let item of baTable.table.column) {
-        item.type === 'selection' || item.render === 'buttons' || item.enableColumnDisplayControl === false ? '' : columnDisplayArr.push(item)
+        item.type === 'selection' || item.render === 'buttons' || item.enableColumnDisplayControl === false ? '' : columnDisplayArr.push(item);
     }
-    return columnDisplayArr
-})
+    return columnDisplayArr;
+});
 
-const enableBatchOpt = computed(() => (baTable.table.selection!.length > 0 ? true : false))
+const enableBatchOpt = computed(() => (baTable.table.selection!.length > 0 ? true : false));
 
 const onAction = (event: string, data: AnyObj = {}) => {
-    baTable.onTableHeaderAction(event, data)
-}
+    baTable.onTableHeaderAction(event, data);
+};
 
 const onSearchInput = () => {
-    baTable.onTableHeaderAction('quick-search', { keyword: state.quickSearch })
-}
+    baTable.onTableHeaderAction('quick-search', { keyword: state.quickSearch });
+};
 
 const onChangeShowColumn = (value: string | number | boolean, field: string) => {
-    baTable.onTableHeaderAction('change-show-column', { field: field, value: value })
-}
+    baTable.onTableHeaderAction('change-show-column', { field: field, value: value });
+};
 </script>
 
 <style scoped lang="scss">

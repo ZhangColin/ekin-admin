@@ -26,33 +26,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 
-const router = useRouter()
-const complete = ref(0)
-var timer: any = null
+const router = useRouter();
+const complete = ref(0);
+var timer: any = null;
 
 function process() {
-    complete.value += Math.floor(Math.random() * 50)
+    complete.value += Math.floor(Math.random() * 50);
     if (complete.value >= 100) {
-        complete.value = 100
-        router.back()
+        complete.value = 100;
+        router.back();
     } else {
-        processInterval()
+        processInterval();
     }
 }
 
 function processInterval() {
-    timer = setTimeout(process, Math.random() * (1000 - 500) + 500)
+    timer = setTimeout(process, Math.random() * (1000 - 500) + 500);
 }
 
 onMounted(() => {
-    processInterval()
-})
+    processInterval();
+});
 onBeforeUnmount(() => {
-    clearTimeout(timer)
-})
+    clearTimeout(timer);
+});
 </script>
 
 <style scoped lang="scss">

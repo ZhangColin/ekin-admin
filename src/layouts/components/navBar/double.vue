@@ -10,55 +10,55 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, ref } from 'vue'
-import { useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded } from 'vue-router'
-import { currentRouteTopActivity } from '/@/layouts/components/menus/helper'
-import MenuTree from '/@/layouts/components/menus/menuTree.vue'
-import NavMenus from '/@/layouts/components/navMenus.vue'
-import type { ScrollbarInstance } from 'element-plus'
-import { useNavTabs } from '/@/stores/navTabs'
-import { useConfig } from '/@/stores/config'
-import { uuid } from '/@/utils/random'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue';
+import { useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded } from 'vue-router';
+import { currentRouteTopActivity } from '/@/layouts/components/menus/helper';
+import MenuTree from '/@/layouts/components/menus/menuTree.vue';
+import NavMenus from '/@/layouts/components/navMenus.vue';
+import type { ScrollbarInstance } from 'element-plus';
+import { useNavTabs } from '/@/stores/navTabs';
+import { useConfig } from '/@/stores/config';
+import { uuid } from '/@/utils/random';
 
-const horizontalMenusRef = ref<ScrollbarInstance>()
+const horizontalMenusRef = ref<ScrollbarInstance>();
 
-const config = useConfig()
-const navTabs = useNavTabs()
-const route = useRoute()
+const config = useConfig();
+const navTabs = useNavTabs();
+const route = useRoute();
 
 const state = reactive({
     menuKey: uuid(),
     defaultActive: '',
-})
+});
 
 const menus = computed(() => {
-    state.menuKey = uuid() // eslint-disable-line
-    return navTabs.state.tabsViewRoutes
-})
+    state.menuKey = uuid(); // eslint-disable-line
+    return navTabs.state.tabsViewRoutes;
+});
 
 // 激活当前路由的菜单
 const currentRouteActive = (currentRoute: RouteLocationNormalizedLoaded) => {
-    let routeChildren = currentRouteTopActivity(currentRoute.path, navTabs.state.tabsViewRoutes)
-    if (routeChildren) state.defaultActive = currentRoute.path
-}
+    let routeChildren = currentRouteTopActivity(currentRoute.path, navTabs.state.tabsViewRoutes);
+    if (routeChildren) state.defaultActive = currentRoute.path;
+};
 
 // 滚动条滚动到激活菜单所在位置
 const verticalMenusScroll = () => {
     nextTick(() => {
-        let activeMenu: HTMLElement | null = document.querySelector('.el-menu.menu-horizontal li.is-active')
-        if (!activeMenu) return false
-        horizontalMenusRef.value?.setScrollTop(activeMenu.offsetTop)
-    })
-}
+        let activeMenu: HTMLElement | null = document.querySelector('.el-menu.menu-horizontal li.is-active');
+        if (!activeMenu) return false;
+        horizontalMenusRef.value?.setScrollTop(activeMenu.offsetTop);
+    });
+};
 
 onMounted(() => {
-    currentRouteActive(route)
-    verticalMenusScroll()
-})
+    currentRouteActive(route);
+    verticalMenusScroll();
+});
 
 onBeforeRouteUpdate((to) => {
-    currentRouteActive(to)
-})
+    currentRouteActive(to);
+});
 </script>
 
 <style scoped lang="scss">

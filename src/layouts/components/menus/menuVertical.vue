@@ -13,57 +13,57 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, ref } from 'vue'
-import MenuTree from '/@/layouts/components/menus/menuTree.vue'
-import { useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded } from 'vue-router'
-import type { ScrollbarInstance } from 'element-plus'
-import { useConfig } from '/@/stores/config'
-import { useNavTabs } from '/@/stores/navTabs'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue';
+import MenuTree from '/@/layouts/components/menus/menuTree.vue';
+import { useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded } from 'vue-router';
+import type { ScrollbarInstance } from 'element-plus';
+import { useConfig } from '/@/stores/config';
+import { useNavTabs } from '/@/stores/navTabs';
 
-const config = useConfig()
-const navTabs = useNavTabs()
-const route = useRoute()
+const config = useConfig();
+const navTabs = useNavTabs();
+const route = useRoute();
 
-const verticalMenusRef = ref<ScrollbarInstance>()
+const verticalMenusRef = ref<ScrollbarInstance>();
 
 const state = reactive({
     defaultActive: '',
-})
+});
 
 const verticalMenusScrollbarHeight = computed(() => {
-    let menuTopBarHeight = 0
+    let menuTopBarHeight = 0;
     if (config.layout.menuShowTopBar) {
-        menuTopBarHeight = 50
+        menuTopBarHeight = 50;
     }
     if (config.layout.layoutMode == 'Default') {
-        return 'calc(100vh - ' + (32 + menuTopBarHeight) + 'px)'
+        return 'calc(100vh - ' + (32 + menuTopBarHeight) + 'px)';
     } else {
-        return 'calc(100vh - ' + menuTopBarHeight + 'px)'
+        return 'calc(100vh - ' + menuTopBarHeight + 'px)';
     }
-})
+});
 
 // 激活当前路由的菜单
 const currentRouteActive = (currentRoute: RouteLocationNormalizedLoaded) => {
-    state.defaultActive = currentRoute.path
-}
+    state.defaultActive = currentRoute.path;
+};
 
 // 滚动条滚动到激活菜单所在位置
 const verticalMenusScroll = () => {
     nextTick(() => {
-        let activeMenu: HTMLElement | null = document.querySelector('.el-menu.layouts-menu-vertical li.is-active')
-        if (!activeMenu) return false
-        verticalMenusRef.value?.setScrollTop(activeMenu.offsetTop)
-    })
-}
+        let activeMenu: HTMLElement | null = document.querySelector('.el-menu.layouts-menu-vertical li.is-active');
+        if (!activeMenu) return false;
+        verticalMenusRef.value?.setScrollTop(activeMenu.offsetTop);
+    });
+};
 
 onMounted(() => {
-    currentRouteActive(route)
-    verticalMenusScroll()
-})
+    currentRouteActive(route);
+    verticalMenusScroll();
+});
 
 onBeforeRouteUpdate((to) => {
-    currentRouteActive(to)
-})
+    currentRouteActive(to);
+});
 </script>
 <style>
 .vertical-menus-scrollbar {

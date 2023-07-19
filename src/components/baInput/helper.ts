@@ -1,4 +1,4 @@
-import { FieldData } from './index'
+import { FieldData } from './index';
 
 export const npuaFalse = () => {
     return {
@@ -6,8 +6,8 @@ export const npuaFalse = () => {
         primaryKey: false,
         unsigned: false,
         autoIncrement: false,
-    }
-}
+    };
+};
 
 /**
  * 所有 Input 支持的类型对应的数据字段类型等数据（默认/示例设计）
@@ -189,12 +189,12 @@ export const fieldData: FieldData = {
         default: 'empty string',
         ...npuaFalse(),
     },
-}
+};
 
 export const stringToArray = (val: string | string[]) => {
     if (typeof val === 'string') {
-        return val == '' ? [] : val.split(',')
+        return val == '' ? [] : val.split(',');
     } else {
-        return val as string[]
+        return val as string[];
     }
-}
+};

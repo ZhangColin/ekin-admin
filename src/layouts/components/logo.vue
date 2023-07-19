@@ -17,27 +17,27 @@
 </template>
 
 <script setup lang="ts">
-import { useConfig } from '/@/stores/config'
-import { useSiteConfig } from '/@/stores/siteConfig'
-import { closeShade } from '/@/utils/pageShade'
-import { Session } from '/@/utils/storage'
-import { BEFORE_RESIZE_LAYOUT } from '/@/stores/constant/cacheKey'
+import { useConfig } from '/@/stores/config';
+import { useSiteConfig } from '/@/stores/siteConfig';
+import { closeShade } from '/@/utils/pageShade';
+import { Session } from '/@/utils/storage';
+import { BEFORE_RESIZE_LAYOUT } from '/@/stores/constant/cacheKey';
 
-const config = useConfig()
-const siteConfig = useSiteConfig()
+const config = useConfig();
+const siteConfig = useSiteConfig();
 
 const onMenuCollapse = function () {
     if (config.layout.shrink && !config.layout.menuCollapse) {
-        closeShade()
+        closeShade();
     }
 
-    config.setLayout('menuCollapse', !config.layout.menuCollapse)
+    config.setLayout('menuCollapse', !config.layout.menuCollapse);
 
     Session.set(BEFORE_RESIZE_LAYOUT, {
         layoutMode: config.layout.layoutMode,
         menuCollapse: config.layout.menuCollapse,
-    })
-}
+    });
+};
 </script>
 
 <style scoped lang="scss">

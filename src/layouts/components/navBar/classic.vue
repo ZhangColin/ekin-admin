@@ -9,19 +9,19 @@
 </template>
 
 <script setup lang="ts">
-import { useConfig } from '/@/stores/config'
-import NavTabs from '/@/layouts/components/navBar/tabs.vue'
-import NavMenus from '../navMenus.vue'
-import { showShade } from '/@/utils/pageShade'
+import { useConfig } from '/@/stores/config';
+import NavTabs from '/@/layouts/components/navBar/tabs.vue';
+import NavMenus from '../navMenus.vue';
+import { showShade } from '/@/utils/pageShade';
 
-const config = useConfig()
+const config = useConfig();
 
 const onMenuCollapse = () => {
     showShade('ba-aside-menu-shade', () => {
-        config.setLayout('menuCollapse', true)
-    })
-    config.setLayout('menuCollapse', false)
-}
+        config.setLayout('menuCollapse', true);
+    });
+    config.setLayout('menuCollapse', false);
+};
 </script>
 
 <style scoped lang="scss">

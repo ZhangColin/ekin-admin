@@ -13,77 +13,77 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, ref } from 'vue'
-import MenuTree from '/@/layouts/components/menus/menuTree.vue'
-import { useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
-import type { ScrollbarInstance } from 'element-plus'
-import { useConfig } from '/@/stores/config'
-import { useNavTabs } from '/@/stores/navTabs'
-import { currentRouteTopActivity } from '/@/layouts/components/menus/helper'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue';
+import MenuTree from '/@/layouts/components/menus/menuTree.vue';
+import { useRoute, onBeforeRouteUpdate, RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router';
+import type { ScrollbarInstance } from 'element-plus';
+import { useConfig } from '/@/stores/config';
+import { useNavTabs } from '/@/stores/navTabs';
+import { currentRouteTopActivity } from '/@/layouts/components/menus/helper';
 
-const config = useConfig()
-const navTabs = useNavTabs()
-const route = useRoute()
+const config = useConfig();
+const navTabs = useNavTabs();
+const route = useRoute();
 
-const verticalMenusRef = ref<ScrollbarInstance>()
+const verticalMenusRef = ref<ScrollbarInstance>();
 
 const state: {
-    defaultActive: string
-    routeChildren: RouteRecordRaw[]
+    defaultActive: string;
+    routeChildren: RouteRecordRaw[];
 } = reactive({
     defaultActive: '',
     routeChildren: [],
-})
+});
 
 const verticalMenusScrollbarHeight = computed(() => {
-    let menuTopBarHeight = 0
+    let menuTopBarHeight = 0;
     if (config.layout.menuShowTopBar) {
-        menuTopBarHeight = 50
+        menuTopBarHeight = 50;
     }
     if (config.layout.layoutMode == 'Default') {
-        return 'calc(100vh - ' + (32 + menuTopBarHeight) + 'px)'
+        return 'calc(100vh - ' + (32 + menuTopBarHeight) + 'px)';
     } else {
-        return 'calc(100vh - ' + menuTopBarHeight + 'px)'
+        return 'calc(100vh - ' + menuTopBarHeight + 'px)';
     }
-})
+});
 
 /**
  * 激活当前路由的菜单
  * @param currentRoute 当前路由
  */
 const currentRouteActive = (currentRoute: RouteLocationNormalizedLoaded) => {
-    let routeChildren = currentRouteTopActivity(currentRoute.path, navTabs.state.tabsViewRoutes)
+    let routeChildren = currentRouteTopActivity(currentRoute.path, navTabs.state.tabsViewRoutes);
     if (routeChildren) {
-        state.defaultActive = currentRoute.path
+        state.defaultActive = currentRoute.path;
         if (routeChildren.children && routeChildren.children.length > 0) {
-            state.routeChildren = routeChildren.children
+            state.routeChildren = routeChildren.children;
         } else {
-            state.routeChildren = [routeChildren]
+            state.routeChildren = [routeChildren];
         }
     } else if (!state.routeChildren) {
-        state.routeChildren = navTabs.state.tabsViewRoutes
+        state.routeChildren = navTabs.state.tabsViewRoutes;
     }
-}
+};
 
 /**
  * 侧栏菜单滚动条滚动到激活菜单所在位置
  */
 const verticalMenusScroll = () => {
     nextTick(() => {
-        let activeMenu: HTMLElement | null = document.querySelector('.el-menu.layouts-menu-vertical-children li.is-active')
-        if (!activeMenu) return false
-        verticalMenusRef.value?.setScrollTop(activeMenu.offsetTop)
-    })
-}
+        let activeMenu: HTMLElement | null = document.querySelector('.el-menu.layouts-menu-vertical-children li.is-active');
+        if (!activeMenu) return false;
+        verticalMenusRef.value?.setScrollTop(activeMenu.offsetTop);
+    });
+};
 
 onMounted(() => {
-    currentRouteActive(route)
-    verticalMenusScroll()
-})
+    currentRouteActive(route);
+    verticalMenusScroll();
+});
 
 onBeforeRouteUpdate((to) => {
-    currentRouteActive(to)
-})
+    currentRouteActive(to);
+});
 </script>
 <style>
 .children-vertical-menus-scrollbar {

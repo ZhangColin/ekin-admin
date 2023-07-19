@@ -72,103 +72,103 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, reactive, ref, nextTick } from 'vue'
-import * as pageBubble from '/@/utils/pageBubble'
-import type { FormInstance, InputInstance } from 'element-plus'
-import { ElNotification } from 'element-plus'
-import { useI18n } from 'vue-i18n'
-import { editDefaultLang } from '/@/lang/index'
-import { useConfig } from '/@/stores/config'
-import { useAdminInfo } from '/@/stores/adminInfo'
-import { login } from '/@/api'
-import { uuid } from '/@/utils/random'
-import { buildValidatorData } from '/@/utils/validate'
-import router from '/@/router'
-import clickCaptcha from '/@/components/clickCaptcha'
-let timer: number
+import { onMounted, onBeforeUnmount, reactive, ref, nextTick } from 'vue';
+import * as pageBubble from '/@/utils/pageBubble';
+import type { FormInstance, InputInstance } from 'element-plus';
+import { ElNotification } from 'element-plus';
+import { useI18n } from 'vue-i18n';
+import { editDefaultLang } from '/@/lang/index';
+import { useConfig } from '/@/stores/config';
+import { useAdminInfo } from '/@/stores/adminInfo';
+import { login } from '/@/api';
+import { uuid } from '/@/utils/random';
+import { buildValidatorData } from '/@/utils/validate';
+import router from '/@/router';
+import clickCaptcha from '/@/components/clickCaptcha';
+let timer: number;
 
-const config = useConfig()
-const adminInfo = useAdminInfo()
+const config = useConfig();
+const adminInfo = useAdminInfo();
 
-const formRef = ref<FormInstance>()
-const usernameRef = ref<InputInstance>()
-const passwordRef = ref<InputInstance>()
+const formRef = ref<FormInstance>();
+const usernameRef = ref<InputInstance>();
+const passwordRef = ref<InputInstance>();
 const state = reactive({
     showCaptcha: false,
     submitLoading: false,
-})
+});
 const form = reactive({
     username: '',
     password: '',
     keep: false,
     captchaId: uuid(),
     captchaInfo: '',
-})
+});
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 // 表单验证规则
 const rules = reactive({
     username: [buildValidatorData({ name: 'required', message: t('login.Please enter an account') }), buildValidatorData({ name: 'account' })],
     password: [buildValidatorData({ name: 'required', message: t('login.Please input a password') }), buildValidatorData({ name: 'password' })],
-})
+});
 
 const focusInput = () => {
     if (form.username === '') {
-        usernameRef.value!.focus()
+        usernameRef.value!.focus();
     } else if (form.password === '') {
-        passwordRef.value!.focus()
+        passwordRef.value!.focus();
     }
-}
+};
 
 onMounted(() => {
     timer = window.setTimeout(() => {
-        pageBubble.init()
-    }, 1000)
+        pageBubble.init();
+    }, 1000);
 
     login('get')
         .then((res) => {
-            state.showCaptcha = res.data.captcha
-            nextTick(() => focusInput())
+            state.showCaptcha = res.data.captcha;
+            nextTick(() => focusInput());
         })
         .catch((err) => {
-            console.log(err)
-        })
-})
+            console.log(err);
+        });
+});
 
 onBeforeUnmount(() => {
-    clearTimeout(timer)
-    pageBubble.removeListeners()
-})
+    clearTimeout(timer);
+    pageBubble.removeListeners();
+});
 
 const onSubmitPre = () => {
     formRef.value?.validate((valid) => {
         if (valid) {
             if (state.showCaptcha) {
-                clickCaptcha(form.captchaId, (captchaInfo: string) => onSubmit(captchaInfo))
+                clickCaptcha(form.captchaId, (captchaInfo: string) => onSubmit(captchaInfo));
             } else {
-                onSubmit()
+                onSubmit();
             }
         }
-    })
-}
+    });
+};
 
 const onSubmit = (captchaInfo = '') => {
-    state.submitLoading = true
-    form.captchaInfo = captchaInfo
+    state.submitLoading = true;
+    form.captchaInfo = captchaInfo;
     login('post', form)
         .then((res) => {
-            adminInfo.dataFill(res.data.userInfo)
+            adminInfo.dataFill(res.data.userInfo);
             ElNotification({
                 message: res.msg,
                 type: 'success',
-            })
-            router.push({ path: res.data.routePath })
+            });
+            router.push({ path: res.data.routePath });
         })
         .finally(() => {
-            state.submitLoading = false
-        })
-}
+            state.submitLoading = false;
+        });
+};
 </script>
 
 <style scoped lang="scss">

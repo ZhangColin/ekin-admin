@@ -6,11 +6,11 @@
 </template>
 
 <script setup lang="ts">
-import { useConfig } from '/@/stores/config'
-import NavTabs from '/@/layouts/components/navBar/tabs.vue'
-import NavMenus from '../navMenus.vue'
+import { useConfig } from '/@/stores/config';
+import NavTabs from '/@/layouts/components/navBar/tabs.vue';
+import NavMenus from '../navMenus.vue';
 
-const config = useConfig()
+const config = useConfig();
 </script>
 
 <style lang="scss" scoped>

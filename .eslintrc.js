@@ -66,4 +66,4 @@ module.exports = {
         window: true,
         NodeJS: true,
     },
-}
+};

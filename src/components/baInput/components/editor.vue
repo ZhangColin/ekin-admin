@@ -8,30 +8,30 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import type { Component } from 'vue'
+import { reactive } from 'vue';
+import type { Component } from 'vue';
 
 interface Props {
-    editorType?: string
+    editorType?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     editorType: 'default',
-})
+});
 
 const state = reactive({
     editorType: props.editorType,
-})
+});
 
-const mixins: Record<string, Component> = {}
-const mixinComponents: Record<string, any> = import.meta.glob('../../mixins/editor/**.vue', { eager: true })
+const mixins: Record<string, Component> = {};
+const mixinComponents: Record<string, any> = import.meta.glob('../../mixins/editor/**.vue', { eager: true });
 for (const key in mixinComponents) {
-    const fileName = key.replace('../../mixins/editor/', '').replace('.vue', '')
-    mixins[fileName] = mixinComponents[key].default
+    const fileName = key.replace('../../mixins/editor/', '').replace('.vue', '');
+    mixins[fileName] = mixinComponents[key].default;
 
     // 未安装富文本编辑器时，值为 default，安装之后，则值为最后一个编辑器的名称
     if (props.editorType == 'default' && fileName != 'default') {
-        state.editorType = fileName
+        state.editorType = fileName;
     }
 }
 </script>

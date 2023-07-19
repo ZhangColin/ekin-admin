@@ -12,4 +12,4 @@ export default {
     required: 'Required',
     'editor required': 'editor Required',
     'Please enter the correct ID number': 'Please enter the correct ID number',
-}
+};

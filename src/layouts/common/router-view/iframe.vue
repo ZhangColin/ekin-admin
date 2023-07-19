@@ -14,20 +14,20 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { mainHeight as iframeStyle } from '/@/utils/layout'
-import { useRouter } from 'vue-router'
+import { reactive } from 'vue';
+import { mainHeight as iframeStyle } from '/@/utils/layout';
+import { useRouter } from 'vue-router';
 
-const router = useRouter()
+const router = useRouter();
 
 const state = reactive({
     loading: true,
     iframeSrc: router.currentRoute.value.meta.url as string,
-})
+});
 
 const hideLoading = () => {
-    state.loading = false
-}
+    state.loading = false;
+};
 </script>
 
 <style scoped lang="scss">
