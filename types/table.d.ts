@@ -45,7 +45,7 @@ declare global {
         // 是否展开所有子项，树状表格专用属性
         expandAll?: boolean
         // 表格扩展数据，随意定义，以便一些自定义数据可以随baTable实例传递
-        extend?: anyObj
+        extend?: AnyObj
     }
 
     interface TableRenderPublicInstance extends ComponentPublicInstance {
@@ -67,15 +67,15 @@ declare global {
         // 被操作数据ID,支持批量编辑:add=[0],edit=[1,2,n]
         operateIds?: string[]
         // 表单数据，内含用户输入
-        items?: anyObj
+        items?: AnyObj
         // 提交按钮状态
         submitLoading?: boolean
         // 默认表单数据(添加时)
-        defaultItems?: anyObj
+        defaultItems?: AnyObj
         // 表单加载状态
         loading?: boolean
         // 表单扩展数据，随意定义，以便一些自定义数据可以随baTable实例传递
-        extend?: anyObj
+        extend?: AnyObj
     }
 
     /* BaTable前置处理函数(前置埋点) */
@@ -91,11 +91,11 @@ declare global {
         // 表单切换前
         toggleForm?: ({ operate, operateIds }: { operate: string; operateIds: string[] }) => boolean | void
         // 表单提交前
-        onSubmit?: ({ formEl, operate, items }: { formEl: FormInstance | undefined; operate: string; items: anyObj }) => boolean | void
+        onSubmit?: ({ formEl, operate, items }: { formEl: FormInstance | undefined; operate: string; items: AnyObj }) => boolean | void
         // 表格内事件响应前
-        onTableAction?: ({ event, data }: { event: string; data: anyObj }) => boolean | void
+        onTableAction?: ({ event, data }: { event: string; data: AnyObj }) => boolean | void
         // 表格顶部菜单事件响应前
-        onTableHeaderAction?: ({ event, data }: { event: string; data: anyObj }) => boolean | void
+        onTableHeaderAction?: ({ event, data }: { event: string; data: AnyObj }) => boolean | void
         // 表格初始化前
         mount?: () => boolean | void
         [key: string]: Function | undefined
@@ -116,14 +116,14 @@ declare global {
         // 表单提交后
         onSubmit?: ({ res }: { res: ApiResponse }) => void
         // 表格事件响应后
-        onTableAction?: ({ event, data }: { event: string; data: anyObj }) => void
+        onTableAction?: ({ event, data }: { event: string; data: AnyObj }) => void
         // 表格顶部事件菜单响应后
-        onTableHeaderAction?: ({ event, data }: { event: string; data: anyObj }) => void
+        onTableHeaderAction?: ({ event, data }: { event: string; data: AnyObj }) => void
         [key: string]: Function | undefined
     }
 
     interface ComSearch {
-        form: anyObj
+        form: AnyObj
         fieldData: Map<string, any>
     }
 
@@ -192,7 +192,7 @@ declare global {
         remote?: {
             pk?: string
             field?: string
-            params?: anyObj
+            params?: AnyObj
             multiple?: boolean
             remoteUrl: string
         }
@@ -222,7 +222,7 @@ declare global {
     }
 
     /* 表格行 */
-    interface TableRow extends anyObj {
+    interface TableRow extends AnyObj {
         children?: TableRow[]
     }
 

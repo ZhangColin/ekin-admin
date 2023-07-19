@@ -157,7 +157,7 @@ const columnDisplay = computed(() => {
 
 const enableBatchOpt = computed(() => (baTable.table.selection!.length > 0 ? true : false))
 
-const onAction = (event: string, data: anyObj = {}) => {
+const onAction = (event: string, data: AnyObj = {}) => {
     baTable.onTableHeaderAction(event, data)
 }
 

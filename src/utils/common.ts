@@ -281,7 +281,7 @@ export const timeFormat = (dateTime: string | number | null = null, fmt = 'yyyy-
 
     const date = new Date(dateTime)
     let ret
-    const opt: anyObj = {
+    const opt: AnyObj = {
         'y+': date.getFullYear().toString(), // 年
         'm+': (date.getMonth() + 1).toString(), // 月
         'd+': date.getDate().toString(), // 日

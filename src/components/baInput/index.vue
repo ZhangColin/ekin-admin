@@ -78,7 +78,7 @@ export default defineComponent({
                         if (props.modelValue == undefined) return ''
                         return '' + props.modelValue
                     } else {
-                        let modelValueArr: anyObj = []
+                        let modelValueArr: AnyObj = []
                         for (const key in props.modelValue) {
                             modelValueArr[key] = '' + props.modelValue[key]
                         }
@@ -118,7 +118,7 @@ export default defineComponent({
                         if (props.modelValue == undefined) return ''
                         return '' + props.modelValue
                     } else {
-                        let modelValueArr: anyObj = []
+                        let modelValueArr: AnyObj = []
                         for (const key in props.modelValue) {
                             modelValueArr[key] = '' + props.modelValue[key]
                         }
@@ -298,7 +298,7 @@ export default defineComponent({
                     })
 
                     // 请求到的node备份-s
-                    let nodeEbak: anyObj = {}
+                    let nodeEbak: AnyObj = {}
                     const getNodes = (level: number, key: string) => {
                         if (nodeEbak[level] && nodeEbak[level][key]) {
                             return nodeEbak[level][key]
@@ -344,7 +344,7 @@ export default defineComponent({
                                     lastLazyValue.value = props.modelValue
                                     lastLazyValue.currentRequest = getArea(pathValues).then((res) => {
                                         let toStr = false
-                                        if (props.modelValue && typeof (props.modelValue as anyObj)[0] === 'string') {
+                                        if (props.modelValue && typeof (props.modelValue as AnyObj)[0] === 'string') {
                                             toStr = true
                                         }
                                         for (const key in res.data) {

@@ -149,7 +149,7 @@ export function buildValidatorData({ name, message, title, trigger = 'blur' }: b
     }
 
     // 自定义验证方法
-    const validatorCustomFun: anyObj = {
+    const validatorCustomFun: AnyObj = {
         mobile: validatorMobile,
         idNumber: validatorIdNumber,
         account: validatorAccount,

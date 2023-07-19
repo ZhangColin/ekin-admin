@@ -40,7 +40,7 @@ export interface InputData {
     // 提示信息
     tip?: string
     // 需要生成子级元素时,子级元素属性(比如radio)
-    childrenAttr?: anyObj
+    childrenAttr?: AnyObj
     // 城市选择器等级,1=省,2=市,3=区
     level?: number
 }
@@ -65,7 +65,7 @@ export interface InputAttr {
     suffixIcon?: string | Component
     rows?: number
     border?: boolean
-    autosize?: boolean | anyObj
+    autosize?: boolean | AnyObj
     autocomplete?: string
     readonly?: boolean
     max?: string | number
@@ -77,7 +77,7 @@ export interface InputAttr {
     label?: string
     tabindex?: string | number
     validateEvent?: boolean
-    inputStyle?: anyObj
+    inputStyle?: AnyObj
     // DateTimePicker属性
     editable?: boolean
     startPlaceholder?: string
@@ -107,7 +107,7 @@ export interface InputAttr {
     filterMethod?: Function
     remote?: false // 禁止使用远程搜索,如需使用请使用单独封装好的 remoteSelect 组件
     remoteMethod?: false
-    labelFormatter?: (optionData: anyObj, optionKey: string) => string
+    labelFormatter?: (optionData: AnyObj, optionKey: string) => string
     noMatchText?: string
     noDataText?: string
     reserveKeyword?: boolean
@@ -117,12 +117,12 @@ export interface InputAttr {
     automaticDropdown?: boolean
     fitInputWidth?: boolean
     tagType?: 'success' | 'info' | 'warning' | 'danger'
-    params?: anyObj
+    params?: AnyObj
     // 远程select属性
     pk?: string
     field?: string
     remoteUrl?: string
-    tooltipParams?: anyObj
+    tooltipParams?: AnyObj
     // 图标选择器属性
     showIconName?: boolean
     placement?: string
@@ -133,9 +133,9 @@ export interface InputAttr {
     predefine?: string[]
     // 图片文件上传属性
     action?: string
-    headers?: anyObj
+    headers?: AnyObj
     method?: string
-    data?: anyObj
+    data?: AnyObj
     withCredentials?: boolean
     showFileList?: boolean
     drag?: boolean
@@ -151,8 +151,8 @@ export interface InputAttr {
     mode?: string
     editorStyle?: CSSProperties
     style?: CSSProperties
-    toolbarConfig?: anyObj
-    editorConfig?: anyObj
+    toolbarConfig?: AnyObj
+    editorConfig?: AnyObj
     editorType?: string
     preview?: boolean
     language?: string

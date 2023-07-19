@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
     for (const key in loadPath) {
         loadPath[key] = loadPath[key].replaceAll('${lang}', config.lang.defaultLang)
         if (loadPath[key] in window.loadLangHandle) {
-            window.loadLangHandle[loadPath[key]]().then((res: { default: anyObj }) => {
+            window.loadLangHandle[loadPath[key]]().then((res: { default: AnyObj }) => {
                 const pathName = loadPath[key].slice(loadPath[key].lastIndexOf(prefix) + (prefix.length + 1), loadPath[key].lastIndexOf('.'))
                 mergeMessage(res.default, pathName)
             })

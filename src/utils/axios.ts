@@ -79,7 +79,7 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
             // 自动携带token
             if (config.headers) {
                 const token = adminInfo.getToken()
-                if (token) (config.headers as anyObj).batoken = token
+                if (token) (config.headers as AnyObj).batoken = token
             }
 
             return config
@@ -289,8 +289,8 @@ function getPendingKey(config: AxiosRequestConfig) {
     return [
         url,
         method,
-        headers && (headers as anyObj).batoken ? (headers as anyObj).batoken : '',
-        headers && (headers as anyObj)['ba-user-token'] ? (headers as anyObj)['ba-user-token'] : '',
+        headers && (headers as AnyObj).batoken ? (headers as AnyObj).batoken : '',
+        headers && (headers as AnyObj)['ba-user-token'] ? (headers as AnyObj)['ba-user-token'] : '',
         JSON.stringify(params),
         JSON.stringify(data),
     ].join('&')
@@ -299,7 +299,7 @@ function getPendingKey(config: AxiosRequestConfig) {
 /**
  * 根据请求方法组装请求数据/参数
  */
-export function requestPayload(method: Method, data: anyObj) {
+export function requestPayload(method: Method, data: AnyObj) {
     if (method == 'GET') {
         return {
             params: data,

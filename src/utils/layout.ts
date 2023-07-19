@@ -9,7 +9,7 @@ import { useConfig } from '/@/stores/config'
  */
 export function mainHeight(extra = 0): CSSProperties {
     let height = extra
-    const adminLayoutMainExtraHeight: anyObj = {
+    const adminLayoutMainExtraHeight: AnyObj = {
         Default: 70,
         Classic: 50,
         Streamline: 60,

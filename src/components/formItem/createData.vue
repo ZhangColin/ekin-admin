@@ -279,7 +279,7 @@ const updateValue = () => {
 }
 
 const dataPretreatment = () => {
-    let inputTypesKey: anyObj = {}
+    let inputTypesKey: AnyObj = {}
     for (const key in inputTypes) {
         if (!props.excludeInputTypes.includes(inputTypes[key])) {
             inputTypesKey[inputTypes[key]] = inputTypes[key]
@@ -287,7 +287,7 @@ const dataPretreatment = () => {
     }
     state.inputTypes = inputTypesKey
 
-    let validators: anyObj = {}
+    let validators: AnyObj = {}
     for (const key in validatorType) {
         if (!props.excludeValidatorRule.includes(key)) {
             validators[key] = validatorType[key as keyof typeof validatorType]

@@ -121,7 +121,7 @@ export interface SiteConfig {
         mimetype: string
         savename: string
         url?: string
-        params?: anyObj
+        params?: AnyObj
     }
     headNav: Menus[]
 }

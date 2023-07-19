@@ -29,7 +29,7 @@ export const refreshTokenUrl = '/api/common/refreshToken'
 /**
  * 上传文件
  */
-export function fileUpload(fd: FormData, params: anyObj = {}, forceLocal = false, config: AxiosRequestConfig = {}): ApiPromise {
+export function fileUpload(fd: FormData, params: AnyObj = {}, forceLocal = false, config: AxiosRequestConfig = {}): ApiPromise {
     let errorMsg = ''
     const file = fd.get('file') as UploadRawFile
     const siteConfig = useSiteConfig()
@@ -220,7 +220,7 @@ export class baTableApi {
         ])
     }
 
-    index(filter: anyObj = {}) {
+    index(filter: AnyObj = {}) {
         return createAxios<TableDefaultData>({
             url: this.actionUrl.get('index'),
             method: 'get',
@@ -228,7 +228,7 @@ export class baTableApi {
         })
     }
 
-    edit(params: anyObj) {
+    edit(params: AnyObj) {
         return createAxios({
             url: this.actionUrl.get('edit'),
             method: 'get',
@@ -251,7 +251,7 @@ export class baTableApi {
         )
     }
 
-    postData(action: string, data: anyObj) {
+    postData(action: string, data: AnyObj) {
         return createAxios(
             {
                 url: this.actionUrl.has(action) ? this.actionUrl.get(action) : this.controllerUrl + action,

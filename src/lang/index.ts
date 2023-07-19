@@ -18,7 +18,7 @@ export let i18n: {
 }
 
 // 准备要合并的语言包
-const assignLocale: anyObj = {
+const assignLocale: AnyObj = {
     'zh-cn': [elementZhcnLocale],
     en: [elementEnLocale],
 }
@@ -75,7 +75,7 @@ export async function loadLang(app: App) {
 }
 
 function getLangFileMessage(mList: any, locale: string) {
-    let msg: anyObj = {}
+    let msg: AnyObj = {}
     locale = '/' + locale
     for (const path in mList) {
         if (mList[path].default) {
@@ -91,12 +91,12 @@ function getLangFileMessage(mList: any, locale: string) {
     return msg
 }
 
-export function mergeMessage(message: anyObj, pathName = '') {
+export function mergeMessage(message: AnyObj, pathName = '') {
     if (isEmpty(message)) return
     if (!pathName) {
         return i18n.global.mergeLocaleMessage(i18n.global.locale.value, message)
     }
-    let msg: anyObj = {}
+    let msg: AnyObj = {}
     if (pathName.indexOf('/') > 0) {
         msg = handleMsglist(msg, message, pathName)
     } else {
@@ -105,9 +105,9 @@ export function mergeMessage(message: anyObj, pathName = '') {
     i18n.global.mergeLocaleMessage(i18n.global.locale.value, msg)
 }
 
-export function handleMsglist(msg: anyObj, mList: anyObj, pathName: string) {
+export function handleMsglist(msg: AnyObj, mList: AnyObj, pathName: string) {
     const pathNameTmp = pathName.split('/')
-    let obj: anyObj = {}
+    let obj: AnyObj = {}
     for (let i = pathNameTmp.length - 1; i >= 0; i--) {
         if (i == pathNameTmp.length - 1) {
             obj = {
@@ -122,7 +122,7 @@ export function handleMsglist(msg: anyObj, mList: anyObj, pathName: string) {
     return mergeMsg(msg, obj)
 }
 
-export function mergeMsg(msg: anyObj, obj: anyObj) {
+export function mergeMsg(msg: AnyObj, obj: AnyObj) {
     for (const key in obj) {
         if (typeof msg[key] == 'undefined') {
             msg[key] = obj[key]

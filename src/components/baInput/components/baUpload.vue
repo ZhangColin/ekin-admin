@@ -61,7 +61,7 @@ type Writeable<T> = { -readonly [P in keyof T]: T[P] }
 interface Props {
     type: 'image' | 'images' | 'file' | 'files'
     // 上传请求时的额外携带数据
-    data?: anyObj
+    data?: AnyObj
     modelValue: string | string[]
     // 返回绝对路径
     returnFullUrl?: boolean
@@ -121,7 +121,7 @@ const state: {
         limit?: number
         returnFullUrl: boolean
     }
-    events: anyObj
+    events: AnyObj
 } = reactive({
     key: uuid(),
     defaultReturnType: 'string',
@@ -231,7 +231,7 @@ onMounted(() => {
         state.attr = { ...state.attr, accept: 'image/*', listType: 'picture-card' }
     }
 
-    const addProps: anyObj = {}
+    const addProps: AnyObj = {}
     const evtArr = ['onPreview', 'onRemove', 'onSuccess', 'onError', 'onChange', 'onExceed', 'beforeUpload', 'onProgress']
     for (const key in props.attr) {
         if (evtArr.includes(key)) {

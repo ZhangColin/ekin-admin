@@ -74,12 +74,12 @@ type valType = string | number | string[] | number[]
 interface Props extends /* @vue-ignore */ ElSelectProps {
     pk?: string
     field?: string
-    params?: anyObj
+    params?: AnyObj
     multiple?: boolean
     remoteUrl: string
     modelValue: valType
-    labelFormatter?: (optionData: anyObj, optionKey: string) => string
-    tooltipParams?: anyObj
+    labelFormatter?: (optionData: AnyObj, optionKey: string) => string
+    tooltipParams?: AnyObj
 }
 const props = withDefaults(defineProps<Props>(), {
     pk: 'id',
@@ -98,12 +98,12 @@ const props = withDefaults(defineProps<Props>(), {
 const state: {
     // 主表字段名(不带表别名)
     primaryKey: string
-    options: anyObj[]
+    options: AnyObj[]
     loading: boolean
     total: number
     currentPage: number
     pageSize: number
-    params: anyObj
+    params: AnyObj
     keyword: string
     value: valType
     selectKey: string

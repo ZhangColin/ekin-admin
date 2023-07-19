@@ -239,7 +239,7 @@ export default class baTable {
      * @param event 事件:selection-change=选中项改变,page-size-change=每页数量改变,current-page-change=翻页,sort-change=排序,edit=编辑,delete=删除,field-change=单元格值改变,com-search=公共搜索
      * @param data 携带数据
      */
-    onTableAction = (event: string, data: anyObj) => {
+    onTableAction = (event: string, data: AnyObj) => {
         if (this.runBefore('onTableAction', { event, data }) === false) return
         const actionFun = new Map([
             [
@@ -330,7 +330,7 @@ export default class baTable {
      * @param event 事件:refresh=刷新,edit=编辑,delete=删除,quick-search=快速查询,unfold=折叠/展开,change-show-column=调整列显示状态
      * @param data 携带数据
      */
-    onTableHeaderAction = (event: string, data: anyObj) => {
+    onTableHeaderAction = (event: string, data: AnyObj) => {
         if (this.runBefore('onTableHeaderAction', { event, data }) === false) return
         const actionFun = new Map([
             [
@@ -476,8 +476,8 @@ export default class baTable {
      * 通用搜索初始化
      * @param query 要搜索的数据
      */
-    initComSearch = (query: anyObj = {}) => {
-        const form: anyObj = {}
+    initComSearch = (query: AnyObj = {}) => {
+        const form: AnyObj = {}
         const field = this.table.column
 
         if (field.length <= 0) {

@@ -77,7 +77,7 @@ const config = useConfig()
 const tableRef = ref<TableInstance>()
 const baTable = inject('baTable') as baTableClass
 
-interface Props extends Partial<TableProps<anyObj>> {
+interface Props extends Partial<TableProps<AnyObj>> {
     pagination?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {

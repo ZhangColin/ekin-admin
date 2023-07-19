@@ -8,7 +8,7 @@ interface Window {
     loadLangHandle: Record<string, any>
 }
 
-interface anyObj {
+interface AnyObj {
     [key: string]: any
 }
 
