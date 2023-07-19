@@ -44,7 +44,7 @@ import { useI18n } from 'vue-i18n'
 import Table from '/@/components/table/index.vue'
 import TableHeader from '/@/components/table/header/index.vue'
 import baTableClass from '/@/utils/baTable'
-import { previewRenderFormatter } from '/@/views/backend/routine/attachment'
+import { previewRenderFormatter } from '/@/views/routine/attachment'
 import { baTableApi } from '/@/api/common'
 
 interface Props {

@@ -16,7 +16,7 @@ export default [{
                     "token": "5fe78d04-c686-4500-886c-473aaa4080c3",
                     "refresh_token": ""
                 },
-                "routePath": "\/admin"
+                "routePath": "\/"
             }
         }
     }

@@ -10,16 +10,12 @@ const pageTitle = (name: string): string => {
 const staticRoutes: Array<RouteRecordRaw> = [
     {
         // 管理员登录页
-        path: '/admin/login',
+        path: '/login',
         name: 'adminLogin',
-        component: () => import('/@/views/backend/login.vue'),
+        component: () => import('/@/views/login.vue'),
         meta: {
             title: pageTitle('adminLogin'),
         },
-    },
-    {
-        path: '/:path(.*)*',
-        redirect: '/404',
     },
     {
         // 404
@@ -32,25 +28,10 @@ const staticRoutes: Array<RouteRecordRaw> = [
     },
     {
         // 后台找不到页面了-可能是路由未加载上
-        path: '/admin:path(.*)*',
+        path: '/:path(.*)*',
         redirect: (to) => {
             return {
                 name: 'adminMainLoading',
-                params: {
-                    to: JSON.stringify({
-                        path: to.path,
-                        query: to.query,
-                    }),
-                },
-            }
-        },
-    },
-    {
-        // 会员中心找不到页面了
-        path: '/user:path(.*)*',
-        redirect: (to) => {
-            return {
-                name: 'userMainLoading',
                 params: {
                     to: JSON.stringify({
                         path: to.path,
@@ -75,10 +56,10 @@ const staticRoutes: Array<RouteRecordRaw> = [
  * 后台基础静态路由
  */
 const adminBaseRoute: RouteRecordRaw = {
-    path: '/admin',
-    name: 'admin',
-    component: () => import('/@/layouts/backend/index.vue'),
-    redirect: '/admin/loading',
+    path: '/',
+    name: '/',
+    component: () => import('/@/layouts/index.vue'),
+    redirect: '/loading',
     meta: {
         title: pageTitle('admin'),
     },

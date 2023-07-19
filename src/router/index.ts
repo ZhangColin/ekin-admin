@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { staticRoutes, adminBaseRoute } from '/@/router/static'
+import { staticRoutes } from '/@/router/static'
 import { loading } from '/@/utils/loading'
 import langAutoLoadMap from '/@/lang/autoload'
 import { mergeMessage } from '/@/lang/index'
@@ -27,11 +27,8 @@ router.beforeEach((to, from, next) => {
     if (to.path in langAutoLoadMap) {
         loadPath.push(...langAutoLoadMap[to.path as keyof typeof langAutoLoadMap])
     }
-    const prefix = './backend/' + config.lang.defaultLang
-
-    // 去除 path 中的 /admin
-    const adminPath = to.path.slice(to.path.indexOf(adminBaseRoute.path) + adminBaseRoute.path.length)
-    if (adminPath) loadPath.push(prefix + adminPath + '.ts')
+    const prefix = './modules/' + config.lang.defaultLang
+    loadPath.push(prefix + to.path + '.ts')
 
     // 根据路由 name 加载的语言包
     if (to.name) {

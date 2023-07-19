@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { BA_ACCOUNT } from '/@/stores/constant/cacheKey'
 import { UserInfo } from '/@/stores/interface'
-import { postLogout } from '/@/api/backend/module'
+import { postLogout } from '/@/api/module'
 import { Local } from '/@/utils/storage'
 import router from '../router'
 

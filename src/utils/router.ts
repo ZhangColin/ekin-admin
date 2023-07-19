@@ -4,9 +4,7 @@ import { ElNotification } from 'element-plus'
 import { useConfig } from '/@/stores/config'
 import { useNavTabs } from '/@/stores/navTabs'
 import { closeShade } from '/@/utils/pageShade'
-import { adminBaseRoute } from '/@/router/static'
 import { i18n } from '/@/lang/index'
-import { Menus } from '/@/stores/interface'
 import { compact, reverse } from 'lodash-es'
 
 /**
@@ -42,9 +40,11 @@ export const routePush = async (to: RouteLocationRaw) => {
 export const getFirstRoute = (routes: RouteRecordRaw[]): false | RouteRecordRaw => {
     const routerPaths: string[] = []
     const routers = router.getRoutes()
+
     routers.forEach((item) => {
         if (item.path) routerPaths.push(item.path)
     })
+
     let find: boolean | RouteRecordRaw = false
     for (const key in routes) {
         if (routes[key].meta?.type != 'menu_dir' && routerPaths.indexOf(routes[key].path) !== -1) {
@@ -54,6 +54,7 @@ export const getFirstRoute = (routes: RouteRecordRaw[]): false | RouteRecordRaw 
             if (find) return find
         }
     }
+
     return find
 }
 
@@ -91,15 +92,15 @@ export const onClickMenu = (menu: RouteRecordRaw) => {
  * 处理后台的路由
  */
 export const handleAdminRoute = (routes: any) => {
-    const viewsComponent = import.meta.glob('/src/views/backend/**/*.vue')
-    addRouteAll(viewsComponent, routes, adminBaseRoute.name as string)
-    const menuAdminBaseRoute = '/' + (adminBaseRoute.name as string) + '/'
-    const menuRule = handleMenuRule(routes, menuAdminBaseRoute, 'admin')
+    console.log(routes)
+    const viewsComponent = import.meta.glob('/src/views/**/*.vue')
+    addRouteAll(viewsComponent, routes, '/')
+    const menuRule = handleMenuRule(routes, '/')
 
     // 更新stores中的路由菜单数据
     const navTabs = useNavTabs()
     navTabs.setTabsViewRoutes(menuRule)
-    navTabs.fillAuthNode(handleAuthNode(routes, menuAdminBaseRoute))
+    navTabs.fillAuthNode(handleAuthNode(routes, ''))
 }
 
 /**
@@ -117,9 +118,9 @@ export const getMenuPaths = (menus: RouteRecordRaw[]): string[] => {
 }
 
 /**
- * 会员中心和后台的菜单处理
+ * 后台的菜单处理
  */
-const handleMenuRule = (routes: any, pathPrefix = '/', module = 'admin') => {
+const handleMenuRule = (routes: any, pathPrefix = '/') => {
     const menuRule: RouteRecordRaw[] = []
     for (const key in routes) {
         if (routes[key].extend == 'add_rules_only') {
@@ -132,7 +133,7 @@ const handleMenuRule = (routes: any, pathPrefix = '/', module = 'admin') => {
             const currentPath = routes[key].menu_type == 'link' || routes[key].menu_type == 'iframe' ? routes[key].url : pathPrefix + routes[key].path
             let children: RouteRecordRaw[] = []
             if (routes[key].children && routes[key].children.length > 0) {
-                children = handleMenuRule(routes[key].children, pathPrefix, module)
+                children = handleMenuRule(routes[key].children, pathPrefix)
             }
             menuRule.push({
                 path: currentPath,
@@ -208,7 +209,7 @@ export const addRouteItem = (viewsComponent: Record<string, any>, route: any, pa
     let path = '',
         component
     if (route.menu_type == 'iframe') {
-        path = '/admin/iframe/' + encodeURIComponent(route.url)
+        path = '/iframe/' + encodeURIComponent(route.url)
         component = () => import('/@/layouts/common/router-view/iframe.vue')
     } else {
         path = parentName ? route.path : '/' + route.path
@@ -266,35 +267,4 @@ const getParentNames = (name: string) => {
     return reverse(parentNames)
 }
 
-export const handleMenus = (rules: anyObj, prefix = '/', type = 'nav') => {
-    const menus: Menus[] = []
-    for (const key in rules) {
-        if (rules[key].extend == 'add_rules_only' || !rules[key].component) {
-            continue
-        }
-        let children: Menus[] = []
-        if (rules[key].children && rules[key].children.length > 0) {
-            children = handleMenus(rules[key].children, prefix)
-        }
 
-        if (rules[key].type == type) {
-            let path = ''
-            if ('link' == rules[key].menu_type) {
-                path = rules[key].url
-            } else if ('iframe' == rules[key].menu_type) {
-                path = '/user/iframe/' + encodeURIComponent(rules[key].url)
-            } else {
-                path = prefix + rules[key].path
-            }
-            menus.push({
-                ...rules[key],
-                meta: {
-                    type: rules[key].menu_type,
-                },
-                path: path,
-                children: children,
-            })
-        }
-    }
-    return menus
-}
