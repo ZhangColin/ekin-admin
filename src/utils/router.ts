@@ -266,5 +266,3 @@ const getParentNames = (name: string) => {
     }
     return reverse(parentNames)
 }
-
-

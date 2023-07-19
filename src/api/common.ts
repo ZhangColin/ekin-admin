@@ -13,12 +13,12 @@ import { i18n } from '../lang'
  */
 
 // Admin模块
-export const adminUploadUrl = '/admin/ajax/upload'
-export const adminBuildSuffixSvgUrl = '/admin/ajax/buildSuffixSvg'
-export const adminAreaUrl = '/admin/ajax/area'
-export const getTablePkUrl = '/admin/ajax/getTablePk'
-export const getTableFieldListUrl = '/admin/ajax/getTableFieldList'
-export const clearCacheUrl = '/admin/ajax/clearCache'
+export const adminUploadUrl = '/ajax/upload'
+export const adminBuildSuffixSvgUrl = '/ajax/buildSuffixSvg'
+export const adminAreaUrl = '/ajax/area'
+export const getTablePkUrl = '/ajax/getTablePk'
+export const getTableFieldListUrl = '/ajax/getTableFieldList'
+export const clearCacheUrl = '/ajax/clearCache'
 
 // 公共
 export const captchaUrl = '/api/common/captcha'
@@ -73,7 +73,8 @@ export function fileUpload(fd: FormData, params: anyObj = {}, forceLocal = false
 export function buildSuffixSvgUrl(suffix: string, background = '') {
     const adminInfo = useAdminInfo()
     return (
-        getUrl() + adminBuildSuffixSvgUrl +
+        getUrl() +
+        adminBuildSuffixSvgUrl +
         '?batoken=' +
         adminInfo.getToken() +
         '&suffix=' +
@@ -118,7 +119,6 @@ export function postClearCache(type: string) {
         }
     )
 }
-
 
 /**
  * 远程下拉框数据获取
