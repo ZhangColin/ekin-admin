@@ -4,8 +4,8 @@ export default [
         method: 'post',
         response: () => {
             return {
-                code: 1,
-                msg: '登录成功！',
+                code: 200,
+                message: '登录成功！',
                 time: 1689600624,
                 data: {
                     userInfo: {
@@ -26,14 +26,14 @@ export default [
         url: '/Index/login',
         method: 'get',
         response: () => {
-            return { code: 1, msg: '', time: 1689645983, data: { captcha: false } };
+            return { code: 200, message: '', time: 1689645983, data: { captcha: false } };
         },
     },
     {
         url: '/Index/logout',
         method: 'post',
         response: () => {
-            return { code: 1, msg: '', time: 1689645983 };
+            return { code: 200, message: '', time: 1689645983 };
         },
     },
 ];

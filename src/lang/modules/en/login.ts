@@ -3,4 +3,5 @@ export default {
     'Please input a password': 'Please enter your password',
     'Hold session': 'Keep the session',
     'Sign in': 'Sign in',
+    'Login successful': 'Login successful',
 };

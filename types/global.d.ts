@@ -21,8 +21,8 @@ interface TableDefaultData<T = any> {
 interface ApiResponse<T = any> {
     code: number;
     data: T;
-    msg: string;
-    time: number;
+    message: string;
+    timestamp: number;
 }
 
 type ApiPromise<T = any> = Promise<ApiResponse<T>>;

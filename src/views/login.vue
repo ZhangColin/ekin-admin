@@ -80,7 +80,7 @@ import { useI18n } from 'vue-i18n';
 import { editDefaultLang } from '/@/lang/index';
 import { useConfig } from '/@/stores/config';
 import { useAdminInfo } from '/@/stores/adminInfo';
-import { login } from '/@/api';
+import { login, loginSetting } from '/@/api/index';
 import { uuid } from '/@/utils/random';
 import { buildValidatorData } from '/@/utils/validate';
 import router from '/@/router';
@@ -121,19 +121,14 @@ const focusInput = () => {
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
     timer = window.setTimeout(() => {
         pageBubble.init();
     }, 1000);
 
-    login('get')
-        .then((res) => {
-            state.showCaptcha = res.data.captcha;
-            nextTick(() => focusInput());
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    let setting = await loginSetting();
+    state.showCaptcha = setting.data.captcha;
+    nextTick(() => focusInput());
 });
 
 onBeforeUnmount(() => {
@@ -153,21 +148,21 @@ const onSubmitPre = () => {
     });
 };
 
-const onSubmit = (captchaInfo = '') => {
+const onSubmit = async (captchaInfo = '') => {
     state.submitLoading = true;
     form.captchaInfo = captchaInfo;
-    login('post', form)
-        .then((res) => {
-            adminInfo.dataFill(res.data.userInfo);
-            ElNotification({
-                message: res.msg,
-                type: 'success',
-            });
-            router.push({ path: res.data.routePath });
-        })
-        .finally(() => {
-            state.submitLoading = false;
+
+    try {
+        const loginResponse = await login(form);
+        adminInfo.dataFill(loginResponse.data.userInfo);
+        ElNotification({
+            message: t('login.Login successful') ,
+            type: 'success',
         });
+        router.push({ path: loginResponse.data.routePath });
+    } finally {
+        state.submitLoading = false;
+    }
 };
 </script>
 

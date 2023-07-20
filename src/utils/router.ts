@@ -92,7 +92,6 @@ export const onClickMenu = (menu: RouteRecordRaw) => {
  * 处理后台的路由
  */
 export const handleAdminRoute = (routes: any) => {
-    console.log(routes);
     const viewsComponent = import.meta.glob('/src/views/**/*.vue');
     addRouteAll(viewsComponent, routes, '/');
     const menuRule = handleMenuRule(routes, '/');

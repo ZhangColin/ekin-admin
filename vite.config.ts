@@ -22,9 +22,10 @@ const viteConfig = ({ command, mode }: ConfigEnv): UserConfig => {
     let proxy: Record<string, string | ProxyOptions> = {};
     if (VITE_PROXY_URL) {
         proxy = {
-            '/': {
+            '/api': {
                 target: VITE_PROXY_URL,
                 changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ''),
             },
         };
     }

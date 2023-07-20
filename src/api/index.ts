@@ -1,5 +1,6 @@
 import createAxios from '/@/utils/axios';
 import { useAdminInfo } from '/@/stores/adminInfo';
+import { encrypt } from '../utils/crypto';
 
 export const url = '/Index/';
 
@@ -10,11 +11,21 @@ export function index() {
     });
 }
 
-export function login(method: 'get' | 'post', params: object = {}) {
+export function loginSetting() {
     return createAxios({
         url: url + 'login',
-        data: params,
-        method: method,
+        method: 'GET',
+    });
+}
+
+export function login(params: any) {
+    return createAxios({
+        url: 'api/system/login',
+        data: {
+            username: params.username,
+            password: encrypt(params.password)
+        },
+        method: 'POST',
     });
 }
 

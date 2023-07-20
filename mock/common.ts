@@ -4,8 +4,8 @@ export default [
         method: 'get',
         response: () => {
             return {
-                code: 1,
-                msg: '',
+                code: 200,
+                message: '',
                 time: 1689646390,
                 data: {
                     id: '9c28e476-3d4b-441e-9ef1-c4b66efc29cc',
@@ -22,7 +22,7 @@ export default [
         url: '/api/common/checkClickCaptcha',
         method: 'post',
         response: () => {
-            return { code: 1, msg: '', time: 1689646421, data: null };
+            return { code: 200, message: '', time: 1689646421, data: null };
         },
     },
 ];

@@ -96,7 +96,7 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
             options.loading && closeLoading(options); // 关闭loading
 
             if (response.config.responseType == 'json') {
-                if (response.data && response.data.code !== 1) {
+                if (response.data && response.data.code !== 200) {
                     if (response.data.code == 409) {
                         if (!window.tokenRefreshing) {
                             window.tokenRefreshing = true;
@@ -156,9 +156,9 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
                     }
                     // code不等于1, 页面then内的具体逻辑就不执行了
                     return Promise.reject(response.data);
-                } else if (options.showSuccessMessage && response.data && response.data.code == 1) {
+                } else if (options.showSuccessMessage && response.data && response.data.code == 200) {
                     ElNotification({
-                        message: response.data.msg ? response.data.msg : i18n.global.t('axios.Operation successful'),
+                        message: response.data.message ? response.data.message : i18n.global.t('axios.Operation successful'),
                         type: 'success',
                     });
                 }
