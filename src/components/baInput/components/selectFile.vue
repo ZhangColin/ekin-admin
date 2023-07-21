@@ -89,7 +89,7 @@ const optBtn: OptButton[] = [
         },
     },
 ];
-const baTable = new baTableClass(new baTableApi('/admin/routine.Attachment/'), {
+const baTable = new baTableClass(new baTableApi('/routine/attachment/'), {
     column: [
         {
             type: 'selection',

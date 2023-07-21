@@ -79,7 +79,7 @@ import { ElNotification } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import { editDefaultLang } from '/@/lang/index';
 import { useConfig } from '/@/stores/config';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '/@/stores/userInfo';
 import { login, loginSetting } from '/@/api/index';
 import { uuid } from '/@/utils/random';
 import { buildValidatorData } from '/@/utils/validate';
@@ -88,7 +88,7 @@ import clickCaptcha from '/@/components/clickCaptcha';
 let timer: number;
 
 const config = useConfig();
-const adminInfo = useAdminInfo();
+const userInfo = useUserInfo();
 
 const formRef = ref<FormInstance>();
 const usernameRef = ref<InputInstance>();
@@ -154,7 +154,7 @@ const onSubmit = async (captchaInfo = '') => {
 
     try {
         const loginResponse = await login(form);
-        adminInfo.dataFill(loginResponse.data.userInfo);
+        userInfo.dataFill(loginResponse.data.userInfo);
         ElNotification({
             message: t('login.Login successful'),
             type: 'success',
@@ -278,3 +278,4 @@ const onSubmit = async (captchaInfo = '') => {
     }
 }
 </style>
+../stores/userInfo

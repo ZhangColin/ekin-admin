@@ -9,7 +9,6 @@ import { useSiteConfig } from '../stores/siteConfig';
 import { useTitle } from '@vueuse/core';
 import { i18n } from '../lang';
 import { getUrl } from './axios';
-import { adminBaseRoute } from '/@/router/static';
 import { trim, trimStart } from 'lodash-es';
 import { TranslateOptions } from 'vue-i18n';
 
@@ -224,8 +223,7 @@ export const getCurrentRoutePath = () => {
 export const __ = (key: string, named?: Record<string, unknown>, options?: TranslateOptions<string>) => {
     let langPath = '';
     const path = getCurrentRoutePath();
-    langPath = path.slice(path.indexOf(adminBaseRoute.path) + adminBaseRoute.path.length);
-    langPath = trim(langPath, '/').replaceAll('/', '.');
+    langPath = trim(path, '/').replaceAll('/', '.');
     langPath = langPath ? langPath + '.' + key : key;
     return i18n.global.te(langPath) ? i18n.global.t(langPath, named ?? {}, options) : i18n.global.t(key, named ?? {}, options);
 };

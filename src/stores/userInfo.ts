@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
-import { ADMIN_INFO } from '/@/stores/constant/cacheKey';
-import { AdminInfo } from '/@/stores/interface';
+import { USER_INFO } from '/@/stores/constant/cacheKey';
+import { UserInfo } from '/@/stores/interface';
 
-export const useAdminInfo = defineStore('adminInfo', {
-    state: (): AdminInfo => {
+export const useUserInfo = defineStore('userInfo', {
+    state: (): UserInfo => {
         return {
             id: 0,
             username: '',
@@ -12,12 +12,12 @@ export const useAdminInfo = defineStore('adminInfo', {
             last_login_time: '',
             token: '',
             refresh_token: '',
-            // 是否是superAdmin，用于判定是否显示终端按钮等，不做任何权限判断
+            // 是否是超级管理员，用于判定是否显示终端按钮等，不做任何权限判断
             super: false,
         };
     },
     actions: {
-        dataFill(state: AdminInfo) {
+        dataFill(state: UserInfo) {
             this.$state = { ...this.$state, ...state };
         },
         removeToken() {
@@ -36,6 +36,6 @@ export const useAdminInfo = defineStore('adminInfo', {
         },
     },
     persist: {
-        key: ADMIN_INFO,
+        key: USER_INFO,
     },
 });

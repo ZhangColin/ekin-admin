@@ -1,6 +1,6 @@
 export default [
     {
-        url: '/admin/auth.Group/index',
+        url: '/system/role/index',
         method: 'get',
         response: () => {
             return {
@@ -61,7 +61,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Group/edit',
+        url: '/system/role/edit',
         method: 'get',
         response: () => {
             return {
@@ -127,7 +127,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Group/add',
+        url: '/system/role/add',
         method: 'post',
         response: () => {
             return {
@@ -138,7 +138,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Group/edit',
+        url: '/system/role/edit',
         method: 'post',
         response: () => {
             return {
@@ -149,7 +149,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Group/del',
+        url: '/system/role/del',
         method: 'delete',
         response: () => {
             return {

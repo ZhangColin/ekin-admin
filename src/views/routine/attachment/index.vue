@@ -67,14 +67,14 @@ const tableRef = ref()
 const optBtn = defaultOptButtons(['edit', 'delete'])
 optBtn[1].popconfirm!.title = t('routine.attachment.Files and records will be deleted at the same time Are you sure?')
 
-const baTable = new baTableClass(new baTableApi('/admin/routine.Attachment/'), {
+const baTable = new baTableClass(new baTableApi('/routine/attachment/'), {
     column: [
         { type: 'selection', align: 'center', operator: false },
         { label: t('Id'), prop: 'id', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query'), width: 70 },
         { label: t('utils.Breakdown'), prop: 'topic', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
         {
             label: t('routine.attachment.Upload administrator'),
-            prop: 'admin.nickname',
+            prop: 'user.nickname',
             align: 'center',
             operator: 'LIKE',
             operatorPlaceholder: t('Fuzzy query'),

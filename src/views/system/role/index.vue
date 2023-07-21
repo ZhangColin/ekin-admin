@@ -1,6 +1,6 @@
 <template>
     <div class="default-main ba-table-box">
-        <el-alert class="ba-table-alert" v-if="!adminInfo.super" :title="t('system.role.Manage subordinate role groups here')" type="info" show-icon />
+        <el-alert class="ba-table-alert" v-if="!userInfo.super" :title="t('system.role.Manage subordinate role groups here')" type="info" show-icon />
         <el-alert class="ba-table-alert" v-if="baTable.table.remark" :title="baTable.table.remark" type="info" show-icon />
 
         <!-- 表格顶部菜单 -->
@@ -29,7 +29,7 @@ import { defaultOptButtons } from '/@/components/table';
 import { useI18n } from 'vue-i18n';
 import { cloneDeep } from 'lodash-es';
 import { getArrayKey } from '/@/utils/common';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '/@/stores/userInfo';
 
 defineOptions({
     name: 'auth/group',
@@ -38,10 +38,10 @@ defineOptions({
 const formRef = ref();
 const tableRef = ref();
 const { t } = useI18n();
-const adminInfo = useAdminInfo();
+const userInfo = useUserInfo();
 
 const baTable: baTableClass = new baTableClass(
-    new baTableApi('/admin/auth.Group/'),
+    new baTableApi('/system/role/'),
     {
         expandAll: true,
         dblClickNotEditColumn: [undefined],
@@ -117,12 +117,12 @@ const baTable: baTableClass = new baTableClass(
         },
         // 双击编辑前
         onTableDblclick: ({ row }) => {
-            return baTable.table.extend!['adminGroup'].indexOf(row.id) === -1;
+            return baTable.table.extend!['userGroup'].indexOf(row.id) === -1;
         },
     },
     {
         getIndex: ({ res }) => {
-            baTable.table.extend!['adminGroup'] = res.data.group;
+            baTable.table.extend!['userGroup'] = res.data.group;
             let buttonsKey = getArrayKey(baTable.table.column, 'render', 'buttons');
             baTable.table.column[buttonsKey].buttons!.forEach((value: OptButton) => {
                 value.display = (row) => {
@@ -143,3 +143,4 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss"></style>
+../../../stores/userInfo

@@ -22,10 +22,10 @@ export default [
                 message: '',
                 time: 1689857077,
                 data: {
-                    adminInfo: {
+                    userInfo: {
                         id: 1,
-                        username: 'admin',
-                        nickname: 'Admin',
+                        username: 'zhang_colin',
+                        nickname: 'Colin',
                         avatar: 'https://demo.buildadmin.com/static/images/avatar.png',
                         last_login_time: '2023-07-20 20:44:38',
                         super: true,
@@ -293,7 +293,7 @@ export default [
                         },
                     ],
                     siteConfig: {
-                        siteName: 'BuildAdmin演示站',
+                        siteName: 'Cartisan',
                         version: 'v1.0.0',
                         cdnUrl: 'https://demo.buildadmin.com',
                         apiUrl: 'https://buildadmin.com',
@@ -303,11 +303,7 @@ export default [
                             mimetype: 'jpg,png,bmp,jpeg,gif,webp,zip,rar,xls,xlsx,doc,docx,wav,mp4,mp3,txt',
                             mode: 'local',
                         },
-                    },
-                    terminal: {
-                        installServicePort: '8000',
-                        npmPackageManager: 'pnpm',
-                    },
+                    }
                 },
             };
         },

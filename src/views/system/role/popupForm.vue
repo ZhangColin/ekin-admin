@@ -84,7 +84,7 @@ import { reactive, ref, watch, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type baTableClass from '/@/utils/baTable';
 import FormItem from '/@/components/formItem/index.vue';
-import { getAdminRules } from '/@/api/system/group';
+import { getMenus } from '/@/api/system/group';
 import type { FormInstance, ElTree, FormItemRule } from 'element-plus';
 import { uuid } from '/@/utils/random';
 import { buildValidatorData } from '/@/utils/validate';
@@ -142,7 +142,7 @@ const rules: Partial<Record<string, FormItemRule[]>> = reactive({
     ],
 });
 
-getAdminRules().then((res) => {
+getMenus().then((res) => {
     state.menuRules = res.data.list;
 });
 

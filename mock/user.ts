@@ -1,6 +1,6 @@
 export default [
     {
-        url: '/admin/auth.Admin/index',
+        url: '/system/user/index',
         method: 'get',
         response: () => {
             return {
@@ -17,10 +17,10 @@ export default [
                                 "超级管理组"
                             ],
                             "id": 1,
-                            "username": "admin",
-                            "nickname": "Admin",
+                            "username": "colin",
+                            "nickname": "Colin",
                             "avatar": "https:\/\/demo.buildadmin.com\/static\/images\/avatar.png",
-                            "email": "admin@buildadmin.com",
+                            "email": "stwyhm@126.com",
                             "mobile": "18888888887",
                             "last_login_time": "2023-07-21 10:19:21",
                             "last_login_ip": "101.228.76.54",
@@ -37,7 +37,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Admin/edit',
+        url: '/system/user/edit',
         method: 'get',
         response: () => {
             return {
@@ -53,10 +53,10 @@ export default [
                             "超级管理组"
                         ],
                         "id": 1,
-                        "username": "admin",
-                        "nickname": "Admin",
+                        "username": "colin",
+                        "nickname": "Colin",
                         "avatar": "https:\/\/demo.buildadmin.com\/static\/images\/avatar.png",
-                        "email": "admin@buildadmin.com",
+                        "email": "stwyhm@126.com",
                         "mobile": "18888888887",
                         "last_login_time": "2023-07-21 16:13:25",
                         "last_login_ip": "101.228.76.54",
@@ -71,7 +71,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Admin/add',
+        url: '/system/user/add',
         method: 'post',
         response: () => {
             return {
@@ -82,7 +82,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Admin/edit',
+        url: '/system/user/edit',
         method: 'post',
         response: () => {
             return {
@@ -93,7 +93,7 @@ export default [
         },
     },
     {
-        url: '/admin/auth.Admin/del',
+        url: '/system/user/del',
         method: 'delete',
         response: () => {
             return {

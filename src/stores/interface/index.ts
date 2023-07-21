@@ -33,19 +33,8 @@ export interface NavTabs {
     authNode: Map<string, string[]>;
 }
 
-export interface MemberCenter {
-    open: boolean;
-    layoutMode: string;
-    activeRoute: RouteRecordRaw | RouteLocationNormalized | null;
-    viewRoutes: RouteRecordRaw[];
-    showHeadline: boolean;
-    authNode: Map<string, string[]>;
-    shrink: boolean;
-    menuExpand: boolean;
-    navUserMenus: Menus[];
-}
 
-export interface AdminInfo {
+export interface UserInfo {
     id: number;
     username: string;
     nickname: string;
@@ -55,26 +44,6 @@ export interface AdminInfo {
     refresh_token: string;
     super: boolean;
 }
-
-export interface UserInfo {
-    id: number;
-    username: string;
-    nickname: string;
-    email: string;
-    mobile: string;
-    gender: number;
-    birthday: string;
-    money: number;
-    score: number;
-    avatar: string;
-    last_login_time: string;
-    last_login_ip: string;
-    join_time: string;
-    motto: string;
-    token: string;
-    refresh_token: string;
-}
-
 export interface TaskItem {
     // 任务唯一标识
     uuid: string;

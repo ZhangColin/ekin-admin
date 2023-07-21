@@ -33,7 +33,7 @@ defineOptions({
 const { t } = useI18n();
 const tableRef = ref();
 const baTable = new baTableClass(
-    new baTableApi('/admin/auth.Rule/'),
+    new baTableApi('/system/menu/'),
     {
         expandAll: false,
         dblClickNotEditColumn: [undefined, 'keepalive', 'status'],

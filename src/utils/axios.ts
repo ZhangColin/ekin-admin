@@ -4,7 +4,7 @@ import { ElLoading, LoadingOptions, ElNotification } from 'element-plus';
 import { useConfig } from '/@/stores/config';
 import router from '/@/router/index';
 import { refreshToken } from '/@/api/common';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '../stores/userInfo';
 import { i18n } from '/@/lang/index';
 
 window.requests = [];
@@ -38,7 +38,7 @@ export const getUrlPort = (): string => {
  */
 function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequestConfig, options: Options = {}, loading: LoadingOptions = {}): T {
     const config = useConfig();
-    const adminInfo = useAdminInfo();
+    const userInfo = useUserInfo();
 
     const Axios = axios.create({
         baseURL: getUrl(),
@@ -78,7 +78,7 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
 
             // 自动携带token
             if (config.headers) {
-                const token = adminInfo.getToken();
+                const token = userInfo.getToken();
                 if (token) (config.headers as AnyObj).batoken = token;
             }
 
@@ -102,22 +102,22 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
                             window.tokenRefreshing = true;
                             return refreshToken()
                                 .then((res) => {
-                                    if (res.data.type == 'admin-refresh') {
-                                        adminInfo.setToken(res.data.token, 'auth');
+                                    if (res.data.type == 'user-refresh') {
+                                        userInfo.setToken(res.data.token, 'auth');
                                         response.headers.batoken = `${res.data.token}`;
-                                        window.requests.forEach((cb) => cb(res.data.token, 'admin-refresh'));
+                                        window.requests.forEach((cb) => cb(res.data.token, 'user-refresh'));
                                     }
                                     window.requests = [];
                                     return Axios(response.config);
                                 })
                                 .catch((err) => {
-                                    adminInfo.removeToken();
-                                    if (router.currentRoute.value.name != 'adminLogin') {
-                                        router.push({ name: 'adminLogin' });
+                                    userInfo.removeToken();
+                                    if (router.currentRoute.value.name != 'login') {
+                                        router.push({ name: 'login' });
                                         return Promise.reject(err);
                                     } else {
                                         response.headers.batoken = '';
-                                        window.requests.forEach((cb) => cb('', 'admin-refresh'));
+                                        window.requests.forEach((cb) => cb('', 'user-refresh'));
                                         window.requests = [];
                                         return Axios(response.config);
                                     }
@@ -129,7 +129,7 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
                             return new Promise((resolve) => {
                                 // 用函数形式将 resolve 存入，等待刷新后再执行
                                 window.requests.push((token: string, type: string) => {
-                                    if (type == 'admin-refresh') {
+                                    if (type == 'user-refresh') {
                                         response.headers.batoken = `${token}`;
                                     } else {
                                         response.headers['ba-user-token'] = `${token}`;
@@ -142,19 +142,19 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
                     if (options.showCodeMessage) {
                         ElNotification({
                             type: 'error',
-                            message: response.data.msg,
+                            message: response.data.message,
                         });
                     }
                     // 自动跳转到路由name或path，仅限server端返回302的情况
                     if (response.data.code == 302) {
-                        adminInfo.removeToken();
+                        userInfo.removeToken();
                         if (response.data.data.routeName) {
                             router.push({ name: response.data.data.routeName });
                         } else if (response.data.data.routePath) {
                             router.push({ path: response.data.data.routePath });
                         }
                     }
-                    // code不等于1, 页面then内的具体逻辑就不执行了
+                    // code不等于200, 页面then内的具体逻辑就不执行了
                     return Promise.reject(response.data);
                 } else if (options.showSuccessMessage && response.data && response.data.code == 200) {
                     ElNotification({

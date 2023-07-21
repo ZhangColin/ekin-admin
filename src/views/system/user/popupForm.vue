@@ -49,9 +49,9 @@
                         :key="('group-' + baTable.form.items!.id)"
                         :input-attr="{
                             multiple: true,
-                            params: { isTree: true, absoluteAuth: adminInfo.id == baTable.form.items!.id ? 0 : 1 },
+                            params: { isTree: true, absoluteAuth: userInfo.id == baTable.form.items!.id ? 0 : 1 },
                             field: 'name',
-                            'remote-url': '/admin/auth.Group/index',
+                            'remote-url': '/system/role/index',
                             placeholder: t('Click select'),
                         }"
                     />
@@ -117,9 +117,9 @@ import type baTableClass from '/@/utils/baTable';
 import { regularPassword, buildValidatorData } from '/@/utils/validate';
 import type { FormInstance, FormItemRule } from 'element-plus';
 import FormItem from '/@/components/formItem/index.vue';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '/@/stores/userInfo';
 
-const adminInfo = useAdminInfo();
+const userInfo = useUserInfo();
 const formRef = ref<FormInstance>();
 const baTable = inject('baTable') as baTableClass;
 
@@ -190,3 +190,4 @@ watch(
     height: 100%;
 }
 </style>
+../../../stores/userInfo

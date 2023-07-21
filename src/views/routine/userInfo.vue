@@ -2,7 +2,7 @@
     <div class="default-main">
         <el-row :gutter="30">
             <el-col class="lg-mb-20" :xs="24" :sm="24" :md="24" :lg="10">
-                <div class="admin-info">
+                <div class="user-info">
                     <el-upload
                         class="avatar-uploader"
                         action=""
@@ -11,7 +11,7 @@
                         :auto-upload="false"
                         accept="image/gif, image/jpg, image/jpeg, image/bmp, image/png, image/webp"
                     >
-                        <el-image :src="state.adminInfo.avatar" class="avatar">
+                        <el-image :src="state.userInfo.avatar" class="avatar">
                             <template #error>
                                 <div class="image-slot">
                                     <Icon size="30" color="#c0c4cc" name="el-icon-Picture" />
@@ -19,58 +19,58 @@
                             </template>
                         </el-image>
                     </el-upload>
-                    <div class="admin-info-base">
-                        <div class="admin-nickname">{{ state.adminInfo.nickname }}</div>
-                        <div class="admin-other">
-                            <div>{{ t('routine.adminInfo.Last logged in on') }} {{ state.adminInfo.last_login_time }}</div>
+                    <div class="user-info-base">
+                        <div class="user-nickname">{{ state.userInfo.nickname }}</div>
+                        <div class="user-other">
+                            <div>{{ t('routine.userInfo.Last logged in on') }} {{ state.userInfo.last_login_time }}</div>
                         </div>
                     </div>
-                    <div class="admin-info-form">
+                    <div class="user-info-form">
                         <el-form
                             @keyup.enter="onSubmit()"
                             :key="state.formKey"
                             label-position="top"
                             :rules="rules"
                             ref="formRef"
-                            :model="state.adminInfo"
+                            :model="state.userInfo"
                         >
-                            <el-form-item :label="t('routine.adminInfo.user name')">
-                                <el-input disabled v-model="state.adminInfo.username"></el-input>
+                            <el-form-item :label="t('routine.userInfo.user name')">
+                                <el-input disabled v-model="state.userInfo.username"></el-input>
                             </el-form-item>
-                            <el-form-item :label="t('routine.adminInfo.User nickname')" prop="nickname">
-                                <el-input :placeholder="t('routine.adminInfo.Please enter a nickname')" v-model="state.adminInfo.nickname"></el-input>
+                            <el-form-item :label="t('routine.userInfo.User nickname')" prop="nickname">
+                                <el-input :placeholder="t('routine.userInfo.Please enter a nickname')" v-model="state.userInfo.nickname"></el-input>
                             </el-form-item>
-                            <el-form-item :label="t('routine.adminInfo.e-mail address')" prop="email">
+                            <el-form-item :label="t('routine.userInfo.e-mail address')" prop="email">
                                 <el-input
-                                    :placeholder="t('Please input field', { field: t('routine.adminInfo.e-mail address') })"
-                                    v-model="state.adminInfo.email"
+                                    :placeholder="t('Please input field', { field: t('routine.userInfo.e-mail address') })"
+                                    v-model="state.userInfo.email"
                                 ></el-input>
                             </el-form-item>
-                            <el-form-item :label="t('routine.adminInfo.phone number')" prop="mobile">
+                            <el-form-item :label="t('routine.userInfo.phone number')" prop="mobile">
                                 <el-input
-                                    :placeholder="t('Please input field', { field: t('routine.adminInfo.phone number') })"
-                                    v-model="state.adminInfo.mobile"
+                                    :placeholder="t('Please input field', { field: t('routine.userInfo.phone number') })"
+                                    v-model="state.userInfo.mobile"
                                 ></el-input>
                             </el-form-item>
-                            <el-form-item :label="t('routine.adminInfo.autograph')" prop="motto">
+                            <el-form-item :label="t('routine.userInfo.autograph')" prop="motto">
                                 <el-input
                                     @keyup.enter.stop=""
                                     @keyup.ctrl.enter="onSubmit()"
-                                    :placeholder="t('routine.adminInfo.This guy is lazy and doesn write anything')"
+                                    :placeholder="t('routine.userInfo.This guy is lazy and doesn write anything')"
                                     type="textarea"
-                                    v-model="state.adminInfo.motto"
+                                    v-model="state.userInfo.motto"
                                 ></el-input>
                             </el-form-item>
-                            <el-form-item :label="t('routine.adminInfo.New password')" prop="password">
+                            <el-form-item :label="t('routine.userInfo.New password')" prop="password">
                                 <el-input
                                     type="password"
-                                    :placeholder="t('routine.adminInfo.Please leave blank if not modified')"
-                                    v-model="state.adminInfo.password"
+                                    :placeholder="t('routine.userInfo.Please leave blank if not modified')"
+                                    v-model="state.userInfo.password"
                                 ></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" :loading="state.buttonLoading" @click="onSubmit()">
-                                    {{ t('routine.adminInfo.Save changes') }}
+                                    {{ t('routine.userInfo.Save changes') }}
                                 </el-button>
                                 <el-button @click="onResetForm(formRef)">{{ t('Reset') }}</el-button>
                             </el-form-item>
@@ -79,7 +79,7 @@
                 </div>
             </el-col>
             <el-col v-loading="state.logLoading" :xs="24" :sm="24" :md="24" :lg="12">
-                <el-card :header="t('routine.adminInfo.Operation log')" shadow="never">
+                <el-card :header="t('routine.userInfo.Operation log')" shadow="never">
                     <el-timeline>
                         <el-timeline-item v-for="(item, idx) in state.log" :key="idx" size="large" :timestamp="timeFormat(item.create_time)">
                             {{ item.title }}
@@ -104,25 +104,25 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { index, log, postData } from '/@/api/backend/routine/AdminInfo'
+import { index, log, postData } from '/@/api/routine/UserInfo'
 import { FormInstance, FormItemRule } from 'element-plus'
 import { onResetForm, timeFormat } from '/@/utils/common'
 import { uuid } from '../../../utils/random'
 import { buildValidatorData } from '/@/utils/validate'
 import { fileUpload } from '/@/api/common'
-import { useAdminInfo } from '/@/stores/adminInfo'
+import { useUserInfo } from '/@/stores/userInfo'
 
 defineOptions({
-    name: 'routine/adminInfo',
+    name: 'routine/userInfo',
 })
 
 const { t } = useI18n()
 const formRef = ref<FormInstance>()
 
-const adminInfoStore = useAdminInfo()
+const userInfoStore = useUserInfo()
 
 const state: {
-    adminInfo: anyObj
+    userInfo: AnyObj
     formKey: string
     buttonLoading: boolean
     log: {
@@ -130,13 +130,13 @@ const state: {
         create_time: string
         url: string
     }[]
-    logFilter: anyObj
+    logFilter: AnyObj
     logCurrentPage: number
     logPageSize: number
     logTotal: number
     logLoading: boolean
 } = reactive({
-    adminInfo: {},
+    userInfo: {},
     formKey: uuid(),
     buttonLoading: false,
     log: [],
@@ -150,7 +150,7 @@ const state: {
 })
 
 index().then((res) => {
-    state.adminInfo = res.data.info
+    state.userInfo = res.data.info
     // 重新渲染表单以记录初始值
     state.formKey = uuid()
 
@@ -190,9 +190,9 @@ const onLogCurrentChange = (page: number) => {
 }
 
 const rules: Partial<Record<string, FormItemRule[]>> = reactive({
-    nickname: [buildValidatorData({ name: 'required', title: t('routine.adminInfo.User nickname') })],
-    email: [buildValidatorData({ name: 'email', title: t('routine.adminInfo.e-mail address') })],
-    mobile: [buildValidatorData({ name: 'mobile', message: t('Please enter the correct field', { field: t('routine.adminInfo.phone number') }) })],
+    nickname: [buildValidatorData({ name: 'required', title: t('routine.userInfo.User nickname') })],
+    email: [buildValidatorData({ name: 'email', title: t('routine.userInfo.e-mail address') })],
+    mobile: [buildValidatorData({ name: 'mobile', message: t('Please enter the correct field', { field: t('routine.userInfo.phone number') }) })],
     password: [buildValidatorData({ name: 'password' })],
 })
 
@@ -202,11 +202,11 @@ const onAvatarBeforeUpload = (file: any) => {
     fileUpload(fd).then((res) => {
         if (res.code == 1) {
             postData({
-                id: state.adminInfo.id,
+                id: state.userInfo.id,
                 avatar: res.data.file.url,
             }).then(() => {
-                adminInfoStore.dataFill({ ...adminInfoStore.$state, avatar: res.data.file.full_url })
-                state.adminInfo.avatar = res.data.file.full_url
+                userInfoStore.dataFill({ ...userInfoStore.$state, avatar: res.data.file.full_url })
+                state.userInfo.avatar = res.data.file.full_url
             })
         }
     })
@@ -216,14 +216,14 @@ const onSubmit = () => {
     if (!formRef.value) return
     formRef.value.validate((valid) => {
         if (valid) {
-            let data = { ...state.adminInfo }
+            let data = { ...state.userInfo }
             delete data.last_login_time
             delete data.username
             delete data.avatar
             state.buttonLoading = true
             postData(data)
                 .then(() => {
-                    adminInfoStore.dataFill({ ...adminInfoStore.$state, nickname: state.adminInfo.nickname })
+                    userInfoStore.dataFill({ ...userInfoStore.$state, nickname: state.userInfo.nickname })
                     state.buttonLoading = false
                 })
                 .catch(() => {
@@ -235,7 +235,7 @@ const onSubmit = () => {
 </script>
 
 <style scoped lang="scss">
-.admin-info {
+.user-info {
     background-color: var(--ba-bg-color-overlay);
     border-radius: var(--el-border-radius-base);
     border-top: 3px solid #409eff;
@@ -267,21 +267,21 @@ const onSubmit = () => {
         justify-content: center;
         height: 100%;
     }
-    .admin-info-base {
-        .admin-nickname {
+    .user-info-base {
+        .user-nickname {
             font-size: 22px;
             color: var(--el-text-color-primary);
             text-align: center;
             padding: 8px 0;
         }
-        .admin-other {
+        .user-other {
             color: var(--el-text-color-regular);
             font-size: 14px;
             text-align: center;
             line-height: 20px;
         }
     }
-    .admin-info-form {
+    .user-info-form {
         padding: 30px;
     }
 }
@@ -294,3 +294,4 @@ const onSubmit = () => {
     }
 }
 </style>
+../../stores/userInfo

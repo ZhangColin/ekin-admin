@@ -203,7 +203,7 @@ declare global {
         // 渲染方式:tipButton=带tip的按钮,confirmButton=带确认框的按钮,moveButton=移动按钮,basicButton=普通按钮
         render: 'tipButton' | 'confirmButton' | 'moveButton' | 'basicButton';
         name: string;
-        // 自动使用 t() 包裹，请使用语言翻译key，比如 admin.infoBtn
+        // 自动使用 t() 包裹，请使用语言翻译key，比如 user.infoBtn
         title?: string;
         text?: string;
         class?: string;

@@ -1,8 +1,8 @@
 import createAxios from '/@/utils/axios'
 
-export function getAdminRules() {
+export function getMenus() {
     return createAxios({
-        url: '/admin/auth.Rule/index',
+        url: '/system/menu/index',
         method: 'get',
     })
 }

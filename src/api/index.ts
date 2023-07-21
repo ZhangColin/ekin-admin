@@ -1,5 +1,5 @@
 import createAxios from '/@/utils/axios';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '../stores/userInfo';
 import { encrypt } from '../utils/crypto';
 
 export const url = '/Index/';
@@ -30,12 +30,12 @@ export function login(params: any) {
 }
 
 export function logout() {
-    const adminInfo = useAdminInfo();
+    const userInfo = useUserInfo();
     return createAxios({
         url: url + 'logout',
         method: 'POST',
         data: {
-            refreshToken: adminInfo.getToken('refresh'),
+            refreshToken: userInfo.getToken('refresh'),
         },
     });
 }

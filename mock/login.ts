@@ -10,8 +10,8 @@ export default [
                 data: {
                     userInfo: {
                         id: 1,
-                        username: 'admin',
-                        nickname: 'Admin',
+                        username: 'colin',
+                        nickname: 'Colin',
                         avatar: 'https://demo.buildadmin.com/static/images/avatar.png',
                         last_login_time: '2023-07-17 21:30:24',
                         token: '5fe78d04-c686-4500-886c-473aaa4080c3',

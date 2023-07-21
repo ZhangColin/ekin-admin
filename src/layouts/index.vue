@@ -6,7 +6,7 @@
 import { useConfig } from '/@/stores/config';
 import { useNavTabs } from '/@/stores/navTabs';
 import { useSiteConfig } from '/@/stores/siteConfig';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '/@/stores/userInfo';
 import { useRoute } from 'vue-router';
 import Default from '/@/layouts/container/default.vue';
 import Classic from '/@/layouts/container/classic.vue';
@@ -15,9 +15,9 @@ import Double from '/@/layouts/container/double.vue';
 import { onMounted, onBeforeMount } from 'vue';
 import { Session } from '/@/utils/storage';
 import { index } from '/@/api';
-import { handleAdminRoute, getFirstRoute, routePush } from '/@/utils/router';
+import { handleRoute, getFirstRoute, routePush } from '/@/utils/router';
 import router from '/@/router/index';
-import { adminBaseRoute } from '/@/router/static';
+import { baseRoute } from '/@/router/static';
 import { useEventListener } from '@vueuse/core';
 import { BEFORE_RESIZE_LAYOUT } from '/@/stores/constant/cacheKey';
 import { isEmpty } from 'lodash-es';
@@ -30,10 +30,10 @@ const navTabs = useNavTabs();
 const config = useConfig();
 const route = useRoute();
 const siteConfig = useSiteConfig();
-const adminInfo = useAdminInfo();
+const userInfo = useUserInfo();
 
 onMounted(() => {
-    if (!adminInfo.token) return router.push({ name: 'adminLogin' });
+    if (!userInfo.token) return router.push({ name: 'login' });
 
     init();
     onSetNavTabsMinWidth();
@@ -50,15 +50,15 @@ const init = () => {
      */
     index().then((res) => {
         siteConfig.dataFill(res.data.siteConfig);
-        adminInfo.dataFill(res.data.adminInfo);
+        userInfo.dataFill(res.data.userInfo);
 
         if (res.data.menus) {
-            handleAdminRoute(res.data.menus);
+            handleRoute(res.data.menus);
 
             // 预跳转到上次路径
             if (route.params.to) {
                 const lastRoute = JSON.parse(route.params.to as string);
-                if (lastRoute.path != adminBaseRoute.path) {
+                if (lastRoute.path != baseRoute.path) {
                     let query = !isEmpty(lastRoute.query) ? lastRoute.query : {};
                     routePush({ path: lastRoute.path, query: query });
                     return;
@@ -106,3 +106,4 @@ const onSetNavTabsMinWidth = () => {
     navTabs.style.width = minWidth.toString() + 'px';
 };
 </script>
+../stores/userInfo

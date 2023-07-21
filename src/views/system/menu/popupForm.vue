@@ -59,7 +59,7 @@
                         <el-input
                             v-model="baTable.form.items!.name"
                             type="string"
-                            :placeholder="t('system.menu.English name, which does not need to start with `/admin`, such as system/menu')"
+                            :placeholder="t('system.menu.English name, which does not need to start with `/`, such as system/menu')"
                         ></el-input>
                         <div class="block-help">
                             {{ t('system.menu.It will be registered as the web side routing name and used as the server side API authentication') }}
@@ -69,7 +69,7 @@
                         <el-input
                             v-model="baTable.form.items!.path"
                             type="string"
-                            :placeholder="t('system.menu.The web side routing path (path) does not need to start with `/admin`, such as system/menu')"
+                            :placeholder="t('system.menu.The web side routing path (path) does not need to start with `/`, such as system/menu')"
                         ></el-input>
                     </el-form-item>
                     <FormItem

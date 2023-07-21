@@ -36,7 +36,7 @@
             <Icon :color="configStore.getColorVal('headerBarTabColor')" class="nav-menu-icon" v-else name="el-icon-FullScreen" size="18" />
         </div>
         <el-dropdown
-            v-if="adminInfo.super"
+            v-if="userInfo.super"
             @visible-change="onCurrentNavMenu($event, 'clear')"
             class="h100"
             size="large"
@@ -57,34 +57,34 @@
             </template>
         </el-dropdown>
         <el-popover
-            @show="onCurrentNavMenu(true, 'adminInfo')"
-            @hide="onCurrentNavMenu(false, 'adminInfo')"
+            @show="onCurrentNavMenu(true, 'userInfo')"
+            @hide="onCurrentNavMenu(false, 'userInfo')"
             placement="bottom-end"
             :hide-after="0"
             :width="260"
             trigger="click"
-            popper-class="admin-info-box"
+            popper-class="user-info-box"
         >
             <template #reference>
-                <div class="admin-info" :class="state.currentNavMenu == 'adminInfo' ? 'hover' : ''">
+                <div class="user-info" :class="state.currentNavMenu == 'userInfo' ? 'hover' : ''">
                     <el-avatar :size="25" fit="fill">
-                        <img :src="adminInfo.avatar" alt="" />
+                        <img :src="userInfo.avatar" alt="" />
                     </el-avatar>
-                    <div class="admin-name">{{ adminInfo.nickname }}</div>
+                    <div class="user-name">{{ userInfo.nickname }}</div>
                 </div>
             </template>
             <div>
-                <div class="admin-info-base">
+                <div class="user-info-base">
                     <el-avatar :size="70" fit="fill">
-                        <img :src="adminInfo.avatar" alt="" />
+                        <img :src="userInfo.avatar" alt="" />
                     </el-avatar>
-                    <div class="admin-info-other">
-                        <div class="admin-info-name">{{ adminInfo.nickname }}</div>
-                        <div class="admin-info-lasttime">{{ adminInfo.last_login_time }}</div>
+                    <div class="user-info-other">
+                        <div class="user-info-name">{{ userInfo.nickname }}</div>
+                        <div class="user-info-lasttime">{{ userInfo.last_login_time }}</div>
                     </div>
                 </div>
-                <div class="admin-info-footer">
-                    <el-button @click="onAdminInfo" type="primary" plain>{{ t('layouts.personal data') }}</el-button>
+                <div class="user-info-footer">
+                    <el-button @click="onUserInfo" type="primary" plain>{{ t('layouts.personal data') }}</el-button>
                     <el-button @click="onLogout" type="danger" plain>{{ t('layouts.cancellation') }}</el-button>
                 </div>
             </div>
@@ -104,9 +104,9 @@ import { useConfig } from '/@/stores/config';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import Config from './config.vue';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '/@/stores/userInfo';
 import { Local, Session } from '/@/utils/storage';
-import { ADMIN_INFO, BA_ACCOUNT } from '/@/stores/constant/cacheKey';
+import { USER_INFO } from '/@/stores/constant/cacheKey';
 import router from '/@/router';
 import { routePush } from '/@/utils/router';
 import { logout } from '/@/api/index';
@@ -114,7 +114,7 @@ import { postClearCache } from '/@/api/common';
 
 const { t } = useI18n();
 
-const adminInfo = useAdminInfo();
+const userInfo = useUserInfo();
 const configStore = useConfig();
 
 const state = reactive({
@@ -138,25 +138,23 @@ const onFullScreen = () => {
     });
 };
 
-const onAdminInfo = () => {
-    routePush({ name: 'routine/adminInfo' });
+const onUserInfo = () => {
+    routePush({ name: 'routine/userInfo' });
 };
 
 const onLogout = () => {
     logout().then(() => {
-        Local.remove(ADMIN_INFO);
+        Local.remove(USER_INFO);
         router.go(0);
     });
 };
 
 const onClearCache = (type: string) => {
     if (type == 'storage' || type == 'all') {
-        const adminInfo = Local.get(ADMIN_INFO);
-        const baAccount = Local.get(BA_ACCOUNT);
+        const userInfo = Local.get(USER_INFO);
         Session.clear();
         Local.clear();
-        Local.set(ADMIN_INFO, adminInfo);
-        Local.set(BA_ACCOUNT, baAccount);
+        Local.set(USER_INFO, userInfo);
         if (type == 'storage') return;
     }
     postClearCache(type).then(() => {});
@@ -192,7 +190,7 @@ const onClearCache = (type: string) => {
             }
         }
     }
-    .admin-info {
+    .user-info {
         display: flex;
         height: 100%;
         padding: 0 10px;
@@ -201,36 +199,36 @@ const onClearCache = (type: string) => {
         user-select: none;
         color: v-bind('configStore.getColorVal("headerBarTabColor")');
     }
-    .admin-name {
+    .user-name {
         padding-left: 6px;
         white-space: nowrap;
     }
     .nav-menu-item:hover,
-    .admin-info:hover,
+    .user-info:hover,
     .nav-menu-item.hover,
-    .admin-info.hover {
+    .user-info.hover {
         background: v-bind('configStore.getColorVal("headerBarHoverBackground")');
     }
 }
 .dropdown-menu-box :deep(.el-dropdown-menu__item) {
     justify-content: center;
 }
-.admin-info-base {
+.user-info-base {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     padding-top: 10px;
-    .admin-info-other {
+    .user-info-other {
         display: block;
         width: 100%;
         text-align: center;
         padding: 10px 0;
-        .admin-info-name {
+        .user-info-name {
             font-size: var(--el-font-size-large);
         }
     }
 }
-.admin-info-footer {
+.user-info-footer {
     padding: 10px 0;
     margin: 0 -12px -12px -12px;
     display: flex;
@@ -252,3 +250,4 @@ const onClearCache = (type: string) => {
     }
 }
 </style>
+../../stores/userInfo

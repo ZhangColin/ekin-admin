@@ -11,10 +11,10 @@ const staticRoutes: Array<RouteRecordRaw> = [
     {
         // 管理员登录页
         path: '/login',
-        name: 'adminLogin',
+        name: 'login',
         component: () => import('/@/views/login.vue'),
         meta: {
-            title: pageTitle('adminLogin'),
+            title: pageTitle('login'),
         },
     },
     {
@@ -31,7 +31,7 @@ const staticRoutes: Array<RouteRecordRaw> = [
         path: '/:path(.*)*',
         redirect: (to) => {
             return {
-                name: 'adminMainLoading',
+                name: 'mainLoading',
                 params: {
                     to: JSON.stringify({
                         path: to.path,
@@ -52,21 +52,18 @@ const staticRoutes: Array<RouteRecordRaw> = [
     },
 ];
 
-/*
- * 后台基础静态路由
- */
-const adminBaseRoute: RouteRecordRaw = {
+const baseRoute: RouteRecordRaw = {
     path: '/',
     name: '/',
     component: () => import('/@/layouts/index.vue'),
     redirect: '/loading',
     meta: {
-        title: pageTitle('admin'),
+        title: pageTitle('home'),
     },
     children: [
         {
             path: 'loading/:to?',
-            name: 'adminMainLoading',
+            name: 'mainLoading',
             component: () => import('/@/layouts/common/components/loading.vue'),
             meta: {
                 title: pageTitle('Loading'),
@@ -75,6 +72,6 @@ const adminBaseRoute: RouteRecordRaw = {
     ],
 };
 
-staticRoutes.push(adminBaseRoute);
+staticRoutes.push(baseRoute);
 
-export { staticRoutes, adminBaseRoute };
+export { staticRoutes, baseRoute };

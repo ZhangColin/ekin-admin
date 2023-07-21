@@ -25,7 +25,7 @@ import Table from '/@/components/table/index.vue';
 import TableHeader from '/@/components/table/header/index.vue';
 import { defaultOptButtons } from '/@/components/table';
 import { baTableApi } from '/@/api/common';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '/@/stores/userInfo';
 import { useI18n } from 'vue-i18n';
 
 defineOptions({
@@ -33,15 +33,15 @@ defineOptions({
 });
 
 const { t } = useI18n();
-const adminInfo = useAdminInfo();
+const userInfo = useUserInfo();
 
 const optButtons = defaultOptButtons(['edit', 'delete']);
 optButtons[1].display = (row) => {
-    return row.id != adminInfo.id;
+    return row.id != userInfo.id;
 };
 
 const baTable = new baTableClass(
-    new baTableApi('/admin/auth.Admin/'),
+    new baTableApi('/system/user/'),
     {
         column: [
             { type: 'selection', align: 'center', operator: false },
@@ -95,3 +95,4 @@ baTable.getIndex();
 </script>
 
 <style scoped lang="scss"></style>
+../../../stores/userInfo

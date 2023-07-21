@@ -1,7 +1,7 @@
 import createAxios from '/@/utils/axios';
 import { checkFileMimetype } from '/@/utils/common';
 import { getUrl } from '/@/utils/axios';
-import { useAdminInfo } from '/@/stores/adminInfo';
+import { useUserInfo } from '../stores/userInfo';
 import { ElNotification, UploadRawFile } from 'element-plus';
 import { useSiteConfig } from '/@/stores/siteConfig';
 import { state as uploadExpandState, fileUpload as uploadExpand } from '/@/components/mixins/baUpload';
@@ -12,15 +12,13 @@ import { i18n } from '../lang';
  * 公共请求函数和Url定义
  */
 
-// Admin模块
-export const adminUploadUrl = '/ajax/upload';
-export const adminBuildSuffixSvgUrl = '/ajax/buildSuffixSvg';
-export const adminAreaUrl = '/ajax/area';
+export const uploadUrl = '/ajax/upload';
+export const buildSuffixSvgUrl = '/ajax/buildSuffixSvg';
+export const areaUrl = '/ajax/area';
 export const getTablePkUrl = '/ajax/getTablePk';
 export const getTableFieldListUrl = '/ajax/getTableFieldList';
 export const clearCacheUrl = '/ajax/clearCache';
 
-// 公共
 export const captchaUrl = '/api/common/captcha';
 export const clickCaptchaUrl = '/api/common/clickCaptcha';
 export const checkClickCaptchaUrl = '/api/common/checkClickCaptcha';
@@ -56,7 +54,7 @@ export function fileUpload(fd: FormData, params: AnyObj = {}, forceLocal = false
     }
 
     return createAxios({
-        url: adminUploadUrl,
+        url: uploadUrl,
         method: 'POST',
         data: fd,
         params: params,
@@ -70,13 +68,13 @@ export function fileUpload(fd: FormData, params: AnyObj = {}, forceLocal = false
  * @param suffix 后缀名
  * @param background 背景色,如:rgb(255,255,255)
  */
-export function buildSuffixSvgUrl(suffix: string, background = '') {
-    const adminInfo = useAdminInfo();
+export function buildSuffixSvg(suffix: string, background = '') {
+    const userInfo = useUserInfo();
     return (
         getUrl() +
-        adminBuildSuffixSvgUrl +
+        buildSuffixSvgUrl +
         '?batoken=' +
-        adminInfo.getToken() +
+        userInfo.getToken() +
         '&suffix=' +
         suffix +
         (background ? '&background=' + background : '') +
@@ -96,7 +94,7 @@ export function getArea(values: number[]) {
         params.city = values[1];
     }
     return createAxios({
-        url: adminAreaUrl,
+        url: areaUrl,
         method: 'GET',
         params: params,
     });
@@ -192,12 +190,12 @@ export function getTableFieldList(table: string, clean = true) {
 }
 
 export function refreshToken() {
-    const adminInfo = useAdminInfo();
+    const userInfo = useUserInfo();
     return createAxios({
         url: refreshTokenUrl,
         method: 'POST',
         data: {
-            refreshToken: adminInfo.getToken('refresh'),
+            refreshToken: userInfo.getToken('refresh'),
         },
     });
 }
