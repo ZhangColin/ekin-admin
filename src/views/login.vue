@@ -156,7 +156,7 @@ const onSubmit = async (captchaInfo = '') => {
         const loginResponse = await login(form);
         adminInfo.dataFill(loginResponse.data.userInfo);
         ElNotification({
-            message: t('login.Login successful') ,
+            message: t('login.Login successful'),
             type: 'success',
         });
         router.push({ path: loginResponse.data.routePath });

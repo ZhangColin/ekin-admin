@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js/crypto-js';
 const KEY = CryptoJS.enc.Utf8.parse('com.cartisan.www');
 const IV = CryptoJS.enc.Utf8.parse('com.cartisan.www');
 
-export function encrypt(content: string, keyStr='', ivStr='') {
+export function encrypt(content: string, keyStr = '', ivStr = '') {
     let key = KEY;
     let iv = IV;
 
@@ -23,7 +23,7 @@ export function encrypt(content: string, keyStr='', ivStr='') {
     return CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
 }
 
-export function decrypt(content: string, keyStr='', ivStr='') {
+export function decrypt(content: string, keyStr = '', ivStr = '') {
     let key = KEY;
     let iv = IV;
 

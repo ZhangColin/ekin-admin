@@ -172,7 +172,9 @@ export const getFileNameFromPath = (path: string) => {
  * @param name
  */
 export const auth = (name: string) => {
-    const path = getCurrentRoutePath();
+    let path = getCurrentRoutePath();
+    if (path.startsWith('/'))
+        path = path.substring(1, path.length)
     const store = useNavTabs();
     if (store.state.authNode.has(path)) {
         if (store.state.authNode.get(path)!.some((v: string) => v == path + '/' + name)) {

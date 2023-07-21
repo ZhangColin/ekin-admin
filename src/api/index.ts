@@ -23,7 +23,7 @@ export function login(params: any) {
         url: 'api/system/login',
         data: {
             username: params.username,
-            password: encrypt(params.password)
+            password: encrypt(params.password),
         },
         method: 'POST',
     });
