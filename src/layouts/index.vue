@@ -14,7 +14,7 @@ import Streamline from '/@/layouts/container/streamline.vue';
 import Double from '/@/layouts/container/double.vue';
 import { onMounted, onBeforeMount } from 'vue';
 import { Session } from '/@/utils/storage';
-import { index } from '/@/api';
+import { getConfig } from '/@/api/index';
 import { handleRoute, getFirstRoute, routePush } from '/@/utils/router';
 import router from '/@/router/index';
 import { baseRoute } from '/@/router/static';
@@ -46,9 +46,9 @@ onBeforeMount(() => {
 
 const init = () => {
     /**
-     * 后台初始化请求，获取站点配置，动态路由等信息
+     * 初始化请求，获取站点配置，动态路由等信息
      */
-    index().then((res) => {
+     getConfig().then((res) => {
         siteConfig.dataFill(res.data.siteConfig);
         userInfo.dataFill(res.data.userInfo);
 

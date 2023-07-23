@@ -79,7 +79,7 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
             // 自动携带token
             if (config.headers) {
                 const token = userInfo.getToken();
-                if (token) (config.headers as AnyObj).batoken = token;
+                if (token) (config.headers as AnyObj).Authorization = "Bearer " + token;
             }
 
             return config;
@@ -167,6 +167,8 @@ function createAxios<Data = any, T = ApiPromise<Data>>(axiosConfig: AxiosRequest
             return options.reductDataFormat ? response.data : response;
         },
         (error) => {
+            console.log(error)
+
             error.config && removePending(error.config);
             options.loading && closeLoading(options); // 关闭loading
             options.showErrorMessage && httpErrorStatusHandle(error); // 处理错误状态码
@@ -240,6 +242,12 @@ function httpErrorStatusHandle(error: any) {
         type: 'error',
         message,
     });
+
+    if (error.response.status === 401) {
+        const userInfo = useUserInfo();
+        userInfo.removeToken();
+        router.push({ path: '/login' });
+    }
 }
 
 /**

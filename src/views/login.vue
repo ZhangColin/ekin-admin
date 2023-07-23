@@ -154,12 +154,12 @@ const onSubmit = async (captchaInfo = '') => {
 
     try {
         const loginResponse = await login(form);
-        userInfo.dataFill(loginResponse.data.userInfo);
+        userInfo.dataFill(loginResponse.data);
         ElNotification({
             message: t('login.Login successful'),
             type: 'success',
         });
-        router.push({ path: loginResponse.data.routePath });
+        router.push({ path: '/' });
     } finally {
         state.submitLoading = false;
     }

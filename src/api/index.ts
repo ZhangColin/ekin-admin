@@ -1,26 +1,23 @@
 import createAxios from '/@/utils/axios';
-import { useUserInfo } from '../stores/userInfo';
 import { encrypt } from '../utils/crypto';
 
-export const url = '/Index/';
-
-export function index() {
+export function getConfig() {
     return createAxios({
-        url: url + 'index',
+        url: 'api/config',
         method: 'get',
     });
 }
 
 export function loginSetting() {
     return createAxios({
-        url: url + 'login',
+        url: '/Index/login',
         method: 'GET',
     });
 }
 
 export function login(params: any) {
     return createAxios({
-        url: 'api/system/login',
+        url: 'api/login',
         data: {
             username: params.username,
             password: encrypt(params.password),
@@ -30,12 +27,8 @@ export function login(params: any) {
 }
 
 export function logout() {
-    const userInfo = useUserInfo();
     return createAxios({
-        url: url + 'logout',
+        url: 'api/logout',
         method: 'POST',
-        data: {
-            refreshToken: userInfo.getToken('refresh'),
-        },
     });
 }
