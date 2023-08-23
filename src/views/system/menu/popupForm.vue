@@ -29,14 +29,14 @@
                 >
                     <FormItem
                         type="remoteSelect"
-                        prop="pid"
+                        prop="parentId"
                         :label="t('system.menu.Superior menu rule')"
-                        v-model="baTable.form.items!.pid"
+                        v-model="baTable.form.items!.parentId"
                         :placeholder="t('Click select')"
                         :input-attr="{
                             params: { isTree: true },
                             field: 'title',
-                            'remote-url': baTable.api.actionUrl.get('index'),
+                            'remote-url': '/api/system/menus/options',
                         }"
                     />
                     <FormItem
@@ -44,7 +44,7 @@
                         v-model="baTable.form.items!.type"
                         type="radio"
                         :data="{
-                            content: { menu_dir: t('system.menu.type menu_dir'), menu: t('system.menu.type menu'), button: t('system.menu.type button') },
+                            content: { menu_dir: t('system.menu.type menu_dir'), menu: t('system.menu.type menu'), operate: t('system.menu.type button') },
                             childrenAttr: { border: true },
                         }"
                     />
@@ -65,7 +65,7 @@
                             {{ t('system.menu.It will be registered as the web side routing name and used as the server side API authentication') }}
                         </div>
                     </el-form-item>
-                    <el-form-item v-if="baTable.form.items!.type != 'button'" :label="t('system.menu.Routing path')">
+                    <el-form-item v-if="baTable.form.items!.type != 'operate'" :label="t('system.menu.Routing path')">
                         <el-input
                             v-model="baTable.form.items!.path"
                             type="string"
@@ -73,7 +73,7 @@
                         ></el-input>
                     </el-form-item>
                     <FormItem
-                        v-if="baTable.form.operate && baTable.form.items!.type != 'button'"
+                        v-if="baTable.form.operate && baTable.form.items!.type != 'operate'"
                         type="icon"
                         :label="t('system.menu.Rule Icon')"
                         v-model="baTable.form.items!.icon"
@@ -82,14 +82,14 @@
                     <FormItem
                         v-if="baTable.form.items!.type == 'menu'"
                         :label="t('system.menu.Menu type')"
-                        v-model="baTable.form.items!.menu_type"
+                        v-model="baTable.form.items!.menuType"
                         type="radio"
                         :data="{
                             content: { tab: t('system.menu.Menu type tab'), link: t('system.menu.Menu type link (offsite)'), iframe: 'Iframe' },
                             childrenAttr: { border: true },
                         }"
                     />
-                    <el-form-item prop="url" v-if="baTable.form.items!.menu_type != 'tab'" :label="t('system.menu.Link address')">
+                    <el-form-item prop="url" v-if="baTable.form.items!.menuType != 'tab'" :label="t('system.menu.Link address')">
                         <el-input
                             v-model="baTable.form.items!.url"
                             type="string"
@@ -97,7 +97,7 @@
                         ></el-input>
                     </el-form-item>
                     <el-form-item
-                        v-if="baTable.form.items!.type == 'menu' && baTable.form.items!.menu_type == 'tab'"
+                        v-if="baTable.form.items!.type == 'menu' && baTable.form.items!.menuType == 'tab'"
                         :label="t('system.menu.Component path')"
                     >
                         <el-input
@@ -106,8 +106,8 @@
                             :placeholder="t('system.menu.Web side component path, please start with /src, such as: /src/views/backend/dashboard')"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item
-                        v-if="baTable.form.items!.type == 'menu' && baTable.form.items!.menu_type == 'tab'"
+                    <!-- <el-form-item
+                        v-if="baTable.form.items!.type == 'menu' && baTable.form.items!.menuType == 'tab'"
                         :label="t('system.menu.Extended properties')"
                     >
                         <el-select
@@ -120,7 +120,7 @@
                             <el-option :label="t('system.menu.Add as menu only')" value="add_menu_only"></el-option>
                         </el-select>
                         <div class="block-help">{{ t('system.menu.extend Title') }}</div>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item :label="t('system.menu.Rule comments')">
                         <el-input
                             @keyup.enter.stop=""
@@ -191,7 +191,7 @@ const rules: Partial<Record<string, FormItemRule[]>> = reactive({
     title: [buildValidatorData({ name: 'required', title: t('system.menu.Rule title') })],
     name: [buildValidatorData({ name: 'required', title: t('system.menu.Rule name') })],
     url: [buildValidatorData({ name: 'url', message: t('system.menu.Please enter the correct URL') })],
-    pid: [
+    parentId: [
         {
             validator: (rule: any, val: string, callback: Function) => {
                 if (!val) {

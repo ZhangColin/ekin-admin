@@ -44,32 +44,32 @@ onBeforeMount(() => {
     useEventListener(window, 'resize', onAdaptiveLayout);
 });
 
-const init = () => {
+const init = async () => {
     /**
      * 初始化请求，获取站点配置，动态路由等信息
      */
-     getConfig().then((res) => {
-        siteConfig.dataFill(res.data.siteConfig);
-        userInfo.dataFill(res.data.userInfo);
+    const config = await getConfig()
 
-        if (res.data.menus) {
-            handleRoute(res.data.menus);
+    siteConfig.dataFill(config.data.siteConfig);
+    userInfo.dataFill(config.data.userInfo);
 
-            // 预跳转到上次路径
-            if (route.params.to) {
-                const lastRoute = JSON.parse(route.params.to as string);
-                if (lastRoute.path != baseRoute.path) {
-                    let query = !isEmpty(lastRoute.query) ? lastRoute.query : {};
-                    routePush({ path: lastRoute.path, query: query });
-                    return;
-                }
+    if (config.data.menus) {
+        handleRoute(config.data.menus);
+
+        // 预跳转到上次路径
+        if (route.params.to) {
+            const lastRoute = JSON.parse(route.params.to as string);
+            if (lastRoute.path != baseRoute.path) {
+                let query = !isEmpty(lastRoute.query) ? lastRoute.query : {};
+                routePush({ path: lastRoute.path, query: query });
+                return;
             }
-
-            // 跳转到第一个菜单
-            let firstRoute = getFirstRoute(navTabs.state.tabsViewRoutes);
-            if (firstRoute) routePush(firstRoute.path);
         }
-    });
+
+        // 跳转到第一个菜单
+        let firstRoute = getFirstRoute(navTabs.state.tabsViewRoutes);
+        if (firstRoute) routePush(firstRoute.path);
+    }
 };
 
 const onAdaptiveLayout = () => {
@@ -106,4 +106,3 @@ const onSetNavTabsMinWidth = () => {
     navTabs.style.width = minWidth.toString() + 'px';
 };
 </script>
-../stores/userInfo

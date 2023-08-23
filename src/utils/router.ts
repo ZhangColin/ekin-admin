@@ -130,7 +130,7 @@ const handleMenuRule = (routes: any, pathPrefix = '/') => {
                 continue;
             }
             const currentPath =
-                routes[key].menu_type == 'link' || routes[key].menu_type == 'iframe' ? routes[key].url : pathPrefix + routes[key].path;
+                routes[key].menuType == 'link' || routes[key].menuType == 'iframe' ? routes[key].url : pathPrefix + routes[key].path;
             let children: RouteRecordRaw[] = [];
             if (routes[key].children && routes[key].children.length > 0) {
                 children = handleMenuRule(routes[key].children, pathPrefix);
@@ -143,7 +143,7 @@ const handleMenuRule = (routes: any, pathPrefix = '/') => {
                     title: routes[key].title,
                     icon: routes[key].icon,
                     keepalive: routes[key].keepalive,
-                    type: routes[key].menu_type,
+                    type: routes[key].menuType,
                 },
                 children: children,
             });
@@ -166,7 +166,7 @@ const handleAuthNode = (routes: any, prefix = '/') => {
 const assembleAuthNode = (routes: any, authNode: Map<string, string[]>, prefix = '/', parent = '/') => {
     const authNodeTemp = [];
     for (const key in routes) {
-        if (routes[key].type == 'button') authNodeTemp.push(prefix + routes[key].name);
+        if (routes[key].type == 'operate') authNodeTemp.push(prefix + routes[key].name);
         if (routes[key].children && routes[key].children.length > 0) {
             assembleAuthNode(routes[key].children, authNode, prefix, prefix + routes[key].name);
         }
@@ -188,7 +188,7 @@ export const addRouteAll = (viewsComponent: Record<string, any>, routes: any, pa
         if (routes[idx].extend == 'add_menu_only') {
             continue;
         }
-        if ((routes[idx].menu_type == 'tab' && viewsComponent[routes[idx].component]) || routes[idx].menu_type == 'iframe') {
+        if ((routes[idx].menuType == 'tab' && viewsComponent[routes[idx].component]) || routes[idx].menuType == 'iframe') {
             addRouteItem(viewsComponent, routes[idx], parentName, analyticRelation);
         }
 
@@ -208,7 +208,7 @@ export const addRouteAll = (viewsComponent: Record<string, any>, routes: any, pa
 export const addRouteItem = (viewsComponent: Record<string, any>, route: any, parentName: string, analyticRelation: boolean) => {
     let path = '',
         component;
-    if (route.menu_type == 'iframe') {
+    if (route.menuType == 'iframe') {
         path = '/iframe/' + encodeURIComponent(route.url);
         component = () => import('/@/layouts/common/router-view/iframe.vue');
     } else {
@@ -216,7 +216,7 @@ export const addRouteItem = (viewsComponent: Record<string, any>, route: any, pa
         component = viewsComponent[route.component];
     }
 
-    if (route.menu_type == 'tab' && analyticRelation) {
+    if (route.menuType == 'tab' && analyticRelation) {
         const parentNames = getParentNames(route.name);
         if (parentNames.length) {
             for (const key in parentNames) {
@@ -237,7 +237,7 @@ export const addRouteItem = (viewsComponent: Record<string, any>, route: any, pa
             extend: route.extend,
             icon: route.icon,
             keepalive: route.keepalive,
-            menu_type: route.menu_type,
+            menuType: route.menuType,
             type: route.type,
             url: route.url,
             addtab: true,

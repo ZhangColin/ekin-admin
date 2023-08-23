@@ -250,4 +250,3 @@ const onClearCache = (type: string) => {
     }
 }
 </style>
-../../stores/userInfo

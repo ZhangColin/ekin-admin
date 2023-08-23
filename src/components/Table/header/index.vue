@@ -30,7 +30,7 @@
             </el-button>
         </el-tooltip>
         <el-popconfirm
-            v-if="props.buttons.includes('delete') && auth('del')"
+            v-if="props.buttons.includes('delete') && auth('delete')"
             @confirm="onAction('delete')"
             :confirm-button-text="t('Delete')"
             :cancel-button-text="t('Cancel')"

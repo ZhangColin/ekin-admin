@@ -9,7 +9,7 @@ const pageTitle = (name: string): string => {
  */
 const staticRoutes: Array<RouteRecordRaw> = [
     {
-        // 管理员登录页
+        // 登录页
         path: '/login',
         name: 'login',
         component: () => import('/@/views/login.vue'),

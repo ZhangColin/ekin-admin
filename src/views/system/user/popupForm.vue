@@ -32,7 +32,7 @@
                         v-model="baTable.form.items!.username"
                         type="string"
                         prop="username"
-                        :placeholder="t('system.user.Administrator login')"
+                        :placeholder="t('Please input field', { field: t('system.user.username') })"
                     />
                     <FormItem
                         :label="t('system.user.nickname')"
@@ -190,4 +190,3 @@ watch(
     height: 100%;
 }
 </style>
-../../../stores/userInfo

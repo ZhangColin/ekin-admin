@@ -278,4 +278,3 @@ const onSubmit = async (captchaInfo = '') => {
     }
 }
 </style>
-../stores/userInfo

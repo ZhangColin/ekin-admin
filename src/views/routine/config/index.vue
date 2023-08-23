@@ -131,14 +131,14 @@ const formRef = ref<FormInstance>()
 
 const state: {
     loading: boolean
-    config: anyObj
+    config: AnyObj
     remark: string
-    configGroup: anyObj
+    configGroup: AnyObj
     activeTab: string
     showAddForm: boolean
     rules: Partial<Record<string, FormItemRule[]>>
-    form: anyObj
-    quickEntrance: anyObj
+    form: AnyObj
+    quickEntrance: AnyObj
     formKey: string
 } = reactive({
     loading: true,
@@ -165,13 +165,13 @@ const getIndex = () => {
                 state.activeTab = key
                 break
             }
-            let formNames: anyObj = {}
+            let formNames: AnyObj = {}
             let rules: Partial<Record<string, FormItemRule[]>> = {}
             for (const key in state.config) {
                 for (const lKey in state.config[key].list) {
                     if (state.config[key].list[lKey].rule) {
                         let ruleStr = state.config[key].list[lKey].rule.split(',')
-                        let ruleArr: anyObj = []
+                        let ruleArr: AnyObj = []
                         ruleStr.forEach((item: string) => {
                             ruleArr.push(
                                 buildValidatorData({ name: item as buildValidatorParams['name'], title: state.config[key].list[lKey].title })
@@ -209,7 +209,7 @@ const onSubmit = () => {
     formRef.value.validate((valid) => {
         if (valid) {
             // 只提交当前tab的表单数据
-            const formData: anyObj = {}
+            const formData: AnyObj = {}
             for (const key in state.config) {
                 if (key != state.activeTab) {
                     continue
@@ -229,7 +229,7 @@ const onSubmit = () => {
     })
 }
 
-const onDelConfig = (config: anyObj) => {
+const onDelConfig = (config: AnyObj) => {
     del([config.id]).then(() => {
         getIndex()
     })

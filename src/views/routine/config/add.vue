@@ -47,7 +47,7 @@ import { useI18n } from 'vue-i18n'
 
 interface Props {
     modelValue: boolean
-    configGroup: anyObj
+    configGroup: AnyObj
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -68,7 +68,7 @@ const closeForm = () => {
 const { t } = useI18n()
 const formRef = ref<FormInstance>()
 const state: {
-    inputTypes: anyObj
+    inputTypes: AnyObj
     labelWidth: number
     submitLoading: boolean
     addConfig: {
@@ -76,7 +76,7 @@ const state: {
         weigh: number
         content: string
     }
-    formItemData: anyObj
+    formItemData: AnyObj
 } = reactive({
     inputTypes: {},
     labelWidth: 180,

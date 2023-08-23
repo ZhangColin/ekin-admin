@@ -210,17 +210,17 @@ export class baTableApi {
     constructor(controllerUrl: string) {
         this.controllerUrl = controllerUrl;
         this.actionUrl = new Map([
-            ['index', controllerUrl + 'index'],
-            ['add', controllerUrl + 'add'],
-            ['edit', controllerUrl + 'edit'],
-            ['del', controllerUrl + 'del'],
+            ['list', controllerUrl + 'list'],
+            ['add', controllerUrl],
+            ['edit', controllerUrl],
+            ['del', controllerUrl],
             ['sortable', controllerUrl + 'sortable'],
         ]);
     }
 
-    index(filter: AnyObj = {}) {
+    search(filter: AnyObj = {}) {
         return createAxios<TableDefaultData>({
-            url: this.actionUrl.get('index'),
+            url: this.actionUrl.get('list'),
             method: 'get',
             params: filter,
         });
@@ -228,38 +228,52 @@ export class baTableApi {
 
     edit(params: AnyObj) {
         return createAxios({
-            url: this.actionUrl.get('edit'),
-            method: 'get',
-            params: params,
+            url: this.actionUrl.get('edit') + '/' + params.id,
+            method: 'get'
         });
     }
 
     del(ids: string[]) {
-        return createAxios(
-            {
-                url: this.actionUrl.get('del'),
-                method: 'DELETE',
-                params: {
-                    ids: ids,
+        return Promise.all(ids.map(id => {
+            return createAxios(
+                {
+                    url: this.actionUrl.get('del') + '/' + id,
+                    method: 'DELETE'
                 },
-            },
-            {
-                showSuccessMessage: true,
-            }
-        );
+                {
+                    showSuccessMessage: true,
+                }
+            );
+        }))
     }
 
     postData(action: string, data: AnyObj) {
-        return createAxios(
-            {
-                url: this.actionUrl.has(action) ? this.actionUrl.get(action) : this.controllerUrl + action,
-                method: 'post',
-                data: data,
-            },
-            {
-                showSuccessMessage: true,
-            }
-        );
+        if(action==="add"){
+            return createAxios(
+                {
+                    url: this.actionUrl.has(action) ? this.actionUrl.get(action) : this.controllerUrl + action,
+                    method: 'post',
+                    data: data,
+                },
+                {
+                    showSuccessMessage: true,
+                }
+            );
+        }
+        else if(action==="edit"){
+            return createAxios(
+                {
+                    url: this.actionUrl.get(action)+'/'+data.id,
+                    method: 'put',
+                    data: data,
+                },
+                {
+                    showSuccessMessage: true,
+                }
+            );
+        }
+
+        
     }
 
     sortableApi(id: number, targetId: number) {

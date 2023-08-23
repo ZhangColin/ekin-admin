@@ -3,10 +3,8 @@
         <el-alert class="ba-table-alert" v-if="baTable.table.remark" :title="baTable.table.remark" type="info" show-icon />
 
         <!-- 表格顶部菜单 -->
-        <TableHeader
-            :buttons="['refresh', 'add', 'edit', 'delete', 'unfold', 'quickSearch', 'columnDisplay']"
-            :quick-search-placeholder="t('Quick search placeholder', { fields: t('system.menu.title') })"
-        />
+        <TableHeader :buttons="['refresh', 'add', 'edit', 'delete', 'unfold', 'quickSearch', 'columnDisplay']"
+            :quick-search-placeholder="t('Quick search placeholder', { fields: t('system.menu.title') })" />
         <!-- 表格 -->
         <!-- 要使用`el-table`组件原有的属性，直接加在Table标签上即可 -->
         <Table ref="tableRef" :pagination="false" />
@@ -33,13 +31,13 @@ defineOptions({
 const { t } = useI18n();
 const tableRef = ref();
 const baTable = new baTableClass(
-    new baTableApi('/system/menu/'),
+    new baTableApi('/api/system/menus/'),
     {
         expandAll: false,
-        dblClickNotEditColumn: [undefined, 'keepalive', 'status'],
+        dblClickNotEditColumn: ['keepalive', 'status'],
         column: [
             { type: 'selection', align: 'center' },
-            { label: t('system.menu.title'), prop: 'title', align: 'left', width: '200' },
+            { label: t('system.menu.title'), prop: 'title', align: 'left'},
             { label: t('system.menu.Icon'), prop: 'icon', align: 'center', width: '60', render: 'icon', default: 'fa fa-circle-o' },
             { label: t('system.menu.name'), prop: 'name', align: 'center', showOverflowTooltip: true },
             {
@@ -48,11 +46,24 @@ const baTable = new baTableClass(
                 align: 'center',
                 render: 'tag',
                 custom: { menu: 'danger', menu_dir: 'success', button: 'info' },
-                replaceValue: { menu: t('system.menu.type menu'), menu_dir: t('system.menu.type menu_dir'), button: t('system.menu.type button') },
+                replaceValue: { menu: t('system.menu.type menu'), menu_dir: t('system.menu.type menu_dir'), operate: t('system.menu.type button') },
             },
             { label: t('system.menu.cache'), prop: 'keepalive', align: 'center', width: '80', render: 'switch' },
             { label: t('State'), prop: 'status', align: 'center', width: '80', render: 'switch' },
-            { label: t('Update time'), prop: 'update_time', align: 'center', width: '160', render: 'datetime' },
+            // {
+            //     label: t('system.menu.cache'), prop: 'keepalive', align: 'center',
+            //     render: 'tag',
+            //     custom: { false: 'danger', true: 'success' },
+            //     replaceValue: { false: t('Disable'), true: t('Enable') }
+            // },
+            // {
+            //     label: t('State'),
+            //     prop: 'status',
+            //     align: 'center',
+            //     render: 'tag',
+            //     custom: { '0': 'danger', '1': 'success' },
+            //     replaceValue: { '0': t('Disable'), '1': t('Enable') },
+            // },
             {
                 label: t('Operate'),
                 align: 'center',
@@ -61,13 +72,12 @@ const baTable = new baTableClass(
                 buttons: defaultOptButtons(),
             },
         ],
-        dragSortLimitField: 'pid',
+        dragSortLimitField: 'parentId',
     },
     {
         defaultItems: {
             type: 'menu',
-            menu_type: 'tab',
-            extend: 'none',
+            menuType: 'tab',
             keepalive: 0,
             status: '1',
             icon: 'fa fa-circle-o',

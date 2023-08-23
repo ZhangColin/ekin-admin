@@ -4,7 +4,7 @@
 
         <!-- 表格顶部菜单 -->
         <TableHeader
-            :buttons="['refresh', 'add', 'edit', 'delete', 'comSearch', 'quickSearch', 'columnDisplay']"
+            :buttons="['refresh', 'add', 'comSearch', 'quickSearch', 'columnDisplay']"
             :quick-search-placeholder="t('Quick search placeholder', { fields: t('system.user.username') + '/' + t('system.user.nickname') })"
         />
 
@@ -35,33 +35,20 @@ defineOptions({
 const { t } = useI18n();
 const userInfo = useUserInfo();
 
-const optButtons = defaultOptButtons(['edit', 'delete']);
-optButtons[1].display = (row) => {
-    return row.id != userInfo.id;
-};
+const optButtons = defaultOptButtons(['edit']);
 
 const baTable = new baTableClass(
-    new baTableApi('/system/user/'),
+    new baTableApi('/api/system/users/'),
     {
         column: [
             { type: 'selection', align: 'center', operator: false },
-            { label: t('Id'), prop: 'id', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query'), width: 70 },
+            { label: t('Id'), prop: 'id', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
             { label: t('system.user.username'), prop: 'username', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
             { label: t('system.user.nickname'), prop: 'nickname', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
             { label: t('system.user.grouping'), prop: 'group_name_arr', align: 'center', operator: false, render: 'tags' },
             { label: t('system.user.head portrait'), prop: 'avatar', align: 'center', render: 'image', operator: false },
             { label: t('system.user.mailbox'), prop: 'email', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
-            { label: t('system.user.mobile'), prop: 'mobile', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
-            {
-                label: t('system.user.Last login'),
-                prop: 'last_login_time',
-                align: 'center',
-                render: 'datetime',
-                sortable: 'custom',
-                operator: 'RANGE',
-                width: 160,
-            },
-            { label: t('Create time'), prop: 'create_time', align: 'center', render: 'datetime', sortable: 'custom', operator: 'RANGE', width: 160 },
+            { label: t('system.user.mobile'), prop: 'phone', align: 'center', operator: 'LIKE', operatorPlaceholder: t('Fuzzy query') },
             {
                 label: t('State'),
                 prop: 'status',
@@ -95,4 +82,3 @@ baTable.getIndex();
 </script>
 
 <style scoped lang="scss"></style>
-../../../stores/userInfo

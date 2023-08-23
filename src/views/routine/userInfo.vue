@@ -294,4 +294,3 @@ const onSubmit = () => {
     }
 }
 </style>
-../../stores/userInfo

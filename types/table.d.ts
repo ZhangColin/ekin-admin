@@ -26,7 +26,7 @@ declare global {
         // 字段搜索,快速搜索,分页等数据
         filter?: {
             page?: number;
-            limit?: number;
+            size?: number;
             order?: string;
             quickSearch?: string;
             search?: comSearchData[];
@@ -34,7 +34,7 @@ declare global {
         };
         // 默认排序字段和排序方式
         defaultOrder?: { prop: string; order: string };
-        // 拖动排序限位字段:例如拖动行pid=1,那么拖动目的行pid也需要为1
+        // 拖动排序限位字段:parentId=1,那么拖动目的行parentId也需要为1
         dragSortLimitField?: string;
         // 接受url的query参数并自动触发通用搜索
         acceptQuery?: boolean;

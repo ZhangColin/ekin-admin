@@ -28,7 +28,6 @@ import PopupForm from './popupForm.vue';
 import { defaultOptButtons } from '/@/components/table';
 import { useI18n } from 'vue-i18n';
 import { cloneDeep } from 'lodash-es';
-import { getArrayKey } from '/@/utils/common';
 import { useUserInfo } from '/@/stores/userInfo';
 
 defineOptions({
@@ -41,14 +40,14 @@ const { t } = useI18n();
 const userInfo = useUserInfo();
 
 const baTable: baTableClass = new baTableClass(
-    new baTableApi('/system/role/'),
+    new baTableApi('/api/system/roles/'),
     {
         expandAll: true,
         dblClickNotEditColumn: [undefined],
         column: [
             { type: 'selection', align: 'center' },
-            { label: t('system.role.Group name'), prop: 'name', align: 'left', width: '200' },
-            { label: t('system.role.jurisdiction'), prop: 'rules', align: 'center' },
+            { label: '角色名称', prop: 'name', align: 'left', width: '200' },
+            { label: '权限规则', prop: 'rules', align: 'center' },
             {
                 label: t('State'),
                 prop: 'status',
@@ -57,8 +56,6 @@ const baTable: baTableClass = new baTableClass(
                 custom: { '0': 'danger', '1': 'success' },
                 replaceValue: { '0': t('Disable'), '1': t('Enable') },
             },
-            { label: t('Update time'), prop: 'update_time', align: 'center', width: '160', render: 'datetime' },
-            { label: t('Create time'), prop: 'create_time', align: 'center', width: '160', render: 'datetime' },
             { label: t('Operate'), align: 'center', width: '130', render: 'buttons', buttons: defaultOptButtons(['edit', 'delete']) },
         ],
     },
@@ -117,18 +114,18 @@ const baTable: baTableClass = new baTableClass(
         },
         // 双击编辑前
         onTableDblclick: ({ row }) => {
-            return baTable.table.extend!['userGroup'].indexOf(row.id) === -1;
+            // return baTable.table.extend!['userGroup'].indexOf(row.id) === -1;
         },
     },
     {
         getIndex: ({ res }) => {
-            baTable.table.extend!['userGroup'] = res.data.group;
-            let buttonsKey = getArrayKey(baTable.table.column, 'render', 'buttons');
-            baTable.table.column[buttonsKey].buttons!.forEach((value: OptButton) => {
-                value.display = (row) => {
-                    return res.data.group.indexOf(row.id) === -1;
-                };
-            });
+            // baTable.table.extend!['userGroup'] = res.data.group;
+            // let buttonsKey = getArrayKey(baTable.table.column, 'render', 'buttons');
+            // baTable.table.column[buttonsKey].buttons!.forEach((value: OptButton) => {
+            //     value.display = (row) => {
+            //         return res.data.group.indexOf(row.id) === -1;
+            //     };
+            // });
         },
     }
 );
@@ -143,4 +140,3 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss"></style>
-../../../stores/userInfo

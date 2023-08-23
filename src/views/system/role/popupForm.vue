@@ -29,9 +29,9 @@
                 >
                     <FormItem
                         :label="t('system.role.Parent group')"
-                        v-model="baTable.form.items!.pid"
+                        v-model="baTable.form.items!.parentId"
                         type="remoteSelect"
-                        prop="pid"
+                        prop="parentId"
                         :input-attr="{
                             params: { isTree: true },
                             field: 'name',
@@ -126,7 +126,7 @@ const rules: Partial<Record<string, FormItemRule[]>> = reactive({
             },
         },
     ],
-    pid: [
+    parentId: [
         {
             validator: (rule: any, val: string, callback: Function) => {
                 if (!val) {

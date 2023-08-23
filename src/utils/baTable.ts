@@ -23,7 +23,7 @@ export default class baTable {
         column: [],
         total: 0,
         filter: {},
-        dragSortLimitField: 'pid',
+        dragSortLimitField: 'parentId',
         acceptQuery: true,
         showComSearch: false,
         dblClickNotEditColumn: [undefined],
@@ -98,10 +98,20 @@ export default class baTable {
     getIndex = () => {
         if (this.runBefore('getIndex') === false) return;
         this.table.loading = true;
+
+        let filter = {} as AnyObj;
+        filter.page = this.table.filter?.page;
+        filter.size = this.table.filter?.size;
+        filter.order = this.table.filter?.order;
+
+        this.table.filter?.search?.forEach(value => filter[value.field] = value.val);
+
+
         return this.api
-            .index(this.table.filter)
+            // .search(this.table.filter)
+            .search(filter)
             .then((res) => {
-                this.table.data = res.data.list;
+                this.table.data = res.data.rows || res.data;
                 this.table.total = res.data.total;
                 this.table.remark = res.data.remark;
                 this.runAfter('getIndex', { res });
@@ -128,7 +138,7 @@ export default class baTable {
                 [this.table.pk!]: id,
             })
             .then((res) => {
-                this.form.items = res.data.row;
+                this.form.items = res.data;
                 this.runAfter('requestEdit', { res });
             })
             .catch((err) => {
@@ -251,7 +261,7 @@ export default class baTable {
             [
                 'page-size-change',
                 () => {
-                    this.table.filter!.limit = data.size;
+                    this.table.filter!.size = data.size;
                     this.getIndex();
                 },
             ],

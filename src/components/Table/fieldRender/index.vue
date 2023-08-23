@@ -6,7 +6,7 @@
     <el-switch
         v-if="field.render == 'switch'"
         @change="onChangeField"
-        :model-value="fieldValue.toString()"
+        :model-value="(fieldValue || 0).toString()"
         :loading="row.loading"
         active-value="1"
         inactive-value="0"
@@ -175,7 +175,7 @@
                             <el-tooltip :disabled="btn.title ? false : true" :content="btn.title ? t(btn.title) : ''" placement="top">
                                 <el-button
                                     v-if="btn.name == 'delete'"
-                                    v-auth="'del'"
+                                    v-auth="'delete'"
                                     v-blur
                                     :class="btn.class"
                                     class="table-operate"
